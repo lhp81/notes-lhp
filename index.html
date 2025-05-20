@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Notes LHP</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Notes LHP</h1>
+
+<div class="theme-toggle">
+  <label>
+    <input type="checkbox" id="themeSwitch" onchange="toggleTheme()" />
+    Dark Mode
+  </label>
+</div>
+
+    <input type="text" id="searchInput" placeholder="Search notes..." onkeyup="searchNotes()" />
+
+    <div id="notes">
+
+      <!-- Example Notes — add as many as you want, only last 5 will show -->
+
+      <!-- Note 1 -->
+      <div class="note">
+        <h2>05/19/25 - Python - Turn Cisco Radio up and down</h2>
+        <div class="note-content">
+          <div class="markdown-preview preview"></div>
+          <div class="markdown-full full" style="display:none;"></div>
+          <script type="text/markdown" class="markdown-source">
+Python script for automating turning Radio up and down on Cisco AP.
+
+
+
+Turn Radio UP
+
+
+```
+# https://stackoverflow.com/questions/48229181/paramiko-exec-command-with-multiple-commands-on-cisco-router-not-providing-any-o
+# https://learningnetwork.cisco.com/s/question/0D56e0000CtFFqeCQG/to-ssh-to-a-cisco-switch-using-python-you-can-use-the-paramiko-library
+import paramiko 
+from time import sleep
+
+hostname = "192.168.88.5" 
+username = "user" 
+password = "password" 
+
+# Create an SSH client instance 
+client = paramiko.SSHClient() 
+client.set_missing_host_key_policy(paramiko.AutoAddPolicy()) 
+
+# Connect to the server 
+client.connect(hostname, username=username, password=password)
+# Execute commands
+################################################################################
+connection = client.invoke_shell()
+connection.send("configure terminal")
+output = connection.recv(65535)
+sleep(1)
+connection.send("\n")
+connection.send("interface dot11Radio 0")
+output = connection.recv(65534)
+sleep(.9)
+connection.send("\n")
+connection.send("no shutdown")
+output = connection.recv(65535)
+sleep(2)
+connection.send("\n")
+################################################################################
+# Close the SSH connection 
+client.close() 
+```
+
+
+Turn Radio down
+
+
+```
+# https://stackoverflow.com/questions/48229181/paramiko-exec-command-with-multiple-commands-on-cisco-router-not-providing-any-o
+# https://learningnetwork.cisco.com/s/question/0D56e0000CtFFqeCQG/to-ssh-to-a-cisco-switch-using-python-you-can-use-the-paramiko-library
+import paramiko 
+from time import sleep
+
+hostname = "192.168.88.5" 
+username = "user" 
+password = "password" 
+
+# Create an SSH client instance 
+client = paramiko.SSHClient() 
+client.set_missing_host_key_policy(paramiko.AutoAddPolicy()) 
+
+# Connect to the server 
+client.connect(hostname, username=username, password=password)
+# Execute commands on the server  
+################################################################################
+connection = client.invoke_shell()
+connection.send("configure terminal")
+output = connection.recv(65535)
+sleep(1)
+connection.send("\n")
+connection.send("interface dot11Radio 0")
+output = connection.recv(65534)
+sleep(.9)
+connection.send("\n")
+connection.send("shutdown")
+output = connection.recv(65535)
+sleep(2)
+connection.send("\n")
+################################################################################
+# Close the SSH connection 
+client.close() 
+```
+
+<!--![Python Logo](data:image/png;base64,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)
+-->
+
+          </script>
+          <button onclick="toggleNote(this)">More</button>
+        </div>
+      </div>
+
+      <!-- Note 2 -->
+      <div class="note">
+        <h2>05/19/25 - GitHub - Publish web site</h2> 
+          <div class="note-content">
+          <div class="markdown-preview preview"></div>
+          <div class="markdown-full full" style="display:none;"></div>
+          <script type="text/markdown" class="markdown-source">
+How to Publish Online for Free
+
+When you're ready, we can host it using **GitHub Pages** (free hosting). Here’s a quick summary:
+
+1.  Create a GitHub account (if you don’t have one)
+2.  Create a new public repository named `my-tech-notes`
+3.  Upload your three files (`index.html`, `styles.css`, `script.js`)
+4.  Go to the repo settings → “Pages” → set source to `main` branch, root folder
+5.  GitHub will give you a live URL like: `https://yourusername.github.io/my-tech-notes`
+<!--![GitHub Logo](data:image/png;base64,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)
+-->
+Hope this helps!
+
+          </script>
+          <button onclick="toggleNote(this)">More</button>
+        </div>
+      </div>
+
+      <!-- Note 3 -->
+      <div class="note">
+        <h2>05/19/25 - Python - Run Ubiquity commands</h2>
+        <div class="note-content">
+          <div class="markdown-preview preview"></div>
+          <div class="markdown-full full" style="display:none;"></div>
+          <script type="text/markdown" class="markdown-source">
+Python script to run commands on an Ubiquity AP.
+
+```
+import paramiko 
+
+hostname = "192.168.40.11" 
+username = "user" 
+password = "password" 
+
+# Create an SSH client instance 
+client = paramiko.SSHClient() 
+client.set_missing_host_key_policy(paramiko.AutoAddPolicy()) 
+
+# Connect to the server 
+client.connect(hostname, username=username, password=password) 
+
+# Execute commands on the server 
+stdin, stdout, stderr = client.exec_command("uptime") 
+
+# Print the output of the command 
+print(stdout.read())
+stdin, stdout, stderr = client.exec_command("ls")
+print(stdout.read()) 
+
+# Close the SSH connection 
+client.close() 
+
+```
+
+          </script>
+          <button onclick="toggleNote(this)">More</button>
+        </div>
+      </div>
+
+      <!-- Note 4 -->
+      <div class="note">
+        <h2>05/19/25 - Python - Quick Web sharing</h2>
+        <div class="note-content">
+          <div class="markdown-preview preview"></div>
+          <div class="markdown-full full" style="display:none;"></div>
+          <script type="text/markdown" class="markdown-source">
+Python web sharing.
+
+Run the following command on the directory you wish to share.
+
+The whole Directory files and sub Directories will be shared.
+
+```
+nohup python3 -m http.server &
+```
+          </script>
+          <button onclick="toggleNote(this)">More</button>
+        </div>
+      </div>
+
+      <!-- Note 5 -->
+      <div class="note">
+        <h2>05/19/25 - Trilium - Install</h2>
+        <div class="note-content">
+          <div class="markdown-preview preview"></div>
+          <div class="markdown-full full" style="display:none;"></div>
+          <script type="text/markdown" class="markdown-source">
+How to install the Trillium note taking app.
+
+Github:
+
+*   [https://github.com/TriliumNext/Notes](https://github.com/TriliumNext/Notes)
+
+Trilium install as per [https://triliumnext.github.io/Docs/Wiki/docker-server-installation.html](https://triliumnext.github.io/Docs/Wiki/docker-server-installation.html)
+
+But first, on an Ubuntu Server in this case, install docker [https://docs.docker.com/engine/install/ubuntu/](https://docs.docker.com/engine/install/ubuntu/)
+
+Uninstall previous conflicting packages, if any.
+
+```
+for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt remove $pkg; done
+```
+
+Install using apt.
+
+```
+# Add Docker's official GPG key:
+sudo apt-get update
+sudo apt-get install ca-certificates curl # Installing ca-certificates and curl
+sudo install -m 0755 -d /etc/apt/keyrings # Setting keyrings that the repository for Docker will be using
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc # Finish setting up keyrings
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+# Add the repository to Apt sources:
+echo \
+ "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+ $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+ sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+```
+
+Install docker packages and then verify they have been successfully installed.
+
+```
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+```
+
+```
+sudo docker run hello-world
+```
+
+Now, going back to the Trilium install [https://triliumnext.github.io/Docs/Wiki/docker-server-installation.html](https://triliumnext.github.io/Docs/Wiki/docker-server-installation.html)
+
+Download the latest docker-compose.yml.
+
+```
+wget https://raw.githubusercontent.com/TriliumNext/Notes/master/docker-compose.yml
+```
+
+This is what the yaml file looks like.
+
+![](api/attachments/M5ryL1pynvxj/image/image.png)
+
+(_In the event port 8080 is already being used on your host, you can change it on the file by modifying the left value, and leaving the one on the right as is_)
+
+Then, start the container.
+
+```
+sudo docker compose up -d
+```
+
+Confirm that Trilium is up; and its details.
+
+```
+sudo docker ps
+sudo docker inspect [container_name]
+```
+
+Load Trilium by navigating to http://hostIP:8080 (_replace 8080 for the port on your yaml file_)
+
+          </script>
+          <button onclick="toggleNote(this)">More</button>
+        </div>
+      </div>
+
+
+
+
+      <!-- Add more notes below... -->
+
+
+
+
+
+
+
+      <div class="note">
+        <h2>05/19/25 - Docker - Install</h2>
+        <div class="note-content">
+          <div class="markdown-preview preview"></div>
+          <div class="markdown-full full" style="display:none;"></div>
+          <script type="text/markdown" class="markdown-source">
+On an Ubuntu Server in this case, install docker [https://docs.docker.com/engine/install/ubuntu/](https://docs.docker.com/engine/install/ubuntu/)
+
+Uninstall previous conflicting packages, if any.
+
+```
+for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt remove $pkg; done
+```
+
+Install using apt.
+
+```
+# Add Docker's official GPG key:
+sudo apt-get update
+sudo apt-get install ca-certificates curl # Installing ca-certificates and curl
+sudo install -m 0755 -d /etc/apt/keyrings # Setting keyrings that the repository for Docker will be using
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc # Finish setting up keyrings
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+# Add the repository to Apt sources:
+echo \
+ "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+ $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+ sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+```
+
+Install docker packages and then verify they have been successfully installed.
+
+```
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+```
+
+```
+sudo docker run hello-world
+```
+
+          </script>
+          <button onclick="toggleNote(this)">More</button>
+        </div>
+      </div>
+
+
+
+
+      <div class="note">
+        <h2>05/19/25 - Docker - Commands</h2>
+        <div class="note-content">
+          <div class="markdown-preview preview"></div>
+          <div class="markdown-full full" style="display:none;"></div>
+          <script type="text/markdown" class="markdown-source">
+
+Check docker service status
+
+```
+systemctl status docker
+```
+
+List running containers
+
+```
+sudo docker ps
+```
+
+List also stopped containers
+
+```
+sudo docker ps -a
+```
+
+Show container details
+
+```
+sudo docker inspect “CONTAINER ID”
+```
+
+ Show container logs
+
+```
+sudo docker logs “CONTAINER ID”
+```
+
+ Watch container logs
+
+```
+sudo watch docker logs “CONTAINER ID”
+```
+
+ Test docker installation by downloading and running the “hello-world” container
+
+```
+sudo docker run hello-world
+```
+
+Check for existing docker images
+
+```
+sudo docker images
+```
+
+Search for available docker images; i.e. nginx
+
+```
+sudo docker search nginx
+```
+
+Download a docker image, without installing it
+
+```
+sudo docker pull nginx
+```
+
+Add login user to the docker group, to avoid running “sudo” for every command
+
+```
+sudo usermod -aG docker lucas
+```
+
+Connecting to the container
+
+Run a container, ubuntu in this case, and access its CLI.  
+(i stands for interactive - t stands for terminal - /bin/bash indicates where we want to be placed on when the container starts)
+
+```
+sudo docker run -it ubuntu /bin/bash
+```
+
+Run the container as a daemon, thus allowing us to stay on the terminal without terminating the container.  
+(d sends the container to the background, it will detach it)
+
+```
+sudo docker run -it -d ubuntu
+```
+
+With the container running in the background, to connect to it, check its “CONTAINER ID”, and then “attach” to it
+
+```
+sudo docker ps
+sudo docker attach “CONTAINER ID”
+```
+
+If we exit from the container after we attached to it, it will terminate it; in order to exit the container command line, and avoid terminating the instance, do CTRL+P+Q.
+
+To start a container, and keep it from ending.
+
+```
+sudo docker run -it -d --restart unless-stopped ubuntu
+```
+
+Specify a port, for a web server for example
+
+```
+sudo docker run -it -d --restart unless-stopped -p 8080:80 nginx
+```
+
+Creating a container
+
+Will create a container with apache2 installed
+
+```
+sudo docker run -it -d ubuntu
+sudo docker attach “CONTAINER ID”
+```
+
+While connected to the container, update the OS and install apache2
+
+```
+apt update
+apt upgrade
+apt install apache2
+```
+
+Check the service status and start if not running
+
+```
+service apache2 status
+service apache2 start
+```
+
+Run this command to create a container image
+
+```
+sudo docker commit “CONTAINER ID” lhp/ubuntu:1.0
+```
+
+Check the image just created.
+
+```
+$ sudo docker images
+REPOSITORY      TAG       IMAGE ID       CREATED         SIZE
+lhp/ubuntu1.0   latest    4108547976a3   3 minutes ago   240MB
+nginx           latest    4e1b6bae1e48   6 days ago      192MB
+ubuntu          latest    602eb6fb314b   2 weeks ago     78.1MB
+hello-world     latest    74cc54e27dc4   3 months ago    10.1kB
+```
+
+Create a container instance from the self created image
+
+```
+sudo docker run -it -d -p 8080:80 lhp/ubuntu1.0
+```
+
+The container gets created.
+
+```
+$ sudo docker ps
+CONTAINER ID   IMAGE           COMMAND       CREATED              STATUS              PORTS                                     NAMES
+b884eff5a00b   lhp/ubuntu1.0   "/bin/bash"   About a minute ago   Up About a minute   0.0.0.0:8080->80/tcp, [::]:8080->80/tcp   friendly_lumiere
+
+```
+
+Now, going to the `hostIP:8080` will not bring the apache welcome page.  
+If we check on the container, apache2 will not be running, it will need to be started manually.
+
+```
+# service apache2 status
+* apache2 is not running
+# service apache2 start
+* Starting Apache httpd web server apache2                                                                          AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 172.17.0.2. Set the 'ServerName' directive globally to suppress this message
+*
+```
+
+If we want to have an image where apache is running as soon as the container starts, we can modify and create a new image as follows.
+
+```
+$ sudo docker commit --change='ENTRYPOINT ["apachectl", "-DFOREGROUND"]' b884eff5a00b lhp/ubuntu1.1
+sha256:e12fd95e9f847bff41891314c87cd96430c248ba97b76ab1f35a0ab54374777e
+$ sudo docker images
+REPOSITORY      TAG       IMAGE ID       CREATED          SIZE
+lhp/ubuntu1.1   latest    e12fd95e9f84   12 seconds ago   240MB
+lhp/ubuntu1.0   latest    4108547976a3   23 minutes ago   240MB
+nginx           latest    4e1b6bae1e48   6 days ago       192MB
+ubuntu          latest    602eb6fb314b   2 weeks ago      78.1MB
+hello-world     latest    74cc54e27dc4   3 months ago     10.1kB
+```
+
+To test the new image, stop the previous container, and start a new one with the new image.
+
+```
+sudo docker run -it -d -p 8080:80 lhp/ubuntu1.1
+7ea2222d8e36d15fade661dde602ea8e2a5813336ccad50e6eb4f8c0c7440719
+sudo docker ps
+CONTAINER ID   IMAGE           COMMAND                  CREATED          STATUS          PORTS                                     NAMES
+7ea2222d8e36   lhp/ubuntu1.1   "apachectl -DFOREGRO…"   49 seconds ago   Up 48 seconds   0.0.0.0:8080->80/tcp, [::]:8080->80/tcp   amazing_elgamal
+
+```
+
+Automating the container creation process further.
+
+On a known destination path, create a “Dockerfile”
+
+```
+$ pwd
+/home/lucas/docker
+$ nano Dockerfile
+```
+
+```
+FROM ubuntu
+MAINTAINER lhp <lhp@email.com>
+# Skip prompts if presented during deploy
+ARG DEBIAN_FRONTEND=noninteractive
+# Update packages
+RUN apt update; apt upgrade -y
+# Install packages
+RUN apt install -y apache2 nano
+# Set entrypoint
+ENTRYPOINT apache2ctl -D FOREGROUND
+```
+
+Now build the image by using the configuration file.  
+(When specifying the Dockerfile path, just make sure you are at the file location, and just use the dot (.) expression for current directory; entering the full path keeps giving me an error)
+
+```
+lucas@dockertraining:~/docker$ pwd
+/home/lucas/docker
+lucas@dockertraining:~/docker$ ls
+Dockerfile
+lucas@dockertraining:~/docker$ docker build -t lhp/ubuntu1.2 /home/lucas/docker/Dockerfile
+[+] Building 0.0s (0/0)                                                                               docker:default
+ERROR: unable to prepare context: path "/home/lucas/docker/Dockerfile" not found
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$ docker build -t lhp/ubuntu1.2 .
+[+] Building 269.2s (7/7) FINISHED                                                                    docker:default
+=> [internal] load build definition from Dockerfile                                                            0.4s
+=> => transferring dockerfile: 316B                                                                            0.2s
+=> [internal] load metadata for docker.io/library/ubuntu:latest                                                0.0s
+=> [internal] load .dockerignore                                                                               0.2s
+=> => transferring context: 2B                                                                                 0.0s
+=> [1/3] FROM docker.io/library/ubuntu:latest                                                                  0.1s
+=> [2/3] RUN apt update; apt upgrade -y                                                                       86.4s
+=> [3/3] RUN apt install -y apache2 nano                                                                     164.6s
+=> exporting to image                                                                                         15.9s
+=> => exporting layers                                                                                        15.7s
+=> => writing image sha256:e20f942af7144d2ab60c64cec3d9751b24e77e6289185fd405d47ce88a54c686                    0.0s
+=> => naming to docker.io/lhp/ubuntu1.2                                                                        0.0s
+2 warnings found (use docker --debug to expand):
+- JSONArgsRecommended: JSON arguments recommended for ENTRYPOINT to prevent unintended behavior related to OS signals (line 14)
+- MaintainerDeprecated: Maintainer instruction is deprecated in favor of using label (line 2)
+lucas@dockertraining:~/docker$ sudo docker ps
+[sudo] password for lucas:
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$ sudo docker images
+REPOSITORY      TAG       IMAGE ID       CREATED             SIZE
+lhp/ubuntu1.2   latest    e20f942af714   24 minutes ago      242MB
+lhp/ubuntu1.1   latest    e12fd95e9f84   About an hour ago   240MB
+lhp/ubuntu1.0   latest    4108547976a3   About an hour ago   240MB
+nginx           latest    4e1b6bae1e48   6 days ago          192MB
+ubuntu          latest    602eb6fb314b   2 weeks ago         78.1MB
+hello-world     latest    74cc54e27dc4   3 months ago        10.1kB
+lucas@dockertraining:~/docker$
+```
+
+Even though, the image got created, there were two warnings listed.
+
+```
+- JSONArgsRecommended: JSON arguments recommended for ENTRYPOINT to prevent unintended behavior related to OS signals (line 14)
+# This one was address at https://docs.docker.com/reference/build-checks/json-args-recommended/
+
+- MaintainerDeprecated: Maintainer instruction is deprecated in favor of using label (line 2)
+# This one was addressed at https://docs.docker.com/reference/build-checks/maintainer-deprecated/
+```
+
+With those two corrections in place, remove any previous images.
+
+```
+lucas@dockertraining:~/docker$ sudo docker images
+REPOSITORY      TAG       IMAGE ID       CREATED             SIZE
+lhp/ubuntu1.2   latest    e20f942af714   36 minutes ago      242MB
+<none>          <none>    d6cd57534c90   36 minutes ago      242MB
+lhp/ubuntu1.3   latest    4fc056e7fe51   36 minutes ago      242MB
+lhp/ubuntu1.1   latest    e12fd95e9f84   About an hour ago   240MB
+lhp/ubuntu1.0   latest    4108547976a3   2 hours ago         240MB
+nginx           latest    4e1b6bae1e48   6 days ago          192MB
+ubuntu          latest    602eb6fb314b   2 weeks ago         78.1MB
+hello-world     latest    74cc54e27dc4   3 months ago        10.1kB
+lucas@dockertraining:~/docker$ sudo docker rmi 4fc056e7fe51
+Untagged: lhp/ubuntu1.3:latest
+Deleted: sha256:4fc056e7fe5112bf21d8ff7640d299447281003db21c401c0004a67effd296d5
+lucas@dockertraining:~/docker$ sudo docker rmi e20f942af714
+Untagged: lhp/ubuntu1.2:latest
+Deleted: sha256:e20f942af7144d2ab60c64cec3d9751b24e77e6289185fd405d47ce88a54c686
+lucas@dockertraining:~/docker$ sudo docker rmi e12fd95e9f84
+Error response from daemon: conflict: unable to delete e12fd95e9f84 (must be forced) - image is being used by stopped container 7ea2222d8e36
+lucas@dockertraining:~/docker$ sudo docker rm 7ea2222d8e36
+7ea2222d8e36
+lucas@dockertraining:~/docker$ sudo docker rmi e12fd95e9f84
+Untagged: lhp/ubuntu1.1:latest
+Deleted: sha256:e12fd95e9f847bff41891314c87cd96430c248ba97b76ab1f35a0ab54374777e
+Deleted: sha256:43f35a3eb896976408dae91700acd22cd5256682b226eb1fe28add0c8865765d
+lucas@dockertraining:~/docker$ sudo docker rmi 4108547976a3
+Error response from daemon: conflict: unable to delete 4108547976a3 (must be forced) - image is being used by stopped container b884eff5a00b
+lucas@dockertraining:~/docker$ sudo docker rm b884eff5a00b
+b884eff5a00b
+lucas@dockertraining:~/docker$ sudo docker rmi 4108547976a3
+Untagged: lhp/ubuntu1.0:latest
+Deleted: sha256:4108547976a3b34758a83e6db7c464a9e0fdca3b466844963383e14deb2b4ffc
+Deleted: sha256:920f1c63cfd4aed915e6c341b6b2df081b546f673678d9e088e70cd4e0614a7f
+lucas@dockertraining:~/docker$ sudo docker images
+REPOSITORY    TAG       IMAGE ID       CREATED          SIZE
+<none>        <none>    d6cd57534c90   38 minutes ago   242MB
+nginx         latest    4e1b6bae1e48   6 days ago       192MB
+ubuntu        latest    602eb6fb314b   2 weeks ago      78.1MB
+hello-world   latest    74cc54e27dc4   3 months ago     10.1kB
+lucas@dockertraining:~/docker$
+```
+
+Lets create a new image from the Dockerfile configuration file below.
+
+```
+FROM ubuntu
+LABEL lhp.net.ar="lhp@email.com"
+# Skip prompts if presented during deploy
+ARG DEBIAN_FRONTEND=noninteractive
+# Update packages
+RUN apt update; apt upgrade -y
+# Install packages
+RUN apt install -y apache2 nano
+# Set entrypoint
+ENTRYPOINT ["apache2ctl","-DFOREGROUND"]
+```
+
+```
+lucas@dockertraining:~/docker$ docker build -t lhp/ubuntu5.1 .
+[+] Building 1.2s (7/7) FINISHED                                                                      docker:default
+ => [internal] load build definition from Dockerfile                                                            0.1s
+ => => transferring dockerfile: 323B                                                                            0.1s
+ => [internal] load metadata for docker.io/library/ubuntu:latest                                                0.0s
+ => [internal] load .dockerignore                                                                               0.1s
+ => => transferring context: 2B                                                                                 0.0s
+ => [1/3] FROM docker.io/library/ubuntu:latest                                                                  0.0s
+ => CACHED [2/3] RUN apt update; apt upgrade -y                                                                 0.0s
+ => CACHED [3/3] RUN apt install -y apache2 nano                                                                0.0s
+ => exporting to image                                                                                          0.1s
+ => => exporting layers                                                                                         0.0s
+ => => writing image sha256:4dbec5ad08dd0fe118710e1e9cf2fe506d11032a73970380060e493ee6616daa                    0.0s
+ => => naming to docker.io/lhp/ubuntu5.1                                                                        0.0s
+lucas@dockertraining:~/docker$ sudo docker images
+REPOSITORY      TAG       IMAGE ID       CREATED             SIZE
+lhp/ubuntu5.1   latest    4dbec5ad08dd   About an hour ago   242MB
+nginx           latest    4e1b6bae1e48   6 days ago          192MB
+ubuntu          latest    602eb6fb314b   2 weeks ago         78.1MB
+hello-world     latest    74cc54e27dc4   3 months ago        10.1kB
+lucas@dockertraining:~/docker$
+```
+
+Now, lets run a new container from the newly created image.
+
+```
+lucas@dockertraining:~/docker$ sudo docker run -it -d -p 8080:80 lhp/ubuntu5.1
+60c1644a9ffd96bea558a540d08c997d3b43704e96eda6ed0741949b524ac05b
+lucas@dockertraining:~/docker$ sudo docker ps
+CONTAINER ID   IMAGE           COMMAND                  CREATED         STATUS         PORTS                                     NAMES
+60c1644a9ffd   lhp/ubuntu5.1   "apache2ctl -DFOREGR…"   9 seconds ago   Up 8 seconds   0.0.0.0:8080->80/tcp, [::]:8080->80/tcp   thirsty_cerf
+lucas@dockertraining:~/docker$
+```
+
+If we go to `hostIP:8080`, the apache default web page will display without us having to do further configurations.
+
+![](api/attachments/qPdhQlcFXzYB/image/image.png)
+
+To connect to the container instance. And CTRL+P+Q to exit without shutting down the container.
+
+```
+sudo docker exec -ti “CONTAINER ID” bash
+```
+
+          </script>
+          <button onclick="toggleNote(this)">More</button>
+        </div>
+      </div>
+
+
+
+      <div class="note">
+        <h2>05/19/25 - Docker - Mount Volumes</h2>
+        <div class="note-content">
+          <div class="markdown-preview preview"></div>
+          <div class="markdown-full full" style="display:none;"></div>
+          <script type="text/markdown" class="markdown-source">
+
+Mount types:
+
+*   Volumes - Persistent
+*   Bind-mounts - Persistent
+*   Temp mounts - Non-persistent
+
+<div class="joplin-table-wrapper"><table><tbody><tr><td style="text-align:left;" colspan="2">Persistent</td></tr><tr><td style="vertical-align:top;"><p><u>Volumes</u></p><ul><li>Newer</li><li>More features</li><li>Managed by Docker daemon only, not the host</li></ul><p><u>Syntax</u>:</p><ul><li>-v mydata:/path/in/container<br>or</li><li>--mount mydata:/path/in/container</li></ul></td><td><p><u>Bind-mounts</u></p><ul><li>Older</li><li>Less features</li><li>Mounts a host file/directory into the container</li></ul><p><u>Syntax</u></p><ul><li>-v ./mydata:/path/in/container</li><li>-v /mydata:/path/in/container<br>or</li><li>--mount&nbsp;</li></ul><p><u>To share from host to container with read only access:</u></p><ul><li>-v ./mydata:/path/in/container:ro</li></ul></td></tr><tr><td><p>Volumes on the host will only be available by the container, the host will have no access to what the container sees.</p><pre><code class="language-text-x-trilium-auto">sudo docker run -v dockermount:/dockermount -dit -p 8080:80 lhp/ubuntu6.5</code></pre></td><td><p>Bind mounts will make the host resources accessible by both the container and the host</p><pre><code class="language-text-x-trilium-auto">sudo docker run -v ./dockermount:/dockermount -dit -p 8080:80 lhp/ubuntu6.5</code></pre></td></tr></tbody></table></div>
+
+          </script>
+          <button onclick="toggleNote(this)">More</button>
+        </div>
+      </div>
+
+
+
+      <div class="note">
+        <h2>05/19/25 - Docker - Networking - Default Bridge</h2>
+        <div class="note-content">
+          <div class="markdown-preview preview"></div>
+          <div class="markdown-full full" style="display:none;"></div>
+          <script type="text/markdown" class="markdown-source">
+
+Default Bridge
+
+On a fresh docker install, lets check what the networking settings look like:
+
+```
+lucas@dockertraining:~/docker$ docker ps
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$ docker ps -a
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$ ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+   link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+   inet 127.0.0.1/8 scope host lo
+      valid_lft forever preferred_lft forever
+   inet6 ::1/128 scope host noprefixroute
+      valid_lft forever preferred_lft forever
+2: ens18: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+   link/ether bc:24:11:c4:0d:2a brd ff:ff:ff:ff:ff:ff
+   altname enp0s18
+   inet 192.168.88.23/24 metric 100 brd 192.168.88.255 scope global dynamic ens18
+      valid_lft 471sec preferred_lft 471sec
+   inet6 fe80::be24:11ff:fec4:d2a/64 scope link
+      valid_lft forever preferred_lft forever
+3: docker0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default
+   link/ether c2:af:04:d1:79:a4 brd ff:ff:ff:ff:ff:ff
+   inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
+      valid_lft forever preferred_lft forever
+   inet6 fe80::c0af:4ff:fed1:79a4/64 scope link
+      valid_lft forever preferred_lft forever
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$ bridge vlan
+port              vlan-id
+docker0           1 PVID Egress Untagged
+lucas@dockertraining:~/docker$ bridge link
+lucas@dockertraining:~/docker$
+
+```
+
+There is the docker bridge, and nothing else.
+
+Lets now run a new container.  
+This will be an Ubuntu image, with apache installed.
+
+```
+lucas@dockertraining:~/docker$ sudo docker run -dit -p 8080:80 lhp/ubuntu6.5
+[sudo] password for lucas:
+5ae93725a7827e38345e2aab72c2b7268fb0ec1ab11273b0ae466baaef2ba9f8
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$ docker ps
+CONTAINER ID   IMAGE           COMMAND                  CREATED         STATUS         PORTS                                     NAMES
+5ae93725a782   lhp/ubuntu6.5   "apache2ctl -DFOREGR…"   8 seconds ago   Up 7 seconds   0.0.0.0:8080->80/tcp, [::]:8080->80/tcp   recursing_napier
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$ ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+   link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+   inet 127.0.0.1/8 scope host lo
+      valid_lft forever preferred_lft forever
+   inet6 ::1/128 scope host noprefixroute
+      valid_lft forever preferred_lft forever
+2: ens18: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+   link/ether bc:24:11:c4:0d:2a brd ff:ff:ff:ff:ff:ff
+   altname enp0s18
+   inet 192.168.88.23/24 metric 100 brd 192.168.88.255 scope global dynamic ens18
+      valid_lft 377sec preferred_lft 377sec
+   inet6 fe80::be24:11ff:fec4:d2a/64 scope link
+      valid_lft forever preferred_lft forever
+3: docker0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default
+   link/ether c2:af:04:d1:79:a4 brd ff:ff:ff:ff:ff:ff
+   inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
+      valid_lft forever preferred_lft forever
+   inet6 fe80::c0af:4ff:fed1:79a4/64 scope link
+      valid_lft forever preferred_lft forever
+10: veth8f09ff7@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master docker0 state UP group default
+   link/ether 86:9b:a2:72:9f:e8 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+   inet6 fe80::849b:a2ff:fe72:9fe8/64 scope link
+      valid_lft forever preferred_lft forever
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$ bridge vlan
+port              vlan-id
+docker0           1 PVID Egress Untagged
+veth8f09ff7       1 PVID Egress Untagged
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$ bridge link
+10: veth8f09ff7@ens18: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 master docker0 state forwarding priority 32 cost 2
+lucas@dockertraining:~/docker$
+```
+
+The default bridge networking provides the newly created container with an IP within the default bridge network range 172.17.0.0/16.  
+The new interface `veth8f09ff7@if2` is assigned to the container.  
+This will be an isolated default network, where the only option to reach the container, is as long as we made it explicit at the run time; we did so in this case with the “-p 8080:80”, where 8080 is the host port, and 80 the container's.
+
+The container network interface `veth8f09ff7@if2` is linked to the default bridge `docker0`  
+`veth8ed1dce@ens18: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 master docker0 state forwarding priority 32 cost 2`
+
+Lets inspect the default bridge
+
+```
+lucas@dockertraining:~/docker$ docker inspect bridge
+[
+   {
+       "Name": "bridge",
+       "Id": "bca8a066750c0f06365124b0204645af04128cb72a5bfd82fc58b06faab05797",
+       "Created": "2025-04-23T12:48:06.482736782Z",
+       "Scope": "local",
+       "Driver": "bridge",
+       "EnableIPv4": true,
+       "EnableIPv6": false,
+       "IPAM": {
+           "Driver": "default",
+           "Options": null,
+           "Config": [
+               {
+                   "Subnet": "172.17.0.0/16",
+                   "Gateway": "172.17.0.1"
+               }
+           ]
+       },
+       "Internal": false,
+       "Attachable": false,
+       "Ingress": false,
+       "ConfigFrom": {
+           "Network": ""
+       },
+       "ConfigOnly": false,
+       "Containers": {
+           "b89a1b9a617c485c57d6fdc6a05453629f981b571a9f30b372fd7aa14ce654c7": {
+               "Name": "gracious_swanson",
+               "EndpointID": "1271677bf7ffa3823d6b2b8c3bc93daf5103c41fd61f1c1b6e9373b1f4affc91",
+               "MacAddress": "52:79:f3:b3:f0:42",
+               "IPv4Address": "172.17.0.2/16",
+               "IPv6Address": ""
+           }
+       },
+       "Options": {
+           "com.docker.network.bridge.default_bridge": "true",
+           "com.docker.network.bridge.enable_icc": "true",
+           "com.docker.network.bridge.enable_ip_masquerade": "true",
+           "com.docker.network.bridge.host_binding_ipv4": "0.0.0.0",
+           "com.docker.network.bridge.name": "docker0",
+           "com.docker.network.driver.mtu": "1500"
+       },
+       "Labels": {}
+   }
+]
+lucas@dockertraining:~/docker$
+```
+
+          </script>
+          <button onclick="toggleNote(this)">More</button>
+        </div>
+      </div>
+
+
+
+      <div class="note">
+        <h2>05/19/25 - Docker - Networking - User-defined Bridge</h2>
+        <div class="note-content">
+          <div class="markdown-preview preview"></div>
+          <div class="markdown-full full" style="display:none;"></div>
+          <script type="text/markdown" class="markdown-source">
+
+When you create a container, and no network is explicitly defined, it will be assigned to the default Bridge network segment; we are starting with such scenario.
+
+```
+lucas@dockertraining:~/docker$ ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+   link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+   inet 127.0.0.1/8 scope host lo
+      valid_lft forever preferred_lft forever
+   inet6 ::1/128 scope host noprefixroute
+      valid_lft forever preferred_lft forever
+2: ens18: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+   link/ether bc:24:11:c4:0d:2a brd ff:ff:ff:ff:ff:ff
+   altname enp0s18
+   inet 192.168.88.23/24 metric 100 brd 192.168.88.255 scope global dynamic ens18
+      valid_lft 544sec preferred_lft 544sec
+   inet6 fe80::be24:11ff:fec4:d2a/64 scope link
+      valid_lft forever preferred_lft forever
+3: docker0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default
+   link/ether c2:af:04:d1:79:a4 brd ff:ff:ff:ff:ff:ff
+   inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
+      valid_lft forever preferred_lft forever
+   inet6 fe80::c0af:4ff:fed1:79a4/64 scope link
+      valid_lft forever preferred_lft forever
+12: veth8ed1dce@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master docker0 state UP group default
+   link/ether 62:8d:7b:c3:65:1d brd ff:ff:ff:ff:ff:ff link-netnsid 0
+   inet6 fe80::608d:7bff:fec3:651d/64 scope link
+      valid_lft forever preferred_lft forever
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$ bridge vlan
+port              vlan-id
+docker0           1 PVID Egress Untagged
+veth8ed1dce       1 PVID Egress Untagged
+lucas@dockertraining:~/docker$ bridge link
+12: veth8ed1dce@ens18: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 master docker0 state forwarding priority 32 cost 2
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$ docker ps
+CONTAINER ID   IMAGE           COMMAND                  CREATED          STATUS          PORTS                                     NAMES
+b89a1b9a617c   lhp/ubuntu6.5   "apache2ctl -DFOREGR…"   14 minutes ago   Up 14 minutes   0.0.0.0:8080->80/tcp, [::]:8080->80/tcp   gracious_swanson
+lucas@dockertraining:~/docker$
+```
+
+Lets say we want to create a second container, but this time, it should be on a different segment, thus, isolated from the first one.
+
+We need to create a new network, a User-defined network.
+
+```
+lucas@dockertraining:~/docker$ docker network create udnet
+d6de0510746675960cf12a7d03c9aefd8503c3a8bf37dcfd4550e5a2de0bc243
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$ bridge vlan
+port              vlan-id
+docker0           1 PVID Egress Untagged
+veth8ed1dce       1 PVID Egress Untagged
+br-d6de05107466   1 PVID Egress Untagged
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$ ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+   link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+   inet 127.0.0.1/8 scope host lo
+      valid_lft forever preferred_lft forever
+   inet6 ::1/128 scope host noprefixroute
+      valid_lft forever preferred_lft forever
+2: ens18: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+   link/ether bc:24:11:c4:0d:2a brd ff:ff:ff:ff:ff:ff
+   altname enp0s18
+   inet 192.168.88.23/24 metric 100 brd 192.168.88.255 scope global dynamic ens18
+      valid_lft 403sec preferred_lft 403sec
+   inet6 fe80::be24:11ff:fec4:d2a/64 scope link
+      valid_lft forever preferred_lft forever
+3: docker0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default
+   link/ether c2:af:04:d1:79:a4 brd ff:ff:ff:ff:ff:ff
+   inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
+      valid_lft forever preferred_lft forever
+   inet6 fe80::c0af:4ff:fed1:79a4/64 scope link
+      valid_lft forever preferred_lft forever
+12: veth8ed1dce@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master docker0 state UP group default
+   link/ether 62:8d:7b:c3:65:1d brd ff:ff:ff:ff:ff:ff link-netnsid 0
+   inet6 fe80::608d:7bff:fec3:651d/64 scope link
+      valid_lft forever preferred_lft forever
+13: br-d6de05107466: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default
+   link/ether b6:71:6b:6d:b6:32 brd ff:ff:ff:ff:ff:ff
+   inet 172.18.0.1/16 brd 172.18.255.255 scope global br-d6de05107466
+      valid_lft forever preferred_lft forever
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$ docker network ls
+NETWORK ID     NAME      DRIVER    SCOPE
+bca8a066750c   bridge    bridge    local
+545eb91fb713   host      host      local
+e7a33442daa2   none      null      local
+d6de05107466   udnet     bridge    local
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$ bridge link
+12: veth8ed1dce@ens18: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 master docker0 state forwarding priority 32 cost 2
+15: vethfd1da22@ens18: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 master br-d6de05107466 state forwarding priority 32 cost 2
+lucas@dockertraining:~/docker$
+```
+
+We named it udnet; we can see a new bridge was created, `br-d6de05107466`, with network segment 172.18.0.1/16.
+
+Now, lets create the new container and assign it to the new network segment `udnet`, and give it a name `secondcontainer`.
+
+```
+lucas@dockertraining:~/docker$ sudo docker run -dit --network udnet --name secondcontainer -p 8081:80 lhp/ubuntu7.0
+4cbdfd9a99da47608d460452643ca0cfcb277ff5db509d9f6e0a85d0270841db
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$ docker ps
+CONTAINER ID   IMAGE           COMMAND                  CREATED              STATUS              PORTS                                     NAMES
+4cbdfd9a99da   lhp/ubuntu7.0   "apache2ctl -DFOREGR…"   About a minute ago   Up About a minute   0.0.0.0:8081->80/tcp, [::]:8081->80/tcp   secondcontainer
+b89a1b9a617c   lhp/ubuntu6.5   "apache2ctl -DFOREGR…"   38 minutes ago       Up 38 minutes       0.0.0.0:8080->80/tcp, [::]:8080->80/tcp   gracious_swanson
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$ ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+   link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+   inet 127.0.0.1/8 scope host lo
+      valid_lft forever preferred_lft forever
+   inet6 ::1/128 scope host noprefixroute
+      valid_lft forever preferred_lft forever
+2: ens18: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+   link/ether bc:24:11:c4:0d:2a brd ff:ff:ff:ff:ff:ff
+   altname enp0s18
+   inet 192.168.88.23/24 metric 100 brd 192.168.88.255 scope global dynamic ens18
+      valid_lft 321sec preferred_lft 321sec
+   inet6 fe80::be24:11ff:fec4:d2a/64 scope link
+      valid_lft forever preferred_lft forever
+3: docker0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default
+   link/ether c2:af:04:d1:79:a4 brd ff:ff:ff:ff:ff:ff
+   inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
+      valid_lft forever preferred_lft forever
+   inet6 fe80::c0af:4ff:fed1:79a4/64 scope link
+      valid_lft forever preferred_lft forever
+12: veth8ed1dce@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master docker0 state UP group default
+   link/ether 62:8d:7b:c3:65:1d brd ff:ff:ff:ff:ff:ff link-netnsid 0
+   inet6 fe80::608d:7bff:fec3:651d/64 scope link
+      valid_lft forever preferred_lft forever
+13: br-d6de05107466: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default
+   link/ether b6:71:6b:6d:b6:32 brd ff:ff:ff:ff:ff:ff
+   inet 172.18.0.1/16 brd 172.18.255.255 scope global br-d6de05107466
+      valid_lft forever preferred_lft forever
+   inet6 fe80::b471:6bff:fe6d:b632/64 scope link
+      valid_lft forever preferred_lft forever
+15: vethfd1da22@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master br-d6de05107466 state UP group default
+   link/ether e2:89:e9:57:cd:20 brd ff:ff:ff:ff:ff:ff link-netnsid 1
+   inet6 fe80::e089:e9ff:fe57:cd20/64 scope link
+      valid_lft forever preferred_lft forever
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$ bridge vlan
+port              vlan-id
+docker0           1 PVID Egress Untagged
+veth8ed1dce       1 PVID Egress Untagged
+br-d6de05107466   1 PVID Egress Untagged
+vethfd1da22       1 PVID Egress Untagged
+lucas@dockertraining:~/docker$
+```
+
+*   The container network interface `veth8ed1dce@if2` is linked to the default bridge `docker0`  
+    `veth8ed1dce@ens18: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 master docker0 state forwarding priority 32 cost 2`
+    
+*   The container network interface `vethfd1da22@if2` is linked to the user defined bridge `br-d6de05107466`  
+    `vethfd1da22@ens18: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 master br-d6de05107466 state forwarding priority 32 cost 2`
+
+Inspecting the user defined bridge
+
+```
+lucas@dockertraining:~/docker$ docker inspect udnet
+[
+   {
+       "Name": "udnet",
+       "Id": "d6de0510746675960cf12a7d03c9aefd8503c3a8bf37dcfd4550e5a2de0bc243",
+       "Created": "2025-04-23T19:51:43.877638947Z",
+       "Scope": "local",
+       "Driver": "bridge",
+       "EnableIPv4": true,
+       "EnableIPv6": false,
+       "IPAM": {
+           "Driver": "default",
+           "Options": {},
+           "Config": [
+               {
+                   "Subnet": "172.18.0.0/16",
+                   "Gateway": "172.18.0.1"
+               }
+           ]
+       },
+       "Internal": false,
+       "Attachable": false,
+       "Ingress": false,
+       "ConfigFrom": {
+           "Network": ""
+       },
+       "ConfigOnly": false,
+       "Containers": {
+           "4cbdfd9a99da47608d460452643ca0cfcb277ff5db509d9f6e0a85d0270841db": {
+               "Name": "secondcontainer",
+               "EndpointID": "f586c7515264cf767e0a29188a7e67eaa60103fc576a98064dd88e3d3513d89f",
+               "MacAddress": "46:19:49:db:e3:88",
+               "IPv4Address": "172.18.0.2/16",
+               "IPv6Address": ""
+           }
+       },
+       "Options": {},
+       "Labels": {}
+   }
+]
+lucas@dockertraining:~/docker$
+```
+
+          </script>
+          <button onclick="toggleNote(this)">More</button>
+        </div>
+      </div>
+
+
+      <div class="note">
+        <h2>05/19/25 - Docker - Networking - Host Bridge</h2>
+        <div class="note-content">
+          <div class="markdown-preview preview"></div>
+          <div class="markdown-full full" style="display:none;"></div>
+          <script type="text/markdown" class="markdown-source">
+
+The host bridge will share the host IP address with the container.
+
+Here is what the host looks like before deploying the container.
+
+```
+lucas@dockertraining:~/docker$ ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+   link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+   inet 127.0.0.1/8 scope host lo
+      valid_lft forever preferred_lft forever
+   inet6 ::1/128 scope host noprefixroute
+      valid_lft forever preferred_lft forever
+2: ens18: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+   link/ether bc:24:11:c4:0d:2a brd ff:ff:ff:ff:ff:ff
+   altname enp0s18
+   inet 192.168.88.23/24 metric 100 brd 192.168.88.255 scope global dynamic ens18
+      valid_lft 491sec preferred_lft 491sec
+   inet6 fe80::be24:11ff:fec4:d2a/64 scope link
+      valid_lft forever preferred_lft forever
+3: docker0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default
+   link/ether c2:af:04:d1:79:a4 brd ff:ff:ff:ff:ff:ff
+   inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
+      valid_lft forever preferred_lft forever
+   inet6 fe80::c0af:4ff:fed1:79a4/64 scope link
+      valid_lft forever preferred_lft forever
+13: br-d6de05107466: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default
+   link/ether b6:71:6b:6d:b6:32 brd ff:ff:ff:ff:ff:ff
+   inet 172.18.0.1/16 brd 172.18.255.255 scope global br-d6de05107466
+      valid_lft forever preferred_lft forever
+   inet6 fe80::b471:6bff:fe6d:b632/64 scope link
+      valid_lft forever preferred_lft forever
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$ bridge link
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$ bridge vlan
+port              vlan-id
+docker0           1 PVID Egress Untagged
+br-d6de05107466   1 PVID Egress Untagged
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$ docker network ls
+NETWORK ID     NAME      DRIVER    SCOPE
+bca8a066750c   bridge    bridge    local
+545eb91fb713   host      host      local
+e7a33442daa2   none      null      local
+d6de05107466   udnet     bridge    local
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$ docker ps
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+lucas@dockertraining:~/docker$
+```
+
+Running the container, with the `--networh host` command
+
+```
+lucas@dockertraining:~/docker$ sudo docker run -dit --network host --name hostcontainer lhp/ubuntu7.0
+[sudo] password for lucas:
+26ff60e04d392dedcda16c1f1570e148d8fa56c89d484be6dce23f50bbeac48a
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$ docker ps
+CONTAINER ID   IMAGE           COMMAND                  CREATED         STATUS         PORTS     NAMES
+26ff60e04d39   lhp/ubuntu7.0   "apache2ctl -DFOREGR…"   3 minutes ago   Up 3 minutes             hostcontainer
+lucas@dockertraining:~/docker$
+```
+
+There is no changes to the networking side on the host.
+
+```
+lucas@dockertraining:~/docker$ ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+   link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+   inet 127.0.0.1/8 scope host lo
+      valid_lft forever preferred_lft forever
+   inet6 ::1/128 scope host noprefixroute
+      valid_lft forever preferred_lft forever
+2: ens18: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+   link/ether bc:24:11:c4:0d:2a brd ff:ff:ff:ff:ff:ff
+   altname enp0s18
+   inet 192.168.88.23/24 metric 100 brd 192.168.88.255 scope global dynamic ens18
+      valid_lft 367sec preferred_lft 367sec
+   inet6 fe80::be24:11ff:fec4:d2a/64 scope link
+      valid_lft forever preferred_lft forever
+3: docker0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default
+   link/ether c2:af:04:d1:79:a4 brd ff:ff:ff:ff:ff:ff
+   inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
+      valid_lft forever preferred_lft forever
+   inet6 fe80::c0af:4ff:fed1:79a4/64 scope link
+      valid_lft forever preferred_lft forever
+13: br-d6de05107466: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default
+   link/ether b6:71:6b:6d:b6:32 brd ff:ff:ff:ff:ff:ff
+   inet 172.18.0.1/16 brd 172.18.255.255 scope global br-d6de05107466
+      valid_lft forever preferred_lft forever
+   inet6 fe80::b471:6bff:fe6d:b632/64 scope link
+      valid_lft forever preferred_lft forever
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$ bridge vlan
+port              vlan-id
+docker0           1 PVID Egress Untagged
+br-d6de05107466   1 PVID Egress Untagged
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$ bridge link
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$ docker network ls
+NETWORK ID     NAME      DRIVER    SCOPE
+bca8a066750c   bridge    bridge    local
+545eb91fb713   host      host      local
+e7a33442daa2   none      null      local
+d6de05107466   udnet     bridge    local
+lucas@dockertraining:~/docker$
+```
+
+If we connect to the container, and check its IP address, we can see it was assigned with the same one as the host.
+
+```
+lucas@dockertraining:~/docker$ docker ps
+CONTAINER ID   IMAGE           COMMAND                  CREATED         STATUS         PORTS     NAMES
+26ff60e04d39   lhp/ubuntu7.0   "apache2ctl -DFOREGR…"   3 minutes ago   Up 3 minutes             hostcontainer
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$ docker exec -it 26ff60e04d39 bash
+root@dockertraining:/# ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+   link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+   inet 127.0.0.1/8 scope host lo
+      valid_lft forever preferred_lft forever
+   inet6 ::1/128 scope host noprefixroute
+      valid_lft forever preferred_lft forever
+2: ens18: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+   link/ether bc:24:11:c4:0d:2a brd ff:ff:ff:ff:ff:ff
+   altname enp0s18
+   inet 192.168.88.23/24 metric 100 brd 192.168.88.255 scope global dynamic ens18
+      valid_lft 470sec preferred_lft 470sec
+   inet6 fe80::be24:11ff:fec4:d2a/64 scope link
+      valid_lft forever preferred_lft forever
+3: docker0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default
+   link/ether c2:af:04:d1:79:a4 brd ff:ff:ff:ff:ff:ff
+   inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
+      valid_lft forever preferred_lft forever
+   inet6 fe80::c0af:4ff:fed1:79a4/64 scope link
+      valid_lft forever preferred_lft forever
+13: br-d6de05107466: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default
+   link/ether b6:71:6b:6d:b6:32 brd ff:ff:ff:ff:ff:ff
+   inet 172.18.0.1/16 brd 172.18.255.255 scope global br-d6de05107466
+      valid_lft forever preferred_lft forever
+   inet6 fe80::b471:6bff:fe6d:b632/64 scope link
+      valid_lft forever preferred_lft forever
+root@dockertraining:/# read escape sequence
+lucas@dockertraining:~/docker$
+```
+
+          </script>
+          <button onclick="toggleNote(this)">More</button>
+        </div>
+      </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- template for markdown note taking
+
+      <div class="note">
+        <h2>05/19/25 - Docker - Networking - Host Bridge</h2>
+        <div class="note-content">
+          <div class="markdown-preview preview"></div>
+          <div class="markdown-full full" style="display:none;"></div>
+          <script type="text/markdown" class="markdown-source">
+
+
+
+          </script>
+          <button onclick="toggleNote(this)">More</button>
+        </div>
+      </div>
+
+-->
+
+
+
+      <!-- Add more notes above-->
+
+
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
+
