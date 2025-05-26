@@ -1344,9 +1344,83 @@ lucas@dockertraining:~/docker$
 
 
 
+      <div class="note">
+        <h2>05/26/25 - Mikrotik - Alerting - New Dynamic DHCP clients</h2>
+        <div class="note-content">
+          <div class="markdown-preview preview"></div>
+          <div class="markdown-full full" style="display:none;"></div>
+          <script type="text/markdown" class="markdown-source">
+
+Mikrotik configuration for email alerting on new DHCP clients.
+
+```
+/tool e-mail
+set address=smtp."youremailprovidersettings".com from="emailaddressaccount" port=587 tls=starttls user="emailaddressaccount"
+# i.e.: set address=smtp.office365.com from=email@outlook.com port=587 tls=starttls user=email@outlook.com
+# The email password must be set on the GUI under tool>e-mail
+
+/system scheduler
+add interval=1h name=CheckNewDHCPclients on-event=CheckNewDHCPclients policy=ftp,reboot,read,write,policy,test,password,sniff,sensitive,romon start-date=jul/07/2021 start-time=07:00:00
+
+/system script
+add dont-require-permissions=yes name=CheckNewDHCPclients owner=mikrotikuser policy=ftp,reboot,read,write,policy,test,password,sniff,sensitive,romon source="
+#This is a reference of zero DHCP clients
+:global dhcphostsreference 0;
+
+#This counts how many DHCP clients there are, and stores the number on \"dhcphosts\"
+:global dhcphosts [ :len [ / ip dhcp-server lease find where dynamic ] ]
+
+#If the DHCP clients count differs from zero, an email will be sent out with a list of all of the DHCP clients, fixed and dynamic.
+:if (\$dhcphosts != dhcphostsreference ) do={ip dhcp-server lease print file= \"disk1/DHCPlog.txt\"; delay delay-time=2; tool e-mail send to=\"destinationemail@gmail.com\" subject=\"There is new DHCP clients\" file=\"disk1/DHCPlog.txt\"}
+
+#sets the \"dhcphosts\" and \"dhcphostsreference\" variables to zero, and deletes txt file
+delay delay-time=3
+:set dhcphostsreference
+:set dhcphosts
+delay delay-time=3
+file remove disk1/DHCPlog.txt
+```
+
+          </script>
+          <button onclick="toggleNote(this)">More</button>
+        </div>
+      </div>
 
 
 
+      <div class="note">
+        <h2>05/26/25 - Mikrotik - Alerting - New version available</h2>
+        <div class="note-content">
+          <div class="markdown-preview preview"></div>
+          <div class="markdown-full full" style="display:none;"></div>
+          <script type="text/markdown" class="markdown-source">
+
+Mikrotik configuration for email alerting on new available version.
+
+```
+/tool e-mail
+set address=smtp."youremailprovidersettings".com from="emailaddressaccount" port=587 tls=starttls user="emailaddressaccount"
+# i.e.: set address=smtp.office365.com from=email@outlook.com port=587 tls=starttls user=email@outlook.com
+# The email password must be set on the GUI under tool>e-mail
+/system scheduler
+add interval=1w name="Email Version Status" on-event=EmailVersionStatus policy=ftp,reboot,read,write,policy,test,password,sniff,sensitive,romon start-date=jun/21/2021 start-time=22:10:00
+/system script
+add dont-require-permissions=no name=EmailVersionStatus owner=mikrotikuser policy=ftp,reboot,read,write,policy,test,password,sniff,sensitive,romon source="
+system package update check-for-updates
+delay delay-time=3
+:global versionstatus do={:put [system package update get status]}
+:if ( [\$versionstatus] != \";System is already up to date\") do={system package update print file= disk1/package.txt; tool e-mail send to=\"destinationemail@gmail.com\" subject=\"Mikrotik new version available\" file=disk1/package.txt} else={system package update print file= disk1/package.txt; tool e-mail send to=\"destinationemail@gmail.com\" subject=\"Mikrotik router is up to date\" file=disk1/package.txt}
+delay delay-time=3
+:set versionstatus
+delay delay-time=3
+file remove disk1/package.txt
+# Using disk1/ as I have a usb stick connected to the router's usb port
+```
+
+          </script>
+          <button onclick="toggleNote(this)">More</button>
+        </div>
+      </div>
 
 
 
