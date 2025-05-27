@@ -1436,7 +1436,7 @@ file remove disk1/package.txt
 
 You will receive the “Access through untrusted domain” error message whenever the NextCloud server IP address changes; lets say it got moved to a different network segment, or even DHCP assigned it a different IP (should have been a reserved IP address in the first place).
 
-![](/images/next_cloud_untrusted_domain.png)
+![](images/next_cloud_untrusted_domain.png)
 
 To address this, go to /var/www/nextcloud/config/config.php, check the values for “trusted.domains” and “overwrite.cli.url”; both will have the previous IP address information.
 Edit the file by changing to the current IP address and save.
