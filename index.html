@@ -1,537 +1,847 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Notes LHP</title>
-  <link rel="stylesheet" href="styles.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LHP Notes</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.2/marked.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-card: #ffffff;
+            --text-primary: #212529;
+            --text-secondary: #6c757d;
+            --border-color: #dee2e6;
+            --accent-color: #ff5e00;
+            --accent-hover: #0056b3;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --code-bg: #f8f9fa;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-card: #21262d;
+            --text-primary: #f0f6fc;
+            --text-secondary: #8b949e;
+            --border-color: #30363d;
+            --accent-color: #58a6ff;
+            --accent-hover: #58a6ff;
+            --shadow: rgba(0, 0, 0, 0.3);
+            --code-bg: #161b22;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            padding: 2rem 0;
+            box-shadow: 0 4px 20px var(--shadow);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .search-container {
+            flex: 1;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 3rem 0.75rem 1rem;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .search-input:focus {
+            outline: none;
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: scale(1.02);
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 0.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: background-color 0.3s ease;
+        }
+
+        .search-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .theme-toggle {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            padding: 0.75rem;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1) rotate(15deg);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .article-card {
+            background-color: var(--bg-card);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 25px var(--shadow);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .article-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-hover));
+        }
+
+        .article-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px var(--shadow);
+        }
+
+        .article-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+            line-height: 1.3;
+        }
+
+        .article-excerpt {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .article-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .article-date {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .read-more {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .read-more:hover {
+            color: var(--accent-hover);
+        }
+
+        .read-more::after {
+            content: "→";
+            transition: transform 0.3s ease;
+        }
+
+        .read-more:hover::after {
+            transform: translateX(3px);
+        }
+
+        .article-content {
+            background-color: var(--bg-card);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: 0 8px 25px var(--shadow);
+            border: 1px solid var(--border-color);
+            display: none;
+        }
+
+        .article-content.active {
+            display: block;
+        }
+
+        .article-content h1,
+        .article-content h2,
+        .article-content h3 {
+            color: var(--text-primary);
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .article-content h1 {
+            font-size: 2rem;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .article-content p {
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .article-content code {
+            background-color: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+        }
+
+        .article-content pre {
+            background-color: var(--code-bg);
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .article-content blockquote {
+            border-left: 4px solid var(--accent-color);
+            padding-left: 1rem;
+            margin: 1rem 0;
+            font-style: italic;
+            color: var(--text-secondary);
+        }
+
+        .back-btn {
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            display: none;
+        }
+
+        .back-btn.active {
+            display: inline-block;
+        }
+
+        .back-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+        }
+
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        .spinner {
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--accent-color);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin-right: 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Advertisement Styles */
+        .ad-banner {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        [data-theme="dark"] .ad-banner {
+            background: linear-gradient(135deg, #21262d, #30363d);
+        }
+
+        .ad-banner:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px var(--shadow);
+            border-color: var(--accent-color);
+        }
+
+        .ad-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .ad-banner:hover::before {
+            left: 100%;
+        }
+
+        .ad-label {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--accent-color);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .ad-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .ad-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .ad-description {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .ad-cta {
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .ad-cta:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .ad-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        /* Sidebar Ad */
+        .sidebar-ad {
+            position: fixed;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 200px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 8px 25px var(--shadow);
+            border: 1px solid var(--border-color);
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-ad:hover {
+            transform: translateY(-50%) scale(1.02);
+        }
+
+        .sidebar-ad .ad-close {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar-ad .ad-close:hover {
+            background: var(--border-color);
+        }
+
+        /* Inline Ad (between articles) */
+        .inline-ad {
+            grid-column: 1 / -1;
+            margin: 1rem 0;
+        }
+
+        /* Header Banner Ad */
+        .header-ad {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            text-align: center;
+        }
+
+        .header-ad .ad-banner {
+            margin: 0;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1400px) {
+            .sidebar-ad {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .ad-banner {
+                padding: 1rem;
+                margin: 1rem 0;
+            }
+            
+            .ad-title {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .search-container {
+                order: 3;
+                max-width: 100%;
+            }
+
+            .articles-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+        }
+    </style>
 </head>
-<body>
-  <div class="container">
-    <h1>Notes LHP</h1>
-
-<div class="theme-toggle">
-  <label>
-    <input type="checkbox" id="themeSwitch" onchange="toggleTheme()" />
-    Dark Mode
-  </label>
-</div>
-
-    <input type="text" id="searchInput" placeholder="Search notes..." onkeyup="searchNotes()" />
-
-    <div id="notes">
-
-      <!-- Example Notes — add as many as you want, only last 5 will show -->
-
-      <!-- Note 1 -->
-      <div class="note">
-        <h2>05/19/25 - Python - Turn Cisco Radio up and down</h2>
-        <div class="note-content">
-          <div class="markdown-preview preview"></div>
-          <div class="markdown-full full" style="display:none;"></div>
-          <script type="text/markdown" class="markdown-source">
-Python script for automating turning Radio up and down on Cisco AP.
-
-
-
-Turn Radio UP
-
-
-```
-# https://stackoverflow.com/questions/48229181/paramiko-exec-command-with-multiple-commands-on-cisco-router-not-providing-any-o
-# https://learningnetwork.cisco.com/s/question/0D56e0000CtFFqeCQG/to-ssh-to-a-cisco-switch-using-python-you-can-use-the-paramiko-library
-import paramiko 
-from time import sleep
-
-hostname = "192.168.88.5" 
-username = "user" 
-password = "password" 
-
-# Create an SSH client instance 
-client = paramiko.SSHClient() 
-client.set_missing_host_key_policy(paramiko.AutoAddPolicy()) 
-
-# Connect to the server 
-client.connect(hostname, username=username, password=password)
-# Execute commands
-################################################################################
-connection = client.invoke_shell()
-connection.send("configure terminal")
-output = connection.recv(65535)
-sleep(1)
-connection.send("\n")
-connection.send("interface dot11Radio 0")
-output = connection.recv(65534)
-sleep(.9)
-connection.send("\n")
-connection.send("no shutdown")
-output = connection.recv(65535)
-sleep(2)
-connection.send("\n")
-################################################################################
-# Close the SSH connection 
-client.close() 
-```
-
-
-Turn Radio down
-
-
-```
-# https://stackoverflow.com/questions/48229181/paramiko-exec-command-with-multiple-commands-on-cisco-router-not-providing-any-o
-# https://learningnetwork.cisco.com/s/question/0D56e0000CtFFqeCQG/to-ssh-to-a-cisco-switch-using-python-you-can-use-the-paramiko-library
-import paramiko 
-from time import sleep
-
-hostname = "192.168.88.5" 
-username = "user" 
-password = "password" 
-
-# Create an SSH client instance 
-client = paramiko.SSHClient() 
-client.set_missing_host_key_policy(paramiko.AutoAddPolicy()) 
-
-# Connect to the server 
-client.connect(hostname, username=username, password=password)
-# Execute commands on the server  
-################################################################################
-connection = client.invoke_shell()
-connection.send("configure terminal")
-output = connection.recv(65535)
-sleep(1)
-connection.send("\n")
-connection.send("interface dot11Radio 0")
-output = connection.recv(65534)
-sleep(.9)
-connection.send("\n")
-connection.send("shutdown")
-output = connection.recv(65535)
-sleep(2)
-connection.send("\n")
-################################################################################
-# Close the SSH connection 
-client.close() 
-```
-
-<!--![Python Logo](data:image/png;base64,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)
--->
-
-          </script>
-          <button onclick="toggleNote(this)">More</button>
+<body data-theme="light">
+    <header class="header">
+        <div class="header-content">
+            <a href="#" class="logo">LHP Notes</a>
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Search articles..." id="searchInput">
+                <button class="search-btn" id="searchBtn">🔍</button>
+            </div>
+            <button class="theme-toggle" id="themeToggle">🌙</button>
         </div>
-      </div>
+    </header>
 
-      <!-- Note 2 -->
-      <div class="note">
-        <h2>05/19/25 - GitHub - Publish web site</h2> 
-          <div class="note-content">
-          <div class="markdown-preview preview"></div>
-          <div class="markdown-full full" style="display:none;"></div>
-          <script type="text/markdown" class="markdown-source">
-How to Publish Online for Free
-
-When you're ready, we can host it using **GitHub Pages** (free hosting). Here’s a quick summary:
-
-1.  Create a GitHub account (if you don’t have one)
-2.  Create a new public repository named `my-tech-notes`
-3.  Upload your three files (`index.html`, `styles.css`, `script.js`)
-4.  Go to the repo settings → “Pages” → set source to `main` branch, root folder
-5.  GitHub will give you a live URL like: `https://yourusername.github.io/my-tech-notes`
-<!--![GitHub Logo](data:image/png;base64,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)
--->
-Hope this helps!
-
-          </script>
-          <button onclick="toggleNote(this)">More</button>
+    <div class="container">
+        <button class="back-btn" id="backBtn">← Back to Articles</button>
+        
+        <div id="articlesContainer" class="articles-grid">
+            <div class="loading">
+                <div class="spinner"></div>
+                Loading articles...
+            </div>
         </div>
-      </div>
 
-      <!-- Note 3 -->
-      <div class="note">
-        <h2>05/19/25 - Python - Run Ubiquity commands</h2>
-        <div class="note-content">
-          <div class="markdown-preview preview"></div>
-          <div class="markdown-full full" style="display:none;"></div>
-          <script type="text/markdown" class="markdown-source">
-Python script to run commands on an Ubiquity AP.
+        <div id="articleContent" class="article-content"></div>
+    </div>
 
-```
-import paramiko 
-
-hostname = "192.168.40.11" 
-username = "user" 
-password = "password" 
-
-# Create an SSH client instance 
-client = paramiko.SSHClient() 
-client.set_missing_host_key_policy(paramiko.AutoAddPolicy()) 
-
-# Connect to the server 
-client.connect(hostname, username=username, password=password) 
-
-# Execute commands on the server 
-stdin, stdout, stderr = client.exec_command("uptime") 
-
-# Print the output of the command 
-print(stdout.read())
-stdin, stdout, stderr = client.exec_command("ls")
-print(stdout.read()) 
-
-# Close the SSH connection 
-client.close() 
-
-```
-
-          </script>
-          <button onclick="toggleNote(this)">More</button>
-        </div>
-      </div>
-
-      <!-- Note 4 -->
-      <div class="note">
-        <h2>05/19/25 - Python - Quick Web sharing</h2>
-        <div class="note-content">
-          <div class="markdown-preview preview"></div>
-          <div class="markdown-full full" style="display:none;"></div>
-          <script type="text/markdown" class="markdown-source">
-Python web sharing.
-
-Run the following command on the directory you wish to share.
-
-The whole Directory files and sub Directories will be shared.
-
-```
-nohup python3 -m http.server &
-```
-          </script>
-          <button onclick="toggleNote(this)">More</button>
-        </div>
-      </div>
-
-      <!-- Note 5 -->
-      <div class="note">
-        <h2>05/19/25 - Trilium - Install</h2>
-        <div class="note-content">
-          <div class="markdown-preview preview"></div>
-          <div class="markdown-full full" style="display:none;"></div>
-          <script type="text/markdown" class="markdown-source">
-How to install the Trillium note taking app.
-
-Github:
-
-*   [https://github.com/TriliumNext/Notes](https://github.com/TriliumNext/Notes)
-
-Trilium install as per [https://triliumnext.github.io/Docs/Wiki/docker-server-installation.html](https://triliumnext.github.io/Docs/Wiki/docker-server-installation.html)
-
-But first, on an Ubuntu Server in this case, install docker [https://docs.docker.com/engine/install/ubuntu/](https://docs.docker.com/engine/install/ubuntu/)
-
-Uninstall previous conflicting packages, if any.
-
-```
-for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt remove $pkg; done
-```
-
-Install using apt.
-
-```
-# Add Docker's official GPG key:
-sudo apt-get update
-sudo apt-get install ca-certificates curl # Installing ca-certificates and curl
-sudo install -m 0755 -d /etc/apt/keyrings # Setting keyrings that the repository for Docker will be using
-sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc # Finish setting up keyrings
-sudo chmod a+r /etc/apt/keyrings/docker.asc
-# Add the repository to Apt sources:
-echo \
- "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
- $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
- sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-sudo apt-get update
-```
-
-Install docker packages and then verify they have been successfully installed.
-
-```
-sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-```
-
-```
-sudo docker run hello-world
-```
-
-Now, going back to the Trilium install [https://triliumnext.github.io/Docs/Wiki/docker-server-installation.html](https://triliumnext.github.io/Docs/Wiki/docker-server-installation.html)
-
-Download the latest docker-compose.yml.
-
-```
-wget https://raw.githubusercontent.com/TriliumNext/Notes/master/docker-compose.yml
-```
-
-This is what the yaml file looks like.
-
-![](api/attachments/M5ryL1pynvxj/image/image.png)
-
-(_In the event port 8080 is already being used on your host, you can change it on the file by modifying the left value, and leaving the one on the right as is_)
-
-Then, start the container.
-
-```
-sudo docker compose up -d
-```
-
-Confirm that Trilium is up; and its details.
-
-```
-sudo docker ps
-sudo docker inspect [container_name]
-```
-
-Load Trilium by navigating to http://hostIP:8080 (_replace 8080 for the port on your yaml file_)
-
-          </script>
-          <button onclick="toggleNote(this)">More</button>
-        </div>
-      </div>
+    <script>
+        //////////////////////////////////////////////////// START of Advertisements ////////////////////////////////////////////////////////////
+        const advertisementsData = [
+            //{
+            //    id: 1,
+            //    type: 'banner',
+            //    title: 'Master Web Development#1',
+            //    description: 'Learn modern web development with our comprehensive course. From HTML to React, become a full-stack developer in 12 weeks.',
+            //    cta: 'Start Learning',
+            //    url: 'https://example.com/web-dev-course',
+            //    image: null,
+            //    placement: ['header'],
+            //    active: true,
+            //   impressions: 0,
+            //    clicks: 0
+            //},
+            {
+                id: 3,
+                type: 'sidebar',
+                title: 'VS Code Extensions',
+                description: 'Boost your productivity with the best VS Code extensions for developers.',
+                cta: 'Download Now',
+                url: 'https://example.com/vscode-extensions',
+                image: null,
+                placement: ['sidebar'],
+                active: true,
+                impressions: 0,
+                clicks: 0
+            },
+            //{
+            //    id: 4,
+            //    type: 'banner',
+            //    title: 'Cloud Hosting Solutions',
+            //    description: 'Deploy your applications with confidence. Fast, reliable, and scalable cloud hosting starting at $5/month.',
+            //    cta: 'Get Started',
+            //    url: 'https://example.com/cloud-hosting',
+            //    image: null,
+            //    placement: ['footer'],
+            //    active: true,
+            //    impressions: 0,
+            //    clicks: 0
+            //},
+            {
+                id: 6,
+                type: 'sidebar',
+                title: 'Developer Tools',
+                description: 'Essential tools every developer needs. Increase your productivity today!',
+                cta: 'Explore Tools',
+                url: 'https://example.com/dev-tools',
+                image: null,
+                placement: ['sidebar'],
+                active: true,
+                impressions: 0,
+                clicks: 0
+            }
+        ];        
+        const articlesData = [
 
 
+        
+            //////////////////////////////////////////////////// TEMPLATE ////////////////////////////////////////////////////////////
+        {
+                id: 1,
+                title: "Next note",
+                excerpt: "More notes to come...",
+                date: "01-01-2045",
+                content: `# Next note
+\`\`\`
+More notes to come...
+\`\`\`
 
+<video width="100%" height="auto" controls autoplay muted loop>
+    <source src="images/rhinos_video.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
+            `},
+            //////////////////////////////////////////////////// TEMPLATE ////////////////////////////////////////////////////////////
+            {
+                id: 18,
+                title: "Security - Wifi audit - airmon-ng - dictionary attack",
+                excerpt: "Audit YOUR Wifi network with Linux.",
+                date: "09-19-2025",
+                content: `# Security - Wifi audit - airmon-ng - dictionary attack
 
-      <!-- Add more notes below... -->
+Using airmon-ng and its related tools to audit your own wifi network
 
+Provided you already have the tool installed (https://www.aircrack-ng.org/).
 
+Look for your system wireless interface with "ip a" or "ifconfig".
 
+Remove any conflicting running processes.
+\`\`\`
+sudo airmon-ng check kill
+\`\`\`
 
+Turn the wifi interface in monitor mode.
+\`\`\`
+sudo airmon-ng start wlp2s0
+\`\`\`
 
+Start scanning for all available SSIDs.
 
+Find your wifi SSID and channel.
+\`\`\`
+sudo airodump-ng wlp2s0
+\`\`\`
 
-      <div class="note">
-        <h2>05/19/25 - Docker - Install</h2>
-        <div class="note-content">
-          <div class="markdown-preview preview"></div>
-          <div class="markdown-full full" style="display:none;"></div>
-          <script type="text/markdown" class="markdown-source">
-On an Ubuntu Server in this case, install docker [https://docs.docker.com/engine/install/ubuntu/](https://docs.docker.com/engine/install/ubuntu/)
+Capture your wifi traffic; specify BSSID, channel, output file and monitoring interface.
 
-Uninstall previous conflicting packages, if any.
+Obtain associated stations.
+\`\`\`
+sudo airodump-ng -c 6 --bssid 12:34:56:AB:CD:AG -w audit wlp2s0
+\`\`\`
 
-```
-for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt remove $pkg; done
-```
+Perform a deauth attack against that station found above.
 
-Install using apt.
+Run the command below 5 times to gather authentication attempts from the station.
+\`\`\`
+sudo aireplay-ng -0 3 -a 12:34:56:AB:CD:AG -c 66:77:88:DD:AA:BB  wlp2s0  --ignore-negative-one
+\`\`\`
 
-```
-# Add Docker's official GPG key:
-sudo apt-get update
-sudo apt-get install ca-certificates curl # Installing ca-certificates and curl
-sudo install -m 0755 -d /etc/apt/keyrings # Setting keyrings that the repository for Docker will be using
-sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc # Finish setting up keyrings
-sudo chmod a+r /etc/apt/keyrings/docker.asc
-# Add the repository to Apt sources:
-echo \
- "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
- $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
- sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-sudo apt-get update
-```
-
-Install docker packages and then verify they have been successfully installed.
-
-```
-sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-```
-
-```
-sudo docker run hello-world
-```
-
-          </script>
-          <button onclick="toggleNote(this)">More</button>
-        </div>
-      </div>
-
-
-
-
-      <div class="note">
-        <h2>05/19/25 - Docker - Commands</h2>
-        <div class="note-content">
-          <div class="markdown-preview preview"></div>
-          <div class="markdown-full full" style="display:none;"></div>
-          <script type="text/markdown" class="markdown-source">
+Run aircrack-ng against the .pcap file obteined above.
+\`\`\`
+sudo aircrack-ng -b 12:34:56:AB:CD:AG -w rockyou.txt audit.cap
+\`\`\`
+            `},
+            {
+                id: 17,
+                title: "Docker - Commands",
+                excerpt: "Docker - Commands",
+                date: "09-18-2025",
+                content: `# Docker - Commands
 
 Check docker service status
-
-```
+\`\`\`
 systemctl status docker
-```
+\`\`\`
 
 List running containers
-
-```
+\`\`\`
 sudo docker ps
-```
+\`\`\`
 
 List also stopped containers
-
-```
+\`\`\`
 sudo docker ps -a
-```
+\`\`\`
 
 Show container details
-
-```
+\`\`\`
 sudo docker inspect “CONTAINER ID”
-```
+\`\`\`
 
- Show container logs
-
-```
+Show container logs
+\`\`\`
 sudo docker logs “CONTAINER ID”
-```
+\`\`\`
 
- Watch container logs
-
-```
+Watch container logs
+\`\`\`
 sudo watch docker logs “CONTAINER ID”
-```
+\`\`\`
 
- Test docker installation by downloading and running the “hello-world” container
-
-```
+Test docker installation by downloading and running the “hello-world” container
+\`\`\`
 sudo docker run hello-world
-```
+\`\`\`
 
 Check for existing docker images
-
-```
+\`\`\`
 sudo docker images
-```
+\`\`\`
 
 Search for available docker images; i.e. nginx
-
-```
+\`\`\`
 sudo docker search nginx
-```
+\`\`\`
 
 Download a docker image, without installing it
-
-```
+\`\`\`
 sudo docker pull nginx
-```
+\`\`\`
 
 Add login user to the docker group, to avoid running “sudo” for every command
-
-```
+\`\`\`
 sudo usermod -aG docker lucas
-```
+\`\`\`
 
 Connecting to the container
 
-Run a container, ubuntu in this case, and access its CLI.  
+Run a container, ubuntu in this case, and access its CLI.
 (i stands for interactive - t stands for terminal - /bin/bash indicates where we want to be placed on when the container starts)
 
-```
+\`\`\`
 sudo docker run -it ubuntu /bin/bash
-```
+\`\`\`
 
-Run the container as a daemon, thus allowing us to stay on the terminal without terminating the container.  
+Run the container as a daemon, thus allowing us to stay on the terminal without terminating the container.
 (d sends the container to the background, it will detach it)
-
-```
+\`\`\`
 sudo docker run -it -d ubuntu
-```
+\`\`\`
 
 With the container running in the background, to connect to it, check its “CONTAINER ID”, and then “attach” to it
-
-```
+\`\`\`
 sudo docker ps
 sudo docker attach “CONTAINER ID”
-```
+\`\`\`
 
 If we exit from the container after we attached to it, it will terminate it; in order to exit the container command line, and avoid terminating the instance, do CTRL+P+Q.
 
 To start a container, and keep it from ending.
-
-```
+\`\`\`
 sudo docker run -it -d --restart unless-stopped ubuntu
-```
+\`\`\`
 
 Specify a port, for a web server for example
-
-```
+\`\`\`
 sudo docker run -it -d --restart unless-stopped -p 8080:80 nginx
-```
+\`\`\`
 
 Creating a container
 
 Will create a container with apache2 installed
-
-```
+\`\`\`
 sudo docker run -it -d ubuntu
 sudo docker attach “CONTAINER ID”
-```
+\`\`\`
 
 While connected to the container, update the OS and install apache2
-
-```
+\`\`\`
 apt update
 apt upgrade
 apt install apache2
-```
+\`\`\`
 
 Check the service status and start if not running
-
-```
+\`\`\`
 service apache2 status
 service apache2 start
-```
+\`\`\`
 
 Run this command to create a container image
-
-```
+\`\`\`
 sudo docker commit “CONTAINER ID” lhp/ubuntu:1.0
-```
+\`\`\`
 
 Check the image just created.
-
-```
+\`\`\`
 $ sudo docker images
 REPOSITORY      TAG       IMAGE ID       CREATED         SIZE
 lhp/ubuntu1.0   latest    4108547976a3   3 minutes ago   240MB
 nginx           latest    4e1b6bae1e48   6 days ago      192MB
 ubuntu          latest    602eb6fb314b   2 weeks ago     78.1MB
 hello-world     latest    74cc54e27dc4   3 months ago    10.1kB
-```
+\`\`\`
 
 Create a container instance from the self created image
-
-```
+\`\`\`
 sudo docker run -it -d -p 8080:80 lhp/ubuntu1.0
-```
+\`\`\`
 
 The container gets created.
-
-```
+\`\`\`
 $ sudo docker ps
 CONTAINER ID   IMAGE           COMMAND       CREATED              STATUS              PORTS                                     NAMES
 b884eff5a00b   lhp/ubuntu1.0   "/bin/bash"   About a minute ago   Up About a minute   0.0.0.0:8080->80/tcp, [::]:8080->80/tcp   friendly_lumiere
+\`\`\`
 
-```
-
-Now, going to the `hostIP:8080` will not bring the apache welcome page.  
+Now, going to the hostIP:8080 will not bring the apache welcome page.
 If we check on the container, apache2 will not be running, it will need to be started manually.
-
-```
+\`\`\`
 # service apache2 status
 * apache2 is not running
 # service apache2 start
 * Starting Apache httpd web server apache2                                                                          AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 172.17.0.2. Set the 'ServerName' directive globally to suppress this message
 *
-```
+\`\`\`
 
 If we want to have an image where apache is running as soon as the container starts, we can modify and create a new image as follows.
-
-```
+\`\`\`
 $ sudo docker commit --change='ENTRYPOINT ["apachectl", "-DFOREGROUND"]' b884eff5a00b lhp/ubuntu1.1
 sha256:e12fd95e9f847bff41891314c87cd96430c248ba97b76ab1f35a0ab54374777e
 $ sudo docker images
@@ -541,30 +851,24 @@ lhp/ubuntu1.0   latest    4108547976a3   23 minutes ago   240MB
 nginx           latest    4e1b6bae1e48   6 days ago       192MB
 ubuntu          latest    602eb6fb314b   2 weeks ago      78.1MB
 hello-world     latest    74cc54e27dc4   3 months ago     10.1kB
-```
+\`\`\`
 
 To test the new image, stop the previous container, and start a new one with the new image.
-
-```
+\`\`\`
 sudo docker run -it -d -p 8080:80 lhp/ubuntu1.1
 7ea2222d8e36d15fade661dde602ea8e2a5813336ccad50e6eb4f8c0c7440719
 sudo docker ps
 CONTAINER ID   IMAGE           COMMAND                  CREATED          STATUS          PORTS                                     NAMES
 7ea2222d8e36   lhp/ubuntu1.1   "apachectl -DFOREGRO…"   49 seconds ago   Up 48 seconds   0.0.0.0:8080->80/tcp, [::]:8080->80/tcp   amazing_elgamal
-
-```
+\`\`\`
 
 Automating the container creation process further.
 
 On a known destination path, create a “Dockerfile”
-
-```
+\`\`\`
 $ pwd
 /home/lucas/docker
 $ nano Dockerfile
-```
-
-```
 FROM ubuntu
 MAINTAINER lhp <lhp@email.com>
 # Skip prompts if presented during deploy
@@ -575,12 +879,11 @@ RUN apt update; apt upgrade -y
 RUN apt install -y apache2 nano
 # Set entrypoint
 ENTRYPOINT apache2ctl -D FOREGROUND
-```
+\`\`\`
 
-Now build the image by using the configuration file.  
+Now build the image by using the configuration file.
 (When specifying the Dockerfile path, just make sure you are at the file location, and just use the dot (.) expression for current directory; entering the full path keeps giving me an error)
-
-```
+\`\`\`
 lucas@dockertraining:~/docker$ pwd
 /home/lucas/docker
 lucas@dockertraining:~/docker$ ls
@@ -621,21 +924,19 @@ nginx           latest    4e1b6bae1e48   6 days ago          192MB
 ubuntu          latest    602eb6fb314b   2 weeks ago         78.1MB
 hello-world     latest    74cc54e27dc4   3 months ago        10.1kB
 lucas@dockertraining:~/docker$
-```
+\`\`\`
 
 Even though, the image got created, there were two warnings listed.
-
-```
+\`\`\`
 - JSONArgsRecommended: JSON arguments recommended for ENTRYPOINT to prevent unintended behavior related to OS signals (line 14)
 # This one was address at https://docs.docker.com/reference/build-checks/json-args-recommended/
 
 - MaintainerDeprecated: Maintainer instruction is deprecated in favor of using label (line 2)
 # This one was addressed at https://docs.docker.com/reference/build-checks/maintainer-deprecated/
-```
+\`\`\`
 
 With those two corrections in place, remove any previous images.
-
-```
+\`\`\`
 lucas@dockertraining:~/docker$ sudo docker images
 REPOSITORY      TAG       IMAGE ID       CREATED             SIZE
 lhp/ubuntu1.2   latest    e20f942af714   36 minutes ago      242MB
@@ -675,11 +976,10 @@ nginx         latest    4e1b6bae1e48   6 days ago       192MB
 ubuntu        latest    602eb6fb314b   2 weeks ago      78.1MB
 hello-world   latest    74cc54e27dc4   3 months ago     10.1kB
 lucas@dockertraining:~/docker$
-```
+\`\`\`
 
 Lets create a new image from the Dockerfile configuration file below.
-
-```
+\`\`\`
 FROM ubuntu
 LABEL lhp.net.ar="lhp@email.com"
 # Skip prompts if presented during deploy
@@ -690,9 +990,6 @@ RUN apt update; apt upgrade -y
 RUN apt install -y apache2 nano
 # Set entrypoint
 ENTRYPOINT ["apache2ctl","-DFOREGROUND"]
-```
-
-```
 lucas@dockertraining:~/docker$ docker build -t lhp/ubuntu5.1 .
 [+] Building 1.2s (7/7) FINISHED                                                                      docker:default
  => [internal] load build definition from Dockerfile                                                            0.1s
@@ -714,780 +1011,1379 @@ nginx           latest    4e1b6bae1e48   6 days ago          192MB
 ubuntu          latest    602eb6fb314b   2 weeks ago         78.1MB
 hello-world     latest    74cc54e27dc4   3 months ago        10.1kB
 lucas@dockertraining:~/docker$
-```
+\`\`\`
 
 Now, lets run a new container from the newly created image.
-
-```
+\`\`\`
 lucas@dockertraining:~/docker$ sudo docker run -it -d -p 8080:80 lhp/ubuntu5.1
 60c1644a9ffd96bea558a540d08c997d3b43704e96eda6ed0741949b524ac05b
 lucas@dockertraining:~/docker$ sudo docker ps
 CONTAINER ID   IMAGE           COMMAND                  CREATED         STATUS         PORTS                                     NAMES
 60c1644a9ffd   lhp/ubuntu5.1   "apache2ctl -DFOREGR…"   9 seconds ago   Up 8 seconds   0.0.0.0:8080->80/tcp, [::]:8080->80/tcp   thirsty_cerf
 lucas@dockertraining:~/docker$
-```
+\`\`\`
 
-If we go to `hostIP:8080`, the apache default web page will display without us having to do further configurations.
+If we go to hostIP:8080, the apache default web page will display without us having to do further configurations.
 
-![](api/attachments/qPdhQlcFXzYB/image/image.png)
+
 
 To connect to the container instance. And CTRL+P+Q to exit without shutting down the container.
-
-```
+\`\`\`
 sudo docker exec -ti “CONTAINER ID” bash
-```
+\`\`\`
 
-          </script>
-          <button onclick="toggleNote(this)">More</button>
-        </div>
-      </div>
+            `},
+            {
+                id: 16,
+                title: "Docker - Installation on Ubuntu",
+                excerpt: "Quick guide on Docker on install",
+                date: "09-18-2025",
+                content: `# Docker - Installation on Ubuntu
+
+On an Ubuntu Server in this case, install docker https://docs.docker.com/engine/install/ubuntu/
+
+Uninstall previous conflicting packages, if any.
+\`\`\`
+for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt remove $pkg; done
+\`\`\`
+Install using apt.
+
+\`\`\`
+# Add Docker's official GPG key:
+sudo apt-get update
+sudo apt-get install ca-certificates curl # Installing ca-certificates and curl
+sudo install -m 0755 -d /etc/apt/keyrings # Setting keyrings that the repository for Docker will be using
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc # Finish setting up keyrings
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+# Add the repository to Apt sources:
+echo \\
+"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \\
+$(. /etc/os-release && echo "\{UBUNTU_CODENAME:-$VERSION_CODENAME\}") stable" | \\
+sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+\`\`\`
+
+Install docker packages and then verify they have been successfully installed.
+
+\`\`\`
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+\`\`\`
+\`\`\`
+sudo docker run hello-world
+\`\`\`
+
+            `},
+            {
+                id: 15,
+                title: "Windsurf Code Editor - Connect to remote server via ssh",
+                excerpt: "In this case, we are configuring Windsurf to connect to a remote Linux server, with a catch...",
+                date: "09-18-2025",
+                content: `# Windsurf Code Editor - Connect to remote server via ssh
+
+We need to edit the index.html file of a remote Linux Server, so the Windsurf ssh remote access feature is needed; in this case however, just connecting via ssh comes with an extra step.
+
+When connecting through ssh, we need to proceed as follows to indicate the mac_spec.
+
+\`\`\`
+ssh -m hmac-sha2-512 lucas@192.168.88.32
+\`\`\`
+
+In order to provide with the server specific details, we will be editing the C:\\Users\\lucas\\.ssh\\config file.
+We'll add Host, HostName and User, and will edit the MACs line by specifying "hmac-sha2-512".
+
+\`\`\`
+Host fedoraserver
+HostName 192.168.88.32
+User lucas
+#HostKeyAlgorithms = hmac-sha2-512
+#PubkeyAcceptedAlgorithms = hmac-sha2-512
+#KexAlgorithms +diffie-hellman-group1-sha1
+#KexAlgorithms +diffie-hellman-group14-sha1
+#Ciphers aes128-ctr,aes192-ctr,aes256-ctr,aes128-cbc,3des-cbc
+#MACs +hmac-sha1-96
+MACs hmac-sha2-512
+\`\`\`
+
+The new connection should be available on the bottom left of the screen.
+
+![](images/windsurfssh1.png)
+
+The "Connect to SSH Host" option opens.
+
+![](images/windsurfssh2.png)
+
+Select the newly created connection and enter the password when prompted.
+
+![](images/windsurfssh3.png)
+
+            `},
+            {
+                id: 14,
+                title: "SSH - ssh error 'ssh_dispatch_run_fatal - message authentication code incorrect'",
+                excerpt: "How to ssh into a remote server, when we receive the 'ssh_dispatch_run_fatal - message authentication code incorrect' error",
+                date: "09-18-2025",
+                content: `# SSH - ssh error 'ssh_dispatch_run_fatal - message authentication code incorrect'
+
+This is an issue I encountered when trying to connect to a new Fedora Server install.
+The client receives the error
+\`\`\`
+ssh_dispatch_run_fatal: Connection to 192.168.88.32 port 22: message authentication code incorrect
+\`\`\`
+
+On the server side, under /var/log/secure or /var/log/auth.log, we can see:
+\`\`\`
+Sep 18 19:29:04 fedoraserver sshd-session[28325]: Corrupted MAC on input. [preauth]
+Sep 18 19:29:04 fedoraserver sshd-session[28325]: ssh_dispatch_run_fatal: Connection from 192.168.88.254 port 1643: message authentication code incorrect [preauth]
+\`\`\`
+
+A way to overcome this is to specify the MAC Algorithm; if using Windows OpenSSH or encountering issues with specific server configurations, explicitly define a compatible MAC algorithm in your SSH command or configuration file.
+
+\`\`\`
+ssh -m hmac-sha2-512 lucas@192.168.88.32   
+\`\`\`
+
+#ssh #ssh_dispatch_run_fatal #authentication
+
+            `},
+            {
+                id: 13,
+                title: "Ubuntu Linux - Print Server",
+                excerpt: "How to set up a print server on Ubuntu Linux",
+                date: "09-14-2025",
+                content: `# Ubuntu Linux - Print Server
+
+How to set up a print server on Ubuntu Linux
 
 
+_ Update repository and install updates
+\`\`\`
+sudo apt update
+sudo apt upgrade
+\`\`\`
 
-      <div class="note">
-        <h2>05/19/25 - Docker - Mount Volumes</h2>
-        <div class="note-content">
-          <div class="markdown-preview preview"></div>
-          <div class="markdown-full full" style="display:none;"></div>
-          <script type="text/markdown" class="markdown-source">
+_ Install the samba service
+\`\`\`
+sudo apt install samba
+\`\`\`
 
-Mount types:
-
-*   Volumes - Persistent
-*   Bind-mounts - Persistent
-*   Temp mounts - Non-persistent
-
-<div class="joplin-table-wrapper"><table><tbody><tr><td style="text-align:left;" colspan="2">Persistent</td></tr><tr><td style="vertical-align:top;"><p><u>Volumes</u></p><ul><li>Newer</li><li>More features</li><li>Managed by Docker daemon only, not the host</li></ul><p><u>Syntax</u>:</p><ul><li>-v mydata:/path/in/container<br>or</li><li>--mount mydata:/path/in/container</li></ul></td><td><p><u>Bind-mounts</u></p><ul><li>Older</li><li>Less features</li><li>Mounts a host file/directory into the container</li></ul><p><u>Syntax</u></p><ul><li>-v ./mydata:/path/in/container</li><li>-v /mydata:/path/in/container<br>or</li><li>--mount&nbsp;</li></ul><p><u>To share from host to container with read only access:</u></p><ul><li>-v ./mydata:/path/in/container:ro</li></ul></td></tr><tr><td><p>Volumes on the host will only be available by the container, the host will have no access to what the container sees.</p><pre><code class="language-text-x-trilium-auto">sudo docker run -v dockermount:/dockermount -dit -p 8080:80 lhp/ubuntu6.5</code></pre></td><td><p>Bind mounts will make the host resources accessible by both the container and the host</p><pre><code class="language-text-x-trilium-auto">sudo docker run -v ./dockermount:/dockermount -dit -p 8080:80 lhp/ubuntu6.5</code></pre></td></tr></tbody></table></div>
-
-          </script>
-          <button onclick="toggleNote(this)">More</button>
-        </div>
-      </div>
+_ Edit smb.conf
+\`\`\`
+sudo cp /etc/samba/smb.conf /etc/samba/smb.conf.old
+sudo nano /etc/samba/smb.conf
 
 
+###########################################
 
-      <div class="note">
-        <h2>05/19/25 - Docker - Networking - Default Bridge</h2>
-        <div class="note-content">
-          <div class="markdown-preview preview"></div>
-          <div class="markdown-full full" style="display:none;"></div>
-          <script type="text/markdown" class="markdown-source">
+# Change this to the workgroup/NT-domain name your Samba server will part of
+   workgroup = WORKGROUP
+   security = user                      # Add this line
+   
+[printers]
+   comment = All Printers
+   browseable = yes                   # Set to yes
+   path = /var/tmp
+   printable = yes
+   guest ok = yes                       # Set to yes
+   read only = yes
+   create mask = 0700
+\`\`\`
 
-Default Bridge
+_ Restart the samba service
+\`\`\`
+systemctl restart smbd.service nmbd.service
+\`\`\`
 
-On a fresh docker install, lets check what the networking settings look like:
+_ Install the CUPS service
+\`\`\`
+sudo apt install -y cups
+\`\`\`
 
-```
-lucas@dockertraining:~/docker$ docker ps
-CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$ docker ps -a
-CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$ ip a
-1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
-   link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-   inet 127.0.0.1/8 scope host lo
-      valid_lft forever preferred_lft forever
-   inet6 ::1/128 scope host noprefixroute
-      valid_lft forever preferred_lft forever
-2: ens18: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
-   link/ether bc:24:11:c4:0d:2a brd ff:ff:ff:ff:ff:ff
-   altname enp0s18
-   inet 192.168.88.23/24 metric 100 brd 192.168.88.255 scope global dynamic ens18
-      valid_lft 471sec preferred_lft 471sec
-   inet6 fe80::be24:11ff:fec4:d2a/64 scope link
-      valid_lft forever preferred_lft forever
-3: docker0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default
-   link/ether c2:af:04:d1:79:a4 brd ff:ff:ff:ff:ff:ff
-   inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
-      valid_lft forever preferred_lft forever
-   inet6 fe80::c0af:4ff:fed1:79a4/64 scope link
-      valid_lft forever preferred_lft forever
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$ bridge vlan
-port              vlan-id
-docker0           1 PVID Egress Untagged
-lucas@dockertraining:~/docker$ bridge link
-lucas@dockertraining:~/docker$
+_ Edit cupsd.conf
+\`\`\`
+sudo cp /etc/cups/cupsd.conf /etc/cups/cupsd.conf.old
+sudo nano /etc/cups/cupsd.conf
 
-```
+###########################################
 
-There is the docker bridge, and nothing else.
-
-Lets now run a new container.  
-This will be an Ubuntu image, with apache installed.
-
-```
-lucas@dockertraining:~/docker$ sudo docker run -dit -p 8080:80 lhp/ubuntu6.5
-[sudo] password for lucas:
-5ae93725a7827e38345e2aab72c2b7268fb0ec1ab11273b0ae466baaef2ba9f8
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$ docker ps
-CONTAINER ID   IMAGE           COMMAND                  CREATED         STATUS         PORTS                                     NAMES
-5ae93725a782   lhp/ubuntu6.5   "apache2ctl -DFOREGR…"   8 seconds ago   Up 7 seconds   0.0.0.0:8080->80/tcp, [::]:8080->80/tcp   recursing_napier
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$ ip a
-1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
-   link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-   inet 127.0.0.1/8 scope host lo
-      valid_lft forever preferred_lft forever
-   inet6 ::1/128 scope host noprefixroute
-      valid_lft forever preferred_lft forever
-2: ens18: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
-   link/ether bc:24:11:c4:0d:2a brd ff:ff:ff:ff:ff:ff
-   altname enp0s18
-   inet 192.168.88.23/24 metric 100 brd 192.168.88.255 scope global dynamic ens18
-      valid_lft 377sec preferred_lft 377sec
-   inet6 fe80::be24:11ff:fec4:d2a/64 scope link
-      valid_lft forever preferred_lft forever
-3: docker0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default
-   link/ether c2:af:04:d1:79:a4 brd ff:ff:ff:ff:ff:ff
-   inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
-      valid_lft forever preferred_lft forever
-   inet6 fe80::c0af:4ff:fed1:79a4/64 scope link
-      valid_lft forever preferred_lft forever
-10: veth8f09ff7@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master docker0 state UP group default
-   link/ether 86:9b:a2:72:9f:e8 brd ff:ff:ff:ff:ff:ff link-netnsid 0
-   inet6 fe80::849b:a2ff:fe72:9fe8/64 scope link
-      valid_lft forever preferred_lft forever
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$ bridge vlan
-port              vlan-id
-docker0           1 PVID Egress Untagged
-veth8f09ff7       1 PVID Egress Untagged
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$ bridge link
-10: veth8f09ff7@ens18: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 master docker0 state forwarding priority 32 cost 2
-lucas@dockertraining:~/docker$
-```
-
-The default bridge networking provides the newly created container with an IP within the default bridge network range 172.17.0.0/16.  
-The new interface `veth8f09ff7@if2` is assigned to the container.  
-This will be an isolated default network, where the only option to reach the container, is as long as we made it explicit at the run time; we did so in this case with the “-p 8080:80”, where 8080 is the host port, and 80 the container's.
-
-The container network interface `veth8f09ff7@if2` is linked to the default bridge `docker0`  
-`veth8ed1dce@ens18: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 master docker0 state forwarding priority 32 cost 2`
-
-Lets inspect the default bridge
-
-```
-lucas@dockertraining:~/docker$ docker inspect bridge
-[
-   {
-       "Name": "bridge",
-       "Id": "bca8a066750c0f06365124b0204645af04128cb72a5bfd82fc58b06faab05797",
-       "Created": "2025-04-23T12:48:06.482736782Z",
-       "Scope": "local",
-       "Driver": "bridge",
-       "EnableIPv4": true,
-       "EnableIPv6": false,
-       "IPAM": {
-           "Driver": "default",
-           "Options": null,
-           "Config": [
-               {
-                   "Subnet": "172.17.0.0/16",
-                   "Gateway": "172.17.0.1"
-               }
-           ]
-       },
-       "Internal": false,
-       "Attachable": false,
-       "Ingress": false,
-       "ConfigFrom": {
-           "Network": ""
-       },
-       "ConfigOnly": false,
-       "Containers": {
-           "b89a1b9a617c485c57d6fdc6a05453629f981b571a9f30b372fd7aa14ce654c7": {
-               "Name": "gracious_swanson",
-               "EndpointID": "1271677bf7ffa3823d6b2b8c3bc93daf5103c41fd61f1c1b6e9373b1f4affc91",
-               "MacAddress": "52:79:f3:b3:f0:42",
-               "IPv4Address": "172.17.0.2/16",
-               "IPv6Address": ""
-           }
-       },
-       "Options": {
-           "com.docker.network.bridge.default_bridge": "true",
-           "com.docker.network.bridge.enable_icc": "true",
-           "com.docker.network.bridge.enable_ip_masquerade": "true",
-           "com.docker.network.bridge.host_binding_ipv4": "0.0.0.0",
-           "com.docker.network.bridge.name": "docker0",
-           "com.docker.network.driver.mtu": "1500"
-       },
-       "Labels": {}
-   }
-]
-lucas@dockertraining:~/docker$
-```
-
-          </script>
-          <button onclick="toggleNote(this)">More</button>
-        </div>
-      </div>
+# Only listen for connections from the local machine.
+#Listen localhost:631                   # Comment
+Port 631                                      # Add "Port 631"
+Listen /run/cups/cups.sock
 
 
 
-      <div class="note">
-        <h2>05/19/25 - Docker - Networking - User-defined Bridge</h2>
-        <div class="note-content">
-          <div class="markdown-preview preview"></div>
-          <div class="markdown-full full" style="display:none;"></div>
-          <script type="text/markdown" class="markdown-source">
+# Restrict access to the server...
+<Location />
+  Order allow,deny
+  Allow all                                    # Add
+</Location>
 
-When you create a container, and no network is explicitly defined, it will be assigned to the default Bridge network segment; we are starting with such scenario.
+# Restrict access to the admin pages...
+<Location /admin>
+  AuthType Default
+  Require user @SYSTEM
+  Order allow,deny
+  Allow all                                    # Add
+</Location>
 
-```
-lucas@dockertraining:~/docker$ ip a
-1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
-   link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-   inet 127.0.0.1/8 scope host lo
-      valid_lft forever preferred_lft forever
-   inet6 ::1/128 scope host noprefixroute
-      valid_lft forever preferred_lft forever
-2: ens18: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
-   link/ether bc:24:11:c4:0d:2a brd ff:ff:ff:ff:ff:ff
-   altname enp0s18
-   inet 192.168.88.23/24 metric 100 brd 192.168.88.255 scope global dynamic ens18
-      valid_lft 544sec preferred_lft 544sec
-   inet6 fe80::be24:11ff:fec4:d2a/64 scope link
-      valid_lft forever preferred_lft forever
-3: docker0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default
-   link/ether c2:af:04:d1:79:a4 brd ff:ff:ff:ff:ff:ff
-   inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
-      valid_lft forever preferred_lft forever
-   inet6 fe80::c0af:4ff:fed1:79a4/64 scope link
-      valid_lft forever preferred_lft forever
-12: veth8ed1dce@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master docker0 state UP group default
-   link/ether 62:8d:7b:c3:65:1d brd ff:ff:ff:ff:ff:ff link-netnsid 0
-   inet6 fe80::608d:7bff:fec3:651d/64 scope link
-      valid_lft forever preferred_lft forever
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$ bridge vlan
-port              vlan-id
-docker0           1 PVID Egress Untagged
-veth8ed1dce       1 PVID Egress Untagged
-lucas@dockertraining:~/docker$ bridge link
-12: veth8ed1dce@ens18: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 master docker0 state forwarding priority 32 cost 2
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$ docker ps
-CONTAINER ID   IMAGE           COMMAND                  CREATED          STATUS          PORTS                                     NAMES
-b89a1b9a617c   lhp/ubuntu6.5   "apache2ctl -DFOREGR…"   14 minutes ago   Up 14 minutes   0.0.0.0:8080->80/tcp, [::]:8080->80/tcp   gracious_swanson
-lucas@dockertraining:~/docker$
-```
+# Restrict access to configuration files...
+<Location /admin/conf>
+  AuthType Default
+  Require user @SYSTEM
+  Order allow,deny
+  Allow all                                    # Add
+</Location>
+\`\`\`
 
-Lets say we want to create a second container, but this time, it should be on a different segment, thus, isolated from the first one.
+_ Add your account to the lpadmin group
+\`\`\`
+sudo usermod -a -G lpadmin lucas
+\`\`\`
 
-We need to create a new network, a User-defined network.
+_ Access CUPS with https://IP:631/admin
+\`\`\`
+https://serverIP:631/admin
+\`\`\`
 
-```
-lucas@dockertraining:~/docker$ docker network create udnet
-d6de0510746675960cf12a7d03c9aefd8503c3a8bf37dcfd4550e5a2de0bc243
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$ bridge vlan
-port              vlan-id
-docker0           1 PVID Egress Untagged
-veth8ed1dce       1 PVID Egress Untagged
-br-d6de05107466   1 PVID Egress Untagged
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$ ip a
-1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
-   link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-   inet 127.0.0.1/8 scope host lo
-      valid_lft forever preferred_lft forever
-   inet6 ::1/128 scope host noprefixroute
-      valid_lft forever preferred_lft forever
-2: ens18: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
-   link/ether bc:24:11:c4:0d:2a brd ff:ff:ff:ff:ff:ff
-   altname enp0s18
-   inet 192.168.88.23/24 metric 100 brd 192.168.88.255 scope global dynamic ens18
-      valid_lft 403sec preferred_lft 403sec
-   inet6 fe80::be24:11ff:fec4:d2a/64 scope link
-      valid_lft forever preferred_lft forever
-3: docker0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default
-   link/ether c2:af:04:d1:79:a4 brd ff:ff:ff:ff:ff:ff
-   inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
-      valid_lft forever preferred_lft forever
-   inet6 fe80::c0af:4ff:fed1:79a4/64 scope link
-      valid_lft forever preferred_lft forever
-12: veth8ed1dce@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master docker0 state UP group default
-   link/ether 62:8d:7b:c3:65:1d brd ff:ff:ff:ff:ff:ff link-netnsid 0
-   inet6 fe80::608d:7bff:fec3:651d/64 scope link
-      valid_lft forever preferred_lft forever
-13: br-d6de05107466: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default
-   link/ether b6:71:6b:6d:b6:32 brd ff:ff:ff:ff:ff:ff
-   inet 172.18.0.1/16 brd 172.18.255.255 scope global br-d6de05107466
-      valid_lft forever preferred_lft forever
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$ docker network ls
-NETWORK ID     NAME      DRIVER    SCOPE
-bca8a066750c   bridge    bridge    local
-545eb91fb713   host      host      local
-e7a33442daa2   none      null      local
-d6de05107466   udnet     bridge    local
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$ bridge link
-12: veth8ed1dce@ens18: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 master docker0 state forwarding priority 32 cost 2
-15: vethfd1da22@ens18: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 master br-d6de05107466 state forwarding priority 32 cost 2
-lucas@dockertraining:~/docker$
-```
+_ Add Printer
 
-We named it udnet; we can see a new bridge was created, `br-d6de05107466`, with network segment 172.18.0.1/16.
+![](images/ubuntuprn1.png)
 
-Now, lets create the new container and assign it to the new network segment `udnet`, and give it a name `secondcontainer`.
+![](images/ubuntuprn2.png)
 
-```
-lucas@dockertraining:~/docker$ sudo docker run -dit --network udnet --name secondcontainer -p 8081:80 lhp/ubuntu7.0
-4cbdfd9a99da47608d460452643ca0cfcb277ff5db509d9f6e0a85d0270841db
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$ docker ps
-CONTAINER ID   IMAGE           COMMAND                  CREATED              STATUS              PORTS                                     NAMES
-4cbdfd9a99da   lhp/ubuntu7.0   "apache2ctl -DFOREGR…"   About a minute ago   Up About a minute   0.0.0.0:8081->80/tcp, [::]:8081->80/tcp   secondcontainer
-b89a1b9a617c   lhp/ubuntu6.5   "apache2ctl -DFOREGR…"   38 minutes ago       Up 38 minutes       0.0.0.0:8080->80/tcp, [::]:8080->80/tcp   gracious_swanson
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$ ip a
-1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
-   link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-   inet 127.0.0.1/8 scope host lo
-      valid_lft forever preferred_lft forever
-   inet6 ::1/128 scope host noprefixroute
-      valid_lft forever preferred_lft forever
-2: ens18: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
-   link/ether bc:24:11:c4:0d:2a brd ff:ff:ff:ff:ff:ff
-   altname enp0s18
-   inet 192.168.88.23/24 metric 100 brd 192.168.88.255 scope global dynamic ens18
-      valid_lft 321sec preferred_lft 321sec
-   inet6 fe80::be24:11ff:fec4:d2a/64 scope link
-      valid_lft forever preferred_lft forever
-3: docker0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default
-   link/ether c2:af:04:d1:79:a4 brd ff:ff:ff:ff:ff:ff
-   inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
-      valid_lft forever preferred_lft forever
-   inet6 fe80::c0af:4ff:fed1:79a4/64 scope link
-      valid_lft forever preferred_lft forever
-12: veth8ed1dce@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master docker0 state UP group default
-   link/ether 62:8d:7b:c3:65:1d brd ff:ff:ff:ff:ff:ff link-netnsid 0
-   inet6 fe80::608d:7bff:fec3:651d/64 scope link
-      valid_lft forever preferred_lft forever
-13: br-d6de05107466: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default
-   link/ether b6:71:6b:6d:b6:32 brd ff:ff:ff:ff:ff:ff
-   inet 172.18.0.1/16 brd 172.18.255.255 scope global br-d6de05107466
-      valid_lft forever preferred_lft forever
-   inet6 fe80::b471:6bff:fe6d:b632/64 scope link
-      valid_lft forever preferred_lft forever
-15: vethfd1da22@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master br-d6de05107466 state UP group default
-   link/ether e2:89:e9:57:cd:20 brd ff:ff:ff:ff:ff:ff link-netnsid 1
-   inet6 fe80::e089:e9ff:fe57:cd20/64 scope link
-      valid_lft forever preferred_lft forever
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$ bridge vlan
-port              vlan-id
-docker0           1 PVID Egress Untagged
-veth8ed1dce       1 PVID Egress Untagged
-br-d6de05107466   1 PVID Egress Untagged
-vethfd1da22       1 PVID Egress Untagged
-lucas@dockertraining:~/docker$
-```
+(the printer will most likely be detected)
 
-*   The container network interface `veth8ed1dce@if2` is linked to the default bridge `docker0`  
-    `veth8ed1dce@ens18: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 master docker0 state forwarding priority 32 cost 2`
+![](images/ubuntuprn3.png)
+
+Mark “Share this Printer” and click continue.
+
+If your Printer Maker/Brand is not listed, you may need to look for the controllers yourself, in my case, Brother hl1212w; Utilities | Downloads | HL-1212W | Others | Brother
+
+https://support.brother.com/g/b/downloadhowto.aspx?c=us_ot&lang=en&prod=hl1212w_us_eu&os=128&dlid=dlf006893_000&flang=4&type3=625
+
+Follow the driver installation process.
+
+![](images/ubuntuprn4.png)
+
+\`\`\`
+lucas@server:~/PRN/driver/Brother$ sudo bash linux-brprinter-installer-2.2.4-1
+Input model name ->hl1210wlpr
+
+You are going to install following packages.
+   hl1210wlpr-3.0.1-1.i386.deb
+   hl1210wcupswrapper-3.0.1-1.i386.deb
+OK? [y/N] ->y
+
+Hit:1 http://security.ubuntu.com/ubuntu noble-security InRelease
+Hit:2 http://ar.archive.ubuntu.com/ubuntu noble InRelease
+Hit:3 http://ar.archive.ubuntu.com/ubuntu noble-updates InRelease
+Hit:4 http://ar.archive.ubuntu.com/ubuntu noble-backports InRelease
+Reading package lists... Done
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+Package ia32-libs is not available, but is referred to by another package.
+This may mean that the package is missing, has been obsoleted, or
+is only available from another source
+However the following packages replace it:
+  lib32z1
+
+E: Package 'ia32-libs' has no installation candidate
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following additional packages will be installed:
+  lib32gcc-s1 libc6-i386
+The following NEW packages will be installed:
+  lib32gcc-s1 lib32stdc++6 libc6-i386
+0 upgraded, 3 newly installed, 0 to remove and 2 not upgraded.
+Need to get 3,694 kB of archives.
+After this operation, 15.5 MB of additional disk space will be used.
+Do you want to continue? [Y/n] Y
+Get:1 http://ar.archive.ubuntu.com/ubuntu noble-updates/main amd64 libc6-i386 am                                                              d64 2.39-0ubuntu8.5 [2,787 kB]
+Get:2 http://ar.archive.ubuntu.com/ubuntu noble-updates/main amd64 lib32gcc-s1 a                                                              md64 14.2.0-4ubuntu2~24.04 [92.3 kB]
+Get:3 http://ar.archive.ubuntu.com/ubuntu noble-updates/main amd64 lib32stdc++6                                                               amd64 14.2.0-4ubuntu2~24.04 [814 kB]
+Fetched 3,694 kB in 3s (1,351 kB/s)
+Selecting previously unselected package libc6-i386.
+(Reading database ... 130584 files and directories currently installed.)
+Preparing to unpack .../libc6-i386_2.39-0ubuntu8.5_amd64.deb ...
+Unpacking libc6-i386 (2.39-0ubuntu8.5) ...
+Selecting previously unselected package lib32gcc-s1.
+Preparing to unpack .../lib32gcc-s1_14.2.0-4ubuntu2~24.04_amd64.deb ...
+Unpacking lib32gcc-s1 (14.2.0-4ubuntu2~24.04) ...
+Selecting previously unselected package lib32stdc++6.
+Preparing to unpack .../lib32stdc++6_14.2.0-4ubuntu2~24.04_amd64.deb ...
+Unpacking lib32stdc++6 (14.2.0-4ubuntu2~24.04) ...
+Setting up libc6-i386 (2.39-0ubuntu8.5) ...
+Setting up lib32gcc-s1 (14.2.0-4ubuntu2~24.04) ...
+Setting up lib32stdc++6 (14.2.0-4ubuntu2~24.04) ...
+Processing triggers for libc-bin (2.39-0ubuntu8.5) ...
+Scanning processes...
+Scanning linux images...
+
+Running kernel seems to be up-to-date.
+
+No services need to be restarted.
+
+No containers need to be restarted.
+
+No user sessions are running outdated binaries.
+
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+dpkg -x hl1210wlpr-3.0.1-1.i386.deb /
+dpkg -x hl1210wcupswrapper-3.0.1-1.i386.deb /
+dpkg-deb: building package 'hl1210wlpr' in 'hl1210wlpr-3.0.1-1a.i386.deb'.
+dpkg -b ./brother_driver_packdir hl1210wlpr-3.0.1-1a.i386.deb
+dpkg-deb: building package 'hl1210wcupswrapper' in 'hl1210wcupswrapper-3.0.1-1a.                                                              i386.deb'.
+dpkg -b ./brother_driver_packdir hl1210wcupswrapper-3.0.1-1a.i386.deb
+dpkg -i --force-all hl1210wlpr-3.0.1-1a.i386.deb
+dpkg: warning: overriding problem because --force enabled:
+dpkg: warning: package architecture (i386) does not match system (amd64)
+Selecting previously unselected package hl1210wlpr:i386.
+(Reading database ... 130875 files and directories currently installed.)
+Preparing to unpack hl1210wlpr-3.0.1-1a.i386.deb ...
+Unpacking hl1210wlpr:i386 (3.0.1-1) ...
+Setting up hl1210wlpr:i386 (3.0.1-1) ...
+dpkg -i --force-all hl1210wcupswrapper-3.0.1-1a.i386.deb
+dpkg: warning: overriding problem because --force enabled:
+dpkg: warning: package architecture (i386) does not match system (amd64)
+Selecting previously unselected package hl1210wcupswrapper:i386.
+(Reading database ... 130897 files and directories currently installed.)
+Preparing to unpack hl1210wcupswrapper-3.0.1-1a.i386.deb ...
+Unpacking hl1210wcupswrapper:i386 (3.0.1-1) ...
+Setting up hl1210wcupswrapper:i386 (3.0.1-1) ...
+lpadmin -p HL1210W -E -v dnssd://Brother%20HL-1210W%20series._pdl-datastream._tc                                                              p.local/?uuid=e3248000-80ce-11db-8000-e89eb4466714 -P /usr/share/ppd/brother/bro                                                              ther-HL1210W-cups-en.ppd
+lpadmin: Printer drivers are deprecated and will stop working in a future versio                                                              n of CUPS.
+#
+Will you specify the Device URI? [Y/n] ->
+
+
+0: beh
+1: socket
+2: ipps
+3: http
+4: https
+5: ipp
+6: lpd
+7: dnssd://Brother%20HL-1210W%20series._pdl-datastream._tcp.local/?uuid=e3248000                                                              -80ce-11db-8000-e89eb4466714
+8 (I): Specify IP address.
+9 (A): Auto. (dnssd://Brother%20HL-1210W%20series._pdl-datastream._tcp.local/?uu                                                              id=e3248000-80ce-11db-8000-e89eb4466714)
+
+select the number of destination Device URI. ->8
+
+ enter IP address ->192.168.88.100                   # Printer IP address
+lpadmin -p HL1210W -v lpd://192.168.88.100/BINARY_P1 -E
+Test Print? [y/N] ->y
+
+wait 5s.
+lpr -P HL1210W /usr/share/cups/data/testprint
+linux-brprinter-installer-2.2.4-1: line 3021: lpr: command not found
+apt-get install libusb-0.1-4
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following NEW packages will be installed:
+  libusb-0.1-4
+0 upgraded, 1 newly installed, 0 to remove and 2 not upgraded.
+Need to get 17.2 kB of archives.
+After this operation, 59.4 kB of additional disk space will be used.
+Get:1 http://ar.archive.ubuntu.com/ubuntu noble/main amd64 libusb-0.1-4 amd64 2:                                                              0.1.12-35build1 [17.2 kB]
+Fetched 17.2 kB in 1s (19.8 kB/s)
+Selecting previously unselected package libusb-0.1-4:amd64.
+(Reading database ... 130901 files and directories currently installed.)
+Preparing to unpack .../libusb-0.1-4_2%3a0.1.12-35build1_amd64.deb ...
+Unpacking libusb-0.1-4:amd64 (2:0.1.12-35build1) ...
+Setting up libusb-0.1-4:amd64 (2:0.1.12-35build1) ...
+Processing triggers for libc-bin (2.39-0ubuntu8.5) ...
+Scanning processes...
+Scanning linux images...
+
+Running kernel seems to be up-to-date.
+
+No services need to be restarted.
+
+No containers need to be restarted.
+
+No user sessions are running outdated binaries.
+
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+Hit Enter/Return key.
+lucas@server:~/PRN/driver/Brother$
+\`\`\`
+
+Refresh CUPS, the Printer's controllers should be displayed now.
+Select the Model and click “Add Printer”
+
+![](images/ubuntuprn5.png)
+
+Go to “Set Printer Options” for additional settings
+
+![](images/ubuntuprn6.png)
+
+You should be able to add the Printer on Windows, in my case, Windows was able to find it on the network by itself.
+
+#CUPS #Printer #Brother #Linux #Ubuntu #samba #printserver
+            `},
+            {
+                id: 12,
+                title: "Windows - Get CPU Temperature on Powershell",
+                excerpt: "Obtain the current CPU temperature feom Powershell",
+                date: "09-14-2025",
+                content: `# Windows - Get CPU Temperature on Powershell
+
+Run the command below on Windows Powershell as Administrator
+\`\`\`
+wmic /namespace:\\\\root\\wmi PATH MSAcpi_ThermalZoneTemperature get CurrentTemperature
+\`\`\`
+
+\`\`\`
+PS C:\\WINDOWS\\system32> wmic /namespace:\\\\root\\wmi PATH MSAcpi_ThermalZoneTemperature get CurrentTemperature
+CurrentTemperature
+3182
+
+PS C:\\WINDOWS\\system32>
+\`\`\`
+
+The 3182 value will be the current temperature; divide by 10 and substract 273.15 to get the value in Celcius
+
+In this case (3182  /10) - 273,15 = 45.05°C
+
+            `},
+            {
+                id: 11,
+                title: "Windows - quick security checks",
+                excerpt: "Quick security checks on Windows. Connections and user privileges",
+                date: "09-14-2025",
+                content: `# Windows - quick security checks
+
+_ Check connections with 
+\`\`\`
+netstat -ano
+\`\`\`
+
+_ If there seems to be suspicious connections, look for the IPs with nslookup, shodan or ipinfo.io
+
+_ Check permissions, any other user besides the Administrator should not have extended Privileges (i.e.: SeDebugPrivilege, SeImpersonatePrivilege).
+
+
+![](images/whoamipriv.png)
+
+            `},
+            {
+                id: 10,
+                title: "Windows - Wireless passwords",
+                excerpt: "Obtain wireless passwords on Windows from an already existing and saved Wi-Fi connection.",
+                date: "09-14-2025",
+                content: `# Windows Wireless passwords
+
+Obtain wireless passwords on Windows from an already existing and saved Wi-Fi connection.
+
+List learned Wi-fi SSIDs
+
+\`\`\`
+netsh wlan show profile
+\`\`\`
+
+Extract Wi-fi password
+
+\`\`\`
+netsh wlan show profile name="SSID" key=clear
+\`\`\`
+            `},
+            {
+                id: 9,
+                title: "Windows - diskpart",
+                excerpt: "How to format a hard drive on Windows from the command line",
+                date: "09-14-2025",
+                content: `# Windows diskpart
+1.  Open Terminal as Administrator; search cmd, Run as administrator  
+![](images/runasadmin.png)
+2.  Run diskpart
     
-*   The container network interface `vethfd1da22@if2` is linked to the user defined bridge `br-d6de05107466`  
-    `vethfd1da22@ens18: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 master br-d6de05107466 state forwarding priority 32 cost 2`
-
-Inspecting the user defined bridge
-
-```
-lucas@dockertraining:~/docker$ docker inspect udnet
-[
-   {
-       "Name": "udnet",
-       "Id": "d6de0510746675960cf12a7d03c9aefd8503c3a8bf37dcfd4550e5a2de0bc243",
-       "Created": "2025-04-23T19:51:43.877638947Z",
-       "Scope": "local",
-       "Driver": "bridge",
-       "EnableIPv4": true,
-       "EnableIPv6": false,
-       "IPAM": {
-           "Driver": "default",
-           "Options": {},
-           "Config": [
-               {
-                   "Subnet": "172.18.0.0/16",
-                   "Gateway": "172.18.0.1"
-               }
-           ]
-       },
-       "Internal": false,
-       "Attachable": false,
-       "Ingress": false,
-       "ConfigFrom": {
-           "Network": ""
-       },
-       "ConfigOnly": false,
-       "Containers": {
-           "4cbdfd9a99da47608d460452643ca0cfcb277ff5db509d9f6e0a85d0270841db": {
-               "Name": "secondcontainer",
-               "EndpointID": "f586c7515264cf767e0a29188a7e67eaa60103fc576a98064dd88e3d3513d89f",
-               "MacAddress": "46:19:49:db:e3:88",
-               "IPv4Address": "172.18.0.2/16",
-               "IPv6Address": ""
-           }
-       },
-       "Options": {},
-       "Labels": {}
-   }
-]
-lucas@dockertraining:~/docker$
-```
-
-          </script>
-          <button onclick="toggleNote(this)">More</button>
-        </div>
-      </div>
-
-
-      <div class="note">
-        <h2>05/19/25 - Docker - Networking - Host Bridge</h2>
-        <div class="note-content">
-          <div class="markdown-preview preview"></div>
-          <div class="markdown-full full" style="display:none;"></div>
-          <script type="text/markdown" class="markdown-source">
-
-The host bridge will share the host IP address with the container.
-
-Here is what the host looks like before deploying the container.
-
-```
-lucas@dockertraining:~/docker$ ip a
-1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
-   link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-   inet 127.0.0.1/8 scope host lo
-      valid_lft forever preferred_lft forever
-   inet6 ::1/128 scope host noprefixroute
-      valid_lft forever preferred_lft forever
-2: ens18: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
-   link/ether bc:24:11:c4:0d:2a brd ff:ff:ff:ff:ff:ff
-   altname enp0s18
-   inet 192.168.88.23/24 metric 100 brd 192.168.88.255 scope global dynamic ens18
-      valid_lft 491sec preferred_lft 491sec
-   inet6 fe80::be24:11ff:fec4:d2a/64 scope link
-      valid_lft forever preferred_lft forever
-3: docker0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default
-   link/ether c2:af:04:d1:79:a4 brd ff:ff:ff:ff:ff:ff
-   inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
-      valid_lft forever preferred_lft forever
-   inet6 fe80::c0af:4ff:fed1:79a4/64 scope link
-      valid_lft forever preferred_lft forever
-13: br-d6de05107466: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default
-   link/ether b6:71:6b:6d:b6:32 brd ff:ff:ff:ff:ff:ff
-   inet 172.18.0.1/16 brd 172.18.255.255 scope global br-d6de05107466
-      valid_lft forever preferred_lft forever
-   inet6 fe80::b471:6bff:fe6d:b632/64 scope link
-      valid_lft forever preferred_lft forever
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$ bridge link
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$ bridge vlan
-port              vlan-id
-docker0           1 PVID Egress Untagged
-br-d6de05107466   1 PVID Egress Untagged
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$ docker network ls
-NETWORK ID     NAME      DRIVER    SCOPE
-bca8a066750c   bridge    bridge    local
-545eb91fb713   host      host      local
-e7a33442daa2   none      null      local
-d6de05107466   udnet     bridge    local
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$ docker ps
-CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
-lucas@dockertraining:~/docker$
-```
-
-Running the container, with the `--networh host` command
-
-```
-lucas@dockertraining:~/docker$ sudo docker run -dit --network host --name hostcontainer lhp/ubuntu7.0
-[sudo] password for lucas:
-26ff60e04d392dedcda16c1f1570e148d8fa56c89d484be6dce23f50bbeac48a
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$ docker ps
-CONTAINER ID   IMAGE           COMMAND                  CREATED         STATUS         PORTS     NAMES
-26ff60e04d39   lhp/ubuntu7.0   "apache2ctl -DFOREGR…"   3 minutes ago   Up 3 minutes             hostcontainer
-lucas@dockertraining:~/docker$
-```
-
-There is no changes to the networking side on the host.
-
-```
-lucas@dockertraining:~/docker$ ip a
-1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
-   link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-   inet 127.0.0.1/8 scope host lo
-      valid_lft forever preferred_lft forever
-   inet6 ::1/128 scope host noprefixroute
-      valid_lft forever preferred_lft forever
-2: ens18: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
-   link/ether bc:24:11:c4:0d:2a brd ff:ff:ff:ff:ff:ff
-   altname enp0s18
-   inet 192.168.88.23/24 metric 100 brd 192.168.88.255 scope global dynamic ens18
-      valid_lft 367sec preferred_lft 367sec
-   inet6 fe80::be24:11ff:fec4:d2a/64 scope link
-      valid_lft forever preferred_lft forever
-3: docker0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default
-   link/ether c2:af:04:d1:79:a4 brd ff:ff:ff:ff:ff:ff
-   inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
-      valid_lft forever preferred_lft forever
-   inet6 fe80::c0af:4ff:fed1:79a4/64 scope link
-      valid_lft forever preferred_lft forever
-13: br-d6de05107466: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default
-   link/ether b6:71:6b:6d:b6:32 brd ff:ff:ff:ff:ff:ff
-   inet 172.18.0.1/16 brd 172.18.255.255 scope global br-d6de05107466
-      valid_lft forever preferred_lft forever
-   inet6 fe80::b471:6bff:fe6d:b632/64 scope link
-      valid_lft forever preferred_lft forever
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$ bridge vlan
-port              vlan-id
-docker0           1 PVID Egress Untagged
-br-d6de05107466   1 PVID Egress Untagged
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$ bridge link
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$ docker network ls
-NETWORK ID     NAME      DRIVER    SCOPE
-bca8a066750c   bridge    bridge    local
-545eb91fb713   host      host      local
-e7a33442daa2   none      null      local
-d6de05107466   udnet     bridge    local
-lucas@dockertraining:~/docker$
-```
-
-If we connect to the container, and check its IP address, we can see it was assigned with the same one as the host.
-
-```
-lucas@dockertraining:~/docker$ docker ps
-CONTAINER ID   IMAGE           COMMAND                  CREATED         STATUS         PORTS     NAMES
-26ff60e04d39   lhp/ubuntu7.0   "apache2ctl -DFOREGR…"   3 minutes ago   Up 3 minutes             hostcontainer
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$
-lucas@dockertraining:~/docker$ docker exec -it 26ff60e04d39 bash
-root@dockertraining:/# ip a
-1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
-   link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-   inet 127.0.0.1/8 scope host lo
-      valid_lft forever preferred_lft forever
-   inet6 ::1/128 scope host noprefixroute
-      valid_lft forever preferred_lft forever
-2: ens18: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
-   link/ether bc:24:11:c4:0d:2a brd ff:ff:ff:ff:ff:ff
-   altname enp0s18
-   inet 192.168.88.23/24 metric 100 brd 192.168.88.255 scope global dynamic ens18
-      valid_lft 470sec preferred_lft 470sec
-   inet6 fe80::be24:11ff:fec4:d2a/64 scope link
-      valid_lft forever preferred_lft forever
-3: docker0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default
-   link/ether c2:af:04:d1:79:a4 brd ff:ff:ff:ff:ff:ff
-   inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
-      valid_lft forever preferred_lft forever
-   inet6 fe80::c0af:4ff:fed1:79a4/64 scope link
-      valid_lft forever preferred_lft forever
-13: br-d6de05107466: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default
-   link/ether b6:71:6b:6d:b6:32 brd ff:ff:ff:ff:ff:ff
-   inet 172.18.0.1/16 brd 172.18.255.255 scope global br-d6de05107466
-      valid_lft forever preferred_lft forever
-   inet6 fe80::b471:6bff:fe6d:b632/64 scope link
-      valid_lft forever preferred_lft forever
-root@dockertraining:/# read escape sequence
-lucas@dockertraining:~/docker$
-```
-
-          </script>
-          <button onclick="toggleNote(this)">More</button>
-        </div>
-      </div>
-
-
-
-      <div class="note">
-        <h2>05/26/25 - Mikrotik - Alerting - New Dynamic DHCP clients</h2>
-        <div class="note-content">
-          <div class="markdown-preview preview"></div>
-          <div class="markdown-full full" style="display:none;"></div>
-          <script type="text/markdown" class="markdown-source">
-
-Mikrotik configuration for email alerting on new DHCP clients.
-
-```
-/tool e-mail
-set address=smtp."youremailprovidersettings".com from="emailaddressaccount" port=587 tls=starttls user="emailaddressaccount"
-# i.e.: set address=smtp.office365.com from=email@outlook.com port=587 tls=starttls user=email@outlook.com
-# The email password must be set on the GUI under tool>e-mail
-
-/system scheduler
-add interval=1h name=CheckNewDHCPclients on-event=CheckNewDHCPclients policy=ftp,reboot,read,write,policy,test,password,sniff,sensitive,romon start-date=jul/07/2021 start-time=07:00:00
-
-/system script
-add dont-require-permissions=yes name=CheckNewDHCPclients owner=mikrotikuser policy=ftp,reboot,read,write,policy,test,password,sniff,sensitive,romon source="
-#This is a reference of zero DHCP clients
-:global dhcphostsreference 0;
-
-#This counts how many DHCP clients there are, and stores the number on \"dhcphosts\"
-:global dhcphosts [ :len [ / ip dhcp-server lease find where dynamic ] ]
-
-#If the DHCP clients count differs from zero, an email will be sent out with a list of all of the DHCP clients, fixed and dynamic.
-:if (\$dhcphosts != dhcphostsreference ) do={ip dhcp-server lease print file= \"disk1/DHCPlog.txt\"; delay delay-time=2; tool e-mail send to=\"destinationemail@gmail.com\" subject=\"There is new DHCP clients\" file=\"disk1/DHCPlog.txt\"}
-
-#sets the \"dhcphosts\" and \"dhcphostsreference\" variables to zero, and deletes txt file
-delay delay-time=3
-:set dhcphostsreference
-:set dhcphosts
-delay delay-time=3
-file remove disk1/DHCPlog.txt
-```
-
-          </script>
-          <button onclick="toggleNote(this)">More</button>
-        </div>
-      </div>
-
-
-
-      <div class="note">
-        <h2>05/26/25 - Mikrotik - Alerting - New version available</h2>
-        <div class="note-content">
-          <div class="markdown-preview preview"></div>
-          <div class="markdown-full full" style="display:none;"></div>
-          <script type="text/markdown" class="markdown-source">
-
-Mikrotik configuration for email alerting on new available version.
-
-```
-/tool e-mail
-set address=smtp."youremailprovidersettings".com from="emailaddressaccount" port=587 tls=starttls user="emailaddressaccount"
-# i.e.: set address=smtp.office365.com from=email@outlook.com port=587 tls=starttls user=email@outlook.com
-# The email password must be set on the GUI under tool>e-mail
-/system scheduler
-add interval=1w name="Email Version Status" on-event=EmailVersionStatus policy=ftp,reboot,read,write,policy,test,password,sniff,sensitive,romon start-date=jun/21/2021 start-time=22:10:00
-/system script
-add dont-require-permissions=no name=EmailVersionStatus owner=mikrotikuser policy=ftp,reboot,read,write,policy,test,password,sniff,sensitive,romon source="
-system package update check-for-updates
-delay delay-time=3
-:global versionstatus do={:put [system package update get status]}
-:if ( [\$versionstatus] != \";System is already up to date\") do={system package update print file= disk1/package.txt; tool e-mail send to=\"destinationemail@gmail.com\" subject=\"Mikrotik new version available\" file=disk1/package.txt} else={system package update print file= disk1/package.txt; tool e-mail send to=\"destinationemail@gmail.com\" subject=\"Mikrotik router is up to date\" file=disk1/package.txt}
-delay delay-time=3
-:set versionstatus
-delay delay-time=3
-file remove disk1/package.txt
-# Using disk1/ as I have a usb stick connected to the router's usb port
-```
-
-          </script>
-          <button onclick="toggleNote(this)">More</button>
-        </div>
-      </div>
-
-
-
-
-
-      <div class="note">
-        <h2>05/27/25 - NextCloud - "Access through untrusted domain" error </h2>
-        <div class="note-content">
-          <div class="markdown-preview preview"></div>
-          <div class="markdown-full full" style="display:none;"></div>
-          <script type="text/markdown" class="markdown-source">
-
-
-You will receive the “Access through untrusted domain” error message whenever the NextCloud server IP address changes; lets say it got moved to a different network segment, or even DHCP assigned it a different IP (should have been a reserved IP address in the first place).
-
-![](images/next_cloud_untrusted_domain.png)
-
-To address this, go to /var/www/nextcloud/config/config.php, check the values for “trusted.domains” and “overwrite.cli.url”; both will have the previous IP address information.
-Edit the file by changing to the current IP address and save.
-
-![](images/next_cloud_untrusted_domain_2.png)
-
- The login prompt should load after correcting the config.php file.
-
-![](images/next_cloud_untrusted_domain_3.png)
-
-          </script>
-          <button onclick="toggleNote(this)">More</button>
-        </div>
-      </div>
-
-
-
-
-
-
-
-
-<!-- template for markdown note taking
-
-      <div class="note">
-        <h2>05/19/25 - Docker - Networking - Host Bridge</h2>
-        <div class="note-content">
-          <div class="markdown-preview preview"></div>
-          <div class="markdown-full full" style="display:none;"></div>
-          <script type="text/markdown" class="markdown-source">
-
-
-
-          </script>
-          <button onclick="toggleNote(this)">More</button>
-        </div>
-      </div>
-
--->
-
-
-
-      <!-- Add more notes above-->
-
-
-
-    </div>
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <script src="script.js"></script>
+    \`\`\`
+    diskpart
+    \`\`\`
+    
+3.  List available disks on the system
+    
+    \`\`\`
+    list disk
+    \`\`\`
+    
+4.  Select the drive you need to format
+    
+    \`\`\`
+    select disk 2
+    \`\`\`
+    
+5.  Clean the disk
+    
+    \`\`\`
+    clean
+    \`\`\`
+    
+6.  Create a Primary partition
+    
+    \`\`\`
+    create partition primary
+    \`\`\`
+    
+7.  Format the drive
+    
+    \`\`\`
+    format fs=ntfs quick
+    \`\`\`
+    
+8.  Assign a letter to the drive
+    
+    \`\`\`
+    assign
+    \`\`\`
+
+            `},
+            {
+                id: 8,
+                title: "Linux - Filesystem - drives discover and mount",
+                excerpt: "How to discover and mount drives from the Linux CLI.",
+                date: "09-12-2025",
+                content: `# Linux - Filesystem - drives discover and mount
+
+There is a system here with four unmounted drives, we can list them with **lsblk -f**, **fdisk -l** and **cat /proc/partitions**
+
+\`\`\`
+root@proxmox20:~# lsblk
+NAME               MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
+sda                  8:0    0 931.5G  0 disk
+└─sda1               8:1    0 931.5G  0 part
+sdb                  8:16   0 931.5G  0 disk
+├─sdb1               8:17   0   118G  0 part
+└─sdb2               8:18   0 813.5G  0 part
+sdc                  8:32   0 223.6G  0 disk
+├─sdc1               8:33   0 222.6G  0 part
+├─sdc2               8:34   0     1K  0 part
+└─sdc5               8:37   0   975M  0 part
+sdd                  8:48   0 223.6G  0 disk
+├─sdd1               8:49   0   100M  0 part
+├─sdd2               8:50   0    16M  0 part
+├─sdd3               8:51   0 222.8G  0 part
+└─sdd4               8:52   0   657M  0 part
+nvme0n1            259:0    0 931.5G  0 disk
+├─nvme0n1p1        259:1    0  1007K  0 part
+├─nvme0n1p2        259:2    0     1G  0 part /boot/efi
+└─nvme0n1p3        259:3    0 930.5G  0 part
+ ├─pve-swap       252:0    0     8G  0 lvm  [SWAP]
+ ├─pve-root       252:1    0    96G  0 lvm  /
+ ├─pve-data_tmeta 252:2    0   8.1G  0 lvm
+ │ └─pve-data     252:4    0 794.3G  0 lvm
+ └─pve-data_tdata 252:3    0 794.3G  0 lvm
+   └─pve-data     252:4    0 794.3G  0 lvm
+root@proxmox20:~#
+\`\`\`
+
+\`\`\`
+root@proxmox20:~# lsblk -f
+NAME               FSTYPE      FSVER    LABEL   UUID                                   FSAVAIL FSUSE% MOUNTPOINTS
+sda
+└─sda1             ext4        1.0              6bc7b56d-4517-4aaf-8daf-ccdfb
+sdb
+├─sdb1             ntfs                 bookbak 94B418FCB4
+└─sdb2             ntfs                 Datos   701E33B51E3
+sdc
+├─sdc1             ext4        1.0              ec926e56-833f-4211-b7e9-e9c653
+├─sdc2
+└─sdc5             swap        1                4ece47d2-85f4-4fc9-87bb-5771
+sdd
+├─sdd1             vfat        FAT32            FC82-F323
+├─sdd2
+├─sdd3             ntfs                         00FA8763FA
+└─sdd4             ntfs                         04045BF50
+nvme0n1
+├─nvme0n1p1
+├─nvme0n1p2        vfat        FAT32            B69B-8480                              1013.2M     1% /boot/efi
+└─nvme0n1p3        LVM2_member LVM2 001         V4p55x-p9ry-hZ0-2aiC-PlD9-WMX-qVnl
+ ├─pve-swap       swap        1                bd4a8285-0b63-4cb5-a159-a919bd                  [SWAP]
+ ├─pve-root       ext4        1.0              ac99626b-6626-47a2-8a7a-a963       85G     4% /
+ ├─pve-data_tmeta
+ │ └─pve-data
+ └─pve-data_tdata
+   └─pve-data
+root@proxmox20:~#
+\`\`\`
+
+\`\`\`
+root@proxmox20:~# fdisk -l
+Disk /dev/nvme0n1: 931.51 GiB, 1000204886016 bytes, 1953525168 sectors
+Disk model: KINGSTON SNV2S1000G
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: gpt
+Disk identifier: EB216586-CF09-4143-B947-1CD92C726AD3
+
+Device           Start        End    Sectors   Size Type
+/dev/nvme0n1p1      34       2047       2014  1007K BIOS boot
+/dev/nvme0n1p2    2048    2099199    2097152     1G EFI System
+/dev/nvme0n1p3 2099200 1953525134 1951425935 930.5G Linux LVM
+
+
+Disk /dev/sda: 931.51 GiB, 1000204886016 bytes, 1953525168 sectors
+Disk model: WDC WD10EARX-22N
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 4096 bytes
+I/O size (minimum/optimal): 4096 bytes / 4096 bytes
+Disklabel type: dos
+Disk identifier: 0x00034569
+
+Device     Boot Start        End    Sectors   Size Id Type
+/dev/sda1        2048 1953525167 1953523120 931.5G 83 Linux
+
+
+Disk /dev/sdb: 931.51 GiB, 1000204886016 bytes, 1953525168 sectors
+Disk model: WDC WD10EZEX-60W
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 4096 bytes
+I/O size (minimum/optimal): 4096 bytes / 4096 bytes
+Disklabel type: dos
+Disk identifier: 0xda9e92fb
+
+Device     Boot     Start        End    Sectors   Size Id Type
+/dev/sdb1            2048  247537663  247535616   118G  7 HPFS/NTFS/exFAT
+/dev/sdb2       247537664 1953519615 1705981952 813.5G  7 HPFS/NTFS/exFAT
+
+
+Disk /dev/sdc: 223.57 GiB, 240057409536 bytes, 468862128 sectors
+Disk model: SanDisk SDSSDA24
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: dos
+Disk identifier: 0x2b46a5cf
+
+Device     Boot     Start       End   Sectors   Size Id Type
+/dev/sdc1  *         2048 466862079 466860032 222.6G 83 Linux
+/dev/sdc2       466864126 468860927   1996802   975M  5 Extended
+/dev/sdc5       466864128 468860927   1996800   975M 82 Linux swap / Solaris
+
+
+Disk /dev/sdd: 223.57 GiB, 240057409536 bytes, 468862128 sectors
+Disk model: WD Green 2.5 240
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: gpt
+Disk identifier: CB3A2CF3-5F2A-4E86-9E3B-6D82628204A2
+
+Device         Start       End   Sectors   Size Type
+/dev/sdd1       2048    206847    204800   100M EFI System
+/dev/sdd2     206848    239615     32768    16M Microsoft reserved
+/dev/sdd3     239616 467513343 467273728 222.8G Microsoft basic data
+/dev/sdd4  467513344 468858879   1345536   657M Windows recovery environment
+
+
+Disk /dev/mapper/pve-swap: 8 GiB, 8589934592 bytes, 16777216 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+
+
+Disk /dev/mapper/pve-root: 96 GiB, 103079215104 bytes, 201326592 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+root@proxmox20:~#
+\`\`\`
+
+\`\`\`
+root@proxmox20:~# cat /proc/partitions
+major minor  #blocks  name
+259        0  976762584 nvme0n1
+259        1       1007 nvme0n1p1
+259        2    1048576 nvme0n1p2
+259        3  975712967 nvme0n1p3
+  8        0  976762584 sda
+  8        1  976761560 sda1
+  8       16  976762584 sdb
+  8       17  123767808 sdb1
+  8       18  852990976 sdb2
+  8       32  234431064 sdc
+  8       33  233430016 sdc1
+  8       34          1 sdc2
+  8       37     998400 sdc5
+  8       48  234431064 sdd
+  8       49     102400 sdd1
+  8       50      16384 sdd2
+  8       51  233636864 sdd3
+  8       52     672768 sdd4
+252        0    8388608 dm-0
+252        1  100663296 dm-1
+252        2    8495104 dm-2
+252        3  832888832 dm-3
+252        4  832888832 dm-4
+root@proxmox20:~#
+\`\`\`
+
+In order to move forward with mounting the drive, we first need a place to mount them to.
+
+We will create mounting points under /mnt/, **mkdir /mnt/sda1**  
+The sda1 directory is just an example, it can be named whatever you like.
+
+Then, we will need to mount the drive to the mounting point.
+
+\`\`\`
+#Mounting points created
+root@proxmox20:~# mkdir /mnt/sda1
+root@proxmox20:~# mkdir /mnt/sdb1
+root@proxmox20:~# mkdir /mnt/sdb2
+root@proxmox20:~# mkdir /mnt/sdc1
+root@proxmox20:~# mkdir /mnt/sdd1
+root@proxmox20:~# mkdir /mnt/sdd3
+root@proxmox20:~# mkdir /mnt/sdd4
+root@proxmox20:~#
+
+#Mounting action performed
+root@proxmox20:~# ls /mnt
+sda1  sdb1  sdb2  sdc1  sdd1  sdd3  sdd4
+root@proxmox20:~# mount /dev/sda1 /mnt/sda1
+root@proxmox20:~# mount /dev/sdb1 /mnt/sdb1
+root@proxmox20:~# mount /dev/sdb2 /mnt/sdb2
+root@proxmox20:~# mount /dev/sdc1 /mnt/sdc1
+root@proxmox20:~# mount /dev/sdd1 /mnt/sdd1
+root@proxmox20:~# mount /dev/sdd3 /mnt/sdd3
+root@proxmox20:~# mount /dev/sdd4 /mnt/sdd4
+root@proxmox20:~#
+
+#Checking all partitions are available
+root@proxmox20:~# df -h
+Filesystem            Size  Used Avail Use% Mounted on
+udev                  7.5G     0  7.5G   0% /dev
+tmpfs                 1.5G  1.5M  1.5G   1% /run
+/dev/mapper/pve-root   94G  4.2G   85G   5% /
+tmpfs                 7.5G   46M  7.5G   1% /dev/shm
+efivarfs              128K   13K  111K  10% /sys/firmware/efi/efivars
+tmpfs                 5.0M     0  5.0M   0% /run/lock
+tmpfs                 1.0M     0  1.0M   0% /run/credentials/systemd-journald.service
+tmpfs                 7.5G     0  7.5G   0% /tmp
+/dev/nvme0n1p2       1022M  8.8M 1014M   1% /boot/efi
+/dev/fuse             128M   16K  128M   1% /etc/pve
+tmpfs                 1.0M     0  1.0M   0% /run/credentials/getty@tty1.service
+tmpfs                 1.5G  4.0K  1.5G   1% /run/user/0
+/dev/sda1             909G  244G  619G  29% /mnt/sda1
+/dev/sdb1             119G   94M  118G   1% /mnt/sdb1
+/dev/sdb2             814G  464G  350G  57% /mnt/sdb2
+/dev/sdc1             219G   70G  138G  34% /mnt/sdc1
+/dev/sdd1              96M   34M   63M  35% /mnt/sdd1
+/dev/sdd3             223G   91G  133G  41% /mnt/sdd3
+/dev/sdd4             657M  585M   73M  89% /mnt/sdd4
+root@proxmox20:~#
+\`\`\`
+
+To make the mounting process persistent after reboot, edit the **/etc/fstab** file.
+Pay attention to the following:
+
+- The UUID of the drive
+- The mount point of the drive
+- The drive formatting type
+- The options, dump and pass (Defaults are: defaults 0 0)
+
+\`\`\`
+# <file system> <mount point> <type> <options> <dump> <pass>
+/dev/pve/root / ext4 errors=remount-ro 0 1
+UUID=B69B-8480 /boot/efi vfat defaults 0 1
+/dev/pve/swap none swap sw 0 0
+proc /proc proc defaults 0 0
+UUID=6bc7b56d-4517-4aaf-8daf-ccdfb0cf1e87 /mnt/sda1 ext4 defaults 0 0    #Line added
+UUID=94B418FCB418E312 /mnt/sdb1 ntfs defaults 0 0                        #Line added
+UUID=701E33B51E3372E8 /mnt/sdb2 ntfs defaults 0 0                        #Line added
+UUID=ec926e56-833f-4211-b7e9-e9c65327e566 /mnt/sdc1 ext4 defaults 0 0    #Line added
+UUID=FC82-F323 /mnt/sdd1 vfat defaults 0 0                               #Line added
+UUID=00FA8763FA875436 /mnt/sdd3 ntfs defaults 0 0                        #Line added
+UUID=04045BF5045BE866 /mnt/sdd4 ntfs defaults 0 0                        #Line added
+\`\`\`
+
+Reload Systemd (Optional): For systemd-based systems, reload the daemon.
+
+\`\`\`
+sudo systemctl daemon-reload
+\`\`\`
+
+Test the new fstab entries without rebooting by mounting all filesystems
+
+\`\`\`
+sudo mount -a
+\`\`\`
+            `},
+            {
+                id: 7,
+                title: "Proxmox - Change static IP address",
+                excerpt: "How to change the static IP address of a Proxmox server.",
+                date: "09-12-2025",
+                content: `# Proxmox - Change static IP address
+How to change the static IP address of a Proxmox server in the event you happened to have installed it on a different network, and it got set with a different addressing schema
+
+Edit and change /etc/network/interfaces and /etc/hosts
+\`\`\`
+auto lo
+iface lo inet loopback
+
+iface eno1 inet manual
+
+auto vmbr0
+iface vmbr0 inet static
+        address 192.168.88.50/24  # change the IP address to the one you want
+        gateway 192.168.88.1
+        bridge-ports eno1
+        bridge-stp off
+        bridge-fd 0
+
+iface wlp6s0 inet manual
+\`\`\`
+
+\`\`\`
+127.0.0.1 localhost.localdomain localhost
+192.168.88.50 proxmox.pascual.ar proxmox  # change the IP address to the one you want
+
+# The following lines are desirable for IPv6 capable hosts
+
+::1     ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+ff02::3 ip6-allhosts
+\`\`\`
+
+Restart networking for the changes to take effect.
+
+\`\`\`
+sudo systemctl restart networking
+\`\`\`
+
+#proxmox #changeip #staticip #proxmoxip #proxmoxstaticip #proxmoxchangeip
+            `},
+            {
+                id: 2,
+                title: "GitHub - Publish web site",
+                excerpt: "How to Publish Online for Free.",
+                date: "09-09-2025",
+                content: `# GitHub - Publish web site
+
+How to Publish Online for Free
+
+When you're ready, we can host it using **GitHub Pages** (free hosting). Here is a quick summary:
+
+![GitHub Logo](data:image/png;base64,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)
+
+1.  Create a GitHub account (if you do not have one)
+2.  Create a new public repository named my-tech-notes
+3.  Upload your three files (index.html, styles.css, script.js)
+4.  Go to the repo settings → “Pages” → set source to main branch, root folder
+5.  GitHub will give you a live URL like: "https://yourusername.github.io/my-tech-notes"
+
+
+#github #website #freewebsite
+            `},
+            //////////////////////////////////////////////////// START of Articles ////////////////////////////////////////////////////////////
+            {
+                id: 3,
+                title: "Python - Turn Cisco Radio up and down",
+                excerpt: "Python script for automating turning Radio up and down on a Cisco AP.",
+                date: "09-09-2025",
+                content: `# Python - Turn Cisco Radio up and down
+
+Python script for automating turning Radio up and down on Cisco AP.
+
+
+
+Turn Radio UP
+
+
+Reference:
+
+\`\`\`
+https://stackoverflow.com/questions/48229181/paramiko-exec-command-with-multiple-commands-on-cisco-router-not-providing-any-o
+https://learningnetwork.cisco.com/s/question/0D56e0000CtFFqeCQG/to-ssh-to-a-cisco-switch-using-python-you-can-use-the-paramiko-library
+\`\`\`
+
+Code:
+
+\`\`\`
+import paramiko
+from time import sleep
+
+hostname = "192.168.88.5"
+username = "user"
+password = "password"
+
+# Create an SSH client instance
+client = paramiko.SSHClient()
+client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
+# Connect to the server
+client.connect(hostname, username=username, password=password)
+# Execute commands
+################################################################################
+connection = client.invoke_shell()
+connection.send("configure terminal")
+output = connection.recv(65535)
+sleep(1)
+connection.send("\n")
+connection.send("interface dot11Radio 0")
+output = connection.recv(65534)
+sleep(.9)
+connection.send("\n")
+connection.send("no shutdown")
+output = connection.recv(65535)
+sleep(2)
+connection.send("\n")
+################################################################################
+# Close the SSH connection
+client.close()
+\`\`\`
+
+
+
+
+Turn Radio down
+
+
+Reference:
+
+\`\`\`
+https://stackoverflow.com/questions/48229181/paramiko-exec-command-with-multiple-commands-on-cisco-router-not-providing-any-o
+https://learningnetwork.cisco.com/s/question/0D56e0000CtFFqeCQG/to-ssh-to-a-cisco-switch-using-python-you-can-use-the-paramiko-library
+\`\`\`
+
+Script:
+
+\`\`\`
+import paramiko
+from time import sleep
+
+hostname = "192.168.88.5"
+username = "user"
+password = "password"
+
+# Create an SSH client instance
+client = paramiko.SSHClient()
+client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
+# Connect to the server
+client.connect(hostname, username=username, password=password)
+# Execute commands on the server
+################################################################################
+connection = client.invoke_shell()
+connection.send("configure terminal")
+output = connection.recv(65535)
+sleep(1)
+connection.send("\n")
+connection.send("interface dot11Radio 0")
+output = connection.recv(65534)
+sleep(.9)
+connection.send("\n")
+connection.send("shutdown")
+output = connection.recv(65535)
+sleep(2)
+connection.send("\n")
+################################################################################
+# Close the SSH connection
+client.close()
+\`\`\`
+
+#Python #Cisco #AP #AccessPoint #Radio #TurnRadioUpAndDown #Paramiko
+            `},
+            {
+                id: 4,
+                title: "Python - Run Ubiquity commands",
+                excerpt: "Python script to run commands on an Ubiquity AP.",
+                date: "09-09-2025",
+                content: `# Python - Run Ubiquity commands
+
+Python script to run commands on an Ubiquity AP, ideal for automating tasks.
+
+\`\`\`
+import paramiko
+
+hostname = "192.168.40.11"
+username = "user"
+password = "password"
+
+# Create an SSH client instance
+client = paramiko.SSHClient()
+client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
+# Connect to the server
+client.connect(hostname, username=username, password=password)
+
+# Execute commands on the server
+stdin, stdout, stderr = client.exec_command("uptime")
+
+# Print the output of the command
+print(stdout.read())
+stdin, stdout, stderr = client.exec_command("ls")
+print(stdout.read())
+
+# Close the SSH connection
+client.close()
+\`\`\`
+
+#python #ubiquity #ap #radio #turnradioonandoff #paramiko
+            `},
+             {
+                id: 5,
+                title: "Python - Quick Web sharing",
+                excerpt: "Run a quick Web sharing service by using a single python command.",
+                date: "09-09-2025",
+                content: `# Python - Quick Web sharing
+
+Python web sharing.
+
+Run the following command on the directory you wish to share.
+
+The whole Directory files and sub Directories will be shared.
+
+\`\`\`
+nohup python3 -m http.server &
+\`\`\`
+
+#python #web #sharing #python3 #http #server
+            `},
+            {
+                id: 6,
+                title: "Trilium - Install steps",
+                excerpt: "Trilium Note taking App install on Ubuntu with Docker.",
+                date: "09-09-2025",
+                content: `# Trilium - Install steps
+
+How to install the Trillium note taking app.
+
+Github [https://github.com/TriliumNext/Notes](https://github.com/TriliumNext/Notes)
+
+
+Trilium install as per [https://triliumnext.github.io/Docs/Wiki/docker-server-installation.html](https://triliumnext.github.io/Docs/Wiki/docker-server-installation.html)
+
+Install docker (Ubuntu server being used),  [https://docs.docker.com/engine/install/ubuntu/](https://docs.docker.com/engine/install/ubuntu/)
+
+Uninstall previous conflicting packages, if any.
+
+\`\`\`
+for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt remove $pkg; done
+\`\`\` 
+
+Add Docker's official GPG key:
+\`\`\`
+sudo apt-get update
+sudo apt-get install ca-certificates curl # Installing ca-certificates and curl
+sudo install -m 0755 -d /etc/apt/keyrings # Setting keyrings that the repository for Docker will be using
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc # Finish setting up keyrings
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+\`\`\`
+
+Add the repository to apt sources:\n
+![](images/dockergpg.png)
+
+
+Install docker packages and then verify they have been successfully installed.
+
+\`\`\`
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+\`\`\`
+
+\`\`\`
+sudo docker run hello-world
+\`\`\`
+
+Now, going back to the Trilium install [https://triliumnext.github.io/Docs/Wiki/docker-server-installation.html](https://triliumnext.github.io/Docs/Wiki/docker-server-installation.html)
+
+Download the latest docker-compose.yml.
+
+\`\`\`
+wget https://raw.githubusercontent.com/TriliumNext/Notes/master/docker-compose.yml
+\`\`\`
+
+(_Check the compose file, in the event port 8080 is already being used on your host, you can change it on the file by modifying the left value, and leaving the one on the right as is_)
+
+Then, start the container.
+
+\`\`\`
+sudo docker compose up -d
+\`\`\`
+
+Confirm that Trilium is up; and its details.
+
+\`\`\`
+sudo docker ps
+sudo docker inspect [container_name]
+\`\`\`
+
+Load Trilium by navigating to http://hostIP:8080 (_replace 8080 for the port on your yaml file_)
+
+#trilium #docker #install #ubuntu #docker-compose #triliumnext #docker-server-installation
+     `}
+    //////////////////////////////// END of Articles ////////////////////////////////////////////////////////////
+        ];
+
+        // Theme management
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        body.setAttribute('data-theme', savedTheme);
+        themeToggle.textContent = savedTheme === 'light' ? '🌙' : '☀️';
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            body.setAttribute('data-theme', newTheme);
+            themeToggle.textContent = newTheme === 'light' ? '🌙' : '☀️';
+            localStorage.setItem('theme', newTheme);
+        });
+
+        // DOM elements
+        const articlesContainer = document.getElementById('articlesContainer');
+        const articleContent = document.getElementById('articleContent');
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const backBtn = document.getElementById('backBtn');
+
+        // State
+        let currentArticles = articlesData;
+        let currentView = 'list'; // 'list' or 'article'
+        let adRotationIndex = 0;
+        let sidebarAdVisible = true;
+
+        // Advertisement Functions
+        function createAdElement(ad) {
+            const adElement = document.createElement('div');
+            adElement.className = `ad-banner ${ad.type === 'sidebar' ? 'sidebar-ad' : ''}`;
+            adElement.onclick = () => handleAdClick(ad);
+            
+            adElement.innerHTML = `
+                <div class="ad-label">Ad</div>
+                ${ad.type === 'sidebar' ? '<button class="ad-close" onclick="event.stopPropagation(); closeSidebarAd()">×</button>' : ''}
+                <div class="ad-content">
+                    ${ad.image ? `<img src="${ad.image}" alt="${ad.title}" class="ad-image">` : ''}
+                    <div class="ad-title">${ad.title}</div>
+                    <div class="ad-description">${ad.description}</div>
+                    <a href="#" class="ad-cta" onclick="event.stopPropagation(); handleAdClick(ad)">${ad.cta}</a>
+                </div>
+            `;
+            
+            // Track impression
+            ad.impressions++;
+            return adElement;
+        }
+
+        function getRandomAd(placement) {
+            const availableAds = advertisementsData.filter(ad => 
+                ad.active && ad.placement.includes(placement)
+            );
+            
+            if (availableAds.length === 0) return null;
+            
+            // Simple rotation
+            const adIndex = adRotationIndex % availableAds.length;
+            adRotationIndex++;
+            
+            return availableAds[adIndex];
+        }
+
+
+        function showSidebarAd() {
+            if (!sidebarAdVisible) return;
+            
+            const existingSidebarAd = document.querySelector('.sidebar-ad');
+            if (existingSidebarAd) return;
+            
+            const ad = getRandomAd('sidebar');
+            if (!ad) return;
+            
+            const sidebarAd = createAdElement(ad);
+            document.body.appendChild(sidebarAd);
+            
+            // Auto-hide after 10 seconds
+            setTimeout(() => {
+                if (sidebarAd.parentNode) {
+                    sidebarAd.remove();
+                }
+            }, 10000);
+        }
+
+        function closeSidebarAd() {
+            const sidebarAd = document.querySelector('.sidebar-ad');
+            if (sidebarAd) {
+                sidebarAd.remove();
+            }
+            sidebarAdVisible = false;
+            
+            // Re-enable sidebar ads after 30 seconds
+            setTimeout(() => {
+                sidebarAdVisible = true;
+            }, 30000);
+        }
+
+        function handleAdClick(ad) {
+            ad.clicks++;
+            console.log(`Ad clicked: ${ad.title} (${ad.clicks} clicks, ${ad.impressions} impressions)`);
+            
+            // Open ad URL in new tab
+            if (ad.url) {
+                window.open(ad.url, '_blank');
+            }
+        }
+
+        function addHeaderAd() {
+            const headerAd = getRandomAd('header');
+            if (!headerAd) return;
+            
+            const headerAdContainer = document.createElement('div');
+            headerAdContainer.className = 'header-ad';
+            headerAdContainer.appendChild(createAdElement(headerAd));
+            
+            const header = document.querySelector('.header');
+            header.parentNode.insertBefore(headerAdContainer, header.nextSibling);
+        }
+
+        // Initialize
+        function init() {
+            renderArticles(articlesData);
+            setupEventListeners();
+            addHeaderAd();
+            
+            // Show sidebar ad after 3 seconds
+            setTimeout(showSidebarAd, 3000);
+            
+            // Rotate sidebar ads every 15 seconds
+            setInterval(() => {
+                if (sidebarAdVisible && Math.random() > 0.5) {
+                    showSidebarAd();
+                }
+            }, 15000);
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            searchInput.addEventListener('input', debounce(handleSearch, 300));
+            searchBtn.addEventListener('click', () => handleSearch());
+            backBtn.addEventListener('click', showArticlesList);
+            
+            // Enter key for search
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    handleSearch();
+                }
+            });
+        }
+
+        // Debounce function
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Render articles list
+        function renderArticles(articles) {
+            if (articles.length === 0) {
+                articlesContainer.innerHTML = `
+                    <div class="no-results">
+                        <h3>No articles found</h3>
+                        <p>Try adjusting your search terms</p>
+                    </div>
+                `;
+                return;
+            }
+
+            articlesContainer.innerHTML = articles.map(article => `
+                <div class="article-card" onclick="showArticle(${article.id})">
+                    <h2 class="article-title">${article.title}</h2>
+                    <p class="article-excerpt">${article.excerpt}</p>
+                    <div class="article-meta">
+                        <span class="article-date">${formatDate(article.date)}</span>
+                        <a href="#" class="read-more" onclick="event.stopPropagation(); showArticle(${article.id})">Read More</a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Search functionality
+        function handleSearch() {
+            const query = searchInput.value.trim().toLowerCase();
+            
+            if (query === '') {
+                currentArticles = articlesData;
+            } else {
+                currentArticles = articlesData.filter(article => 
+                    article.title.toLowerCase().includes(query) ||
+                    article.excerpt.toLowerCase().includes(query) ||
+                    article.content.toLowerCase().includes(query)
+                );
+            }
+            
+            if (currentView === 'list') {
+                renderArticles(currentArticles);
+            }
+        }
+
+        // Show individual article
+        function showArticle(id) {
+            const article = articlesData.find(a => a.id === id);
+            if (!article) return;
+
+            currentView = 'article';
+            articlesContainer.style.display = 'none';
+            articleContent.style.display = 'block';
+            backBtn.classList.add('active');
+
+            // Convert markdown to HTML
+            const htmlContent = marked.parse(article.content);
+            
+            articleContent.innerHTML = `
+                <div class="article-meta" style="margin-bottom: 2rem;">
+                    <span class="article-date">${formatDate(article.date)}</span>
+                </div>
+                ${htmlContent}
+            `;
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Show articles list
+        function showArticlesList() {
+            currentView = 'list';
+            articlesContainer.style.display = 'grid';
+            articleContent.style.display = 'none';
+            backBtn.classList.remove('active');
+            
+            // Re-render with current search results
+            renderArticles(currentArticles);
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        // Make functions globally accessible
+        window.showArticle = showArticle;
+        window.handleAdClick = handleAdClick;
+        window.closeSidebarAd = closeSidebarAd;
+
+        // Initialize the app
+        init();
+    </script>
 </body>
 </html>
-
