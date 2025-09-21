@@ -638,6 +638,63 @@ More notes to come...
 </video>
             `},
             //////////////////////////////////////////////////// TEMPLATE ////////////////////////////////////////////////////////////
+        {
+                id: 20,
+                title: "PowerShell - Ethernet information",
+                excerpt: "Obtain Ethernet capabilities from PowerShell",
+                date: "09-21-2045",
+                content: `# PowerShell - Ethernet information
+Obtain Ethernet capabilities and related information using Windows PowerShell.
+
+1. Basic Ethernet adapter information:
+\`\`\`
+Get-NetAdapter | Selec-Object InterfaceDescription, Name, Status, LinkSpeed
+\`\`\`
+
+2. Get detailed Ethernet adapter properties:
+\`\`\`
+Get-NetAdapter -Name \"Ethernet\" | Format-List -Property *
+\`\`\`
+
+3. Explore advanced Ethernet capabilities
+\`\`\`
+Get-NetAdapterAdvancedProperty -Name \"Ethernet\"
+\`\`\`
+            `},
+        {
+                id: 19,
+                title: "PowerShell - Wifi information",
+                excerpt: "Obtain Wfi capabilities from PowerShell",
+                date: "09-21-2025",
+                content: `# PowerShell - Wifi information
+
+Obtain Wifi capabilities and related information using Windows PowerShell.
+
+1. View Detailed Wifi Interface Information:
+\`\`\`
+netsh wlan show interfaces
+\`\`\`
+
+2. Check Supported Radio Types (5GHz Capability):
+\`\`\`
+netsh wlan show drivers
+\`\`\`
+
+3. List Saved Wi-Fi Profiles:
+\`\`\`
+netsh wlan show profiles
+\`\`\`
+
+4. Generate a Wifi Report:
+\`\`\`
+netsh wlan show wlanreport
+\`\`\`
+
+5. Get Network Adapter Information (including Link Speed):
+\`\`\`
+Get-NetAdapter | select interfaceDescription, name, status, linkSpeed
+\`\`\`
+            `},
             {
                 id: 18,
                 title: "Security - Wifi audit - airmon-ng - dictionary attack",
