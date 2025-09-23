@@ -639,6 +639,118 @@ More notes to come...
             `},
             //////////////////////////////////////////////////// TEMPLATE ////////////////////////////////////////////////////////////
         {
+                id: 24,
+                title: "Windows - Enable SSH access",
+                excerpt: "Steps to enable ssh access on Windows",
+                date: "09-23-2045",
+                content: `# Windows - Enable SSH access
+
+Enabling SSH and opening port 22 on Windows involves setting up an SSH server on your Windows machine and configuring the firewall to allow inbound connections on port 22. One common way to achieve this is by using third-party software like OpenSSH for Windows.
+Prerequisites:
+
+Before setting up SSH on Windows and opening port 22, ensure the following:
+
+Windows Version:
+
+You must be using a compatible version of Windows that supports the OpenSSH feature. This typically includes Windows 10 version 1809 (October 2018 Update) or later, or Windows Server 2019.
+
+Administrator Access:
+
+You need administrative privileges on the Windows machine to install and configure the OpenSSH server and firewall rules.
+
+Network Connectivity:
+
+Ensure that your Windows machine is connected to a network, and you have a valid IP address assigned to it.
+
+Windows PowerShell:
+
+You should have basic familiarity with Windows PowerShell, as some steps involve running PowerShell commands as an administrator.
+
+SSH Client (for remote access):
+
+Prepare an SSH client on another device (e.g., PuTTY on Windows, OpenSSH on Linux/macOS) to connect to your Windows SSH server once it’s set up.
+
+Step 1: Install OpenSSH Server on Windows
+
+Enable OpenSSH Feature:
+
+Open the “Settings” app on your Windows machine.
+
+Go to “Apps” > “Optional features” > “Add a feature”.
+
+Look for “OpenSSH Server” in the list and click to install it.
+
+Install via PowerShell (if Settings app is not used):
+
+Open PowerShell as Administrator.
+
+Run the following command to install OpenSSH Server:
+\`\`\`
+Add-WindowsCapability -Online -Name OpenSSH.Server
+\`\`\`
+Step 2: Configure OpenSSH Server
+
+Start SSH Service:
+
+Open PowerShell as Administrator.
+
+Start the SSH server service:
+\`\`\`
+Start-Service sshd
+\`\`\`
+(Optional) Set SSH Service to Start Automatically:
+
+Run the following command to set the SSH server service to start automatically:
+\`\`\`
+Set-Service -Name sshd -StartupType 'Automatic'
+\`\`\`
+Verify SSH Server Status:
+
+You can check the status of the SSH server service to ensure it’s running:
+\`\`\`
+Get-Service sshd
+\`\`\`
+Step 3: Allow SSH Through Windows Firewall
+
+Allow SSH Service:
+
+Open PowerShell as Administrator.
+
+Run the following commands to allow SSH traffic through the firewall:
+\`\`\`
+New-NetFirewallRule -Name sshd -DisplayName 'OpenSSH Server (sshd)' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22
+\`\`\`
+Step 4: Accessing Windows SSH Server
+
+Find Windows IP Address:
+
+Open PowerShell.
+
+Run:
+\`\`\`
+ipconfig
+\`\`\`
+Connect via SSH:
+
+Use an SSH client on another machine (like PuTTY on Windows or OpenSSH on Linux/macOS).
+
+In the SSH client, enter the Windows machine’s IP address and port 22 (default for SSH) to establish a connection.
+\`\`\`
+ssh username@hostname_or_ip_address
+\`\`\`
+Additional Notes:
+
+Ensure that Windows Defender Firewall (or any other firewall software) is configured to allow inbound TCP traffic on port 22.
+
+Use appropriate security practices, such as setting up SSH keys for authentication instead of passwords, to enhance security.
+
+Always keep the Windows system and OpenSSH software up-to-date with the latest security patches.
+
+By following these steps, you’ll have successfully enabled SSH and opened port 22 on your Windows machine, allowing you to securely connect to it using SSH clients from other devices on the same network.
+
+            `},
+
+        {
                 id: 23,
                 title: "Linux - Do not suspend when closing notebook lid",
                 excerpt: "Which file to edit to avoid a notebook to suspend when closing the lid",
