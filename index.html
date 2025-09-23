@@ -639,6 +639,46 @@ More notes to come...
             `},
             //////////////////////////////////////////////////// TEMPLATE ////////////////////////////////////////////////////////////
         {
+                id: 22,
+                title: "Linux - CLI built-in vs non-built-in commands",
+                excerpt: "Brief explanation on the difference between built-in and non-built-in commands Linux commands",
+                date: "09-23-2045",
+                content: `# Linux - CLI built-in vs non-built-in commands
+
+Built-in commands are integrated directly into a shell (like Bash), while non-built-in (or external) commands are separate programs located on the system's file system, requiring the shell to locate and execute them.
+
+The help command lists all the builtin programs on bash
+\`\`\`
+help
+\`\`\`
+
+To confirm if a command is a builtin one or not, run command -V
+\`\`\`
+lucas@debian:/test/test_1$ command -V cat
+cat is /usr/bin/cat
+lucas@debian:/test/test_1$ command -V df
+df is /usr/bin/df
+lucas@debian:/test/test_1$ command -V echo
+echo is a shell builtin
+lucas@debian:/test/test_1$
+\`\`\`
+
+To set a command to use either the builtin or the command version
+\`\`\`
+lucas@debian:/test/test_1$ command -V echo
+echo is a shell builtin
+lucas@debian:/test/test_1$ enable -n echo
+lucas@debian:/test/test_1$ command -V echo
+echo is /usr/bin/echo
+lucas@debian:/test/test_1$ enable echo
+lucas@debian:/test/test_1$ command -V echo
+echo is a shell builtin
+lucas@debian:/test/test_1$
+\`\`\`
+
+            `},
+
+        {
                 id: 21,
                 title: "Linux - Wifi information",
                 excerpt: "Obtain Wifi capabilities from the Linux CLI",
