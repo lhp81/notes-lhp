@@ -639,6 +639,20 @@ More notes to come...
             `},
             //////////////////////////////////////////////////// TEMPLATE ////////////////////////////////////////////////////////////
         {
+                id: 23,
+                title: "Linux - Do not suspend when closing notebook lid",
+                excerpt: "Which file to edit to avoid a notebook to suspend when closing the lid",
+                date: "09-23-2045",
+                content: `# Linux - Do not suspend when closing notebook lid
+\`\`\`
+/etc/systemd/logind.conf
+HandleLidSwitch=ignore
+systemctl restart systemd-logind
+\`\`\`
+
+            `},
+
+        {
                 id: 22,
                 title: "Linux - CLI built-in vs non-built-in commands",
                 excerpt: "Brief explanation on the difference between built-in and non-built-in commands Linux commands",
