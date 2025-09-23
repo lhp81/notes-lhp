@@ -873,6 +873,11 @@ netsh wlan show wlanreport
 \`\`\`
 Get-NetAdapter | select interfaceDescription, name, status, linkSpeed
 \`\`\`
+
+6. Extract Wi-fi password
+\`\`\`
+netsh wlan show profile name="SSID" key=clear
+\`\`\`
             `},
             {
                 id: 18,
