@@ -639,6 +639,24 @@ More notes to come...
             `},
             //////////////////////////////////////////////////// TEMPLATE ////////////////////////////////////////////////////////////
         {
+                id: 25,
+                title: "Linux - Add user to the sudoers group",
+                excerpt: "Adding a user to the sudoers group for both Debian and RedHat based systems",
+                date: "09-24-2045",
+                content: `# Linux - Add user to the sudoers group
+
+For Debian/Ubuntu-based systems:
+\`\`\`
+sudo usermod -aG sudo username
+\`\`\`
+
+For Fedora/RHEL-based systems:
+\`\`\`
+sudo usermod -aG wheel username
+\`\`\`
+            `},
+
+        {
                 id: 24,
                 title: "Windows - Enable SSH access",
                 excerpt: "Steps to enable ssh access on Windows",
