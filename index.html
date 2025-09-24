@@ -777,6 +777,8 @@ By following these steps, you’ll have successfully enabled SSH and opened port
 \`\`\`
 /etc/systemd/logind.conf
 HandleLidSwitch=ignore
+HandleLidSwitchExternalPower=ignore
+HandleLidSwitchDocked=ignore
 systemctl restart systemd-logind
 \`\`\`
 
