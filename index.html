@@ -628,9 +628,15 @@
                 excerpt: "More notes to come...",
                 date: "01-01-2045",
                 content: `# Next note
+ <br>  
+<br>
+
 \`\`\`
 More notes to come...
-\`\`\`
+\`\`\`   
+
+ <br>  
+<br>
 
 <video width="100%" height="auto" controls autoplay muted loop>
     <source src="images/rhinos_video.mp4" type="video/mp4">
@@ -638,6 +644,173 @@ More notes to come...
 </video>
             `},
             //////////////////////////////////////////////////// TEMPLATE ////////////////////////////////////////////////////////////
+            {
+                id: 27,
+                title: "Terraform - AWS - Initial configuration",
+                excerpt: "Reference notes for the initial configuration of Terraform and AWS CLI",
+                date: "10-05-2025",
+                content: `# Terraform - AWS - Initial configuration
+   
+
+The intent of this note is to serve as a quick reference for setting up Terraform and AWS CLI for provisioning.
+
+\`\`\`
+Terraform is an open-source Infrastructure as Code (IaC) tool developed by HashiCorp.   
+It allows users to define and provision data center infrastructure using a declarative   
+configuration language, either HashiCorp Configuration Language (HCL) or JSON.
+\`\`\`
+\`\`\`
+The AWS Command Line Interface (AWS CLI) is a unified, open-source tool that allows users   
+to interact with and manage various Amazon Web Services (AWS) from their command-line shell.   
+It provides a consistent interface to control a wide range of AWS services, such as Amazon S3,   
+Amazon EC2, and Amazon DynamoDB, by executing commands directly in the terminal.
+\`\`\`
+*************************************************************************************************
+ <br>  
+<br>
+Install AWS CLI (for Windows in this case).   
+
+https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html#getting-started-install-instructions
+\`\`\`
+msiexec.exe /i https://awscli.amazonaws.com/AWSCLIV2.msi
+\`\`\`   
+   
+
+*************************************************************************************************
+ <br>  
+<br>
+
+Install Terraform (for Windows in this case).   
+Download the binary from https://developer.hashicorp.com/terraform/install.   
+Edit the Environment Variales > System variables to point to the executable.   
+   
+![](images/Win_env_variales.png)
+
+
+*************************************************************************************************
+ <br>  
+<br>   
+
+Create an Access key from the AWS Console to be able to push the code.   
+
+* Go to the top right of the AWS Console screen, select the user icon and click Security Credentials.   
+* Search for Access keys, and create a new one with "Create access key" (permisions are needed for this).  
+* Save the "Acces key ID" and "Secret access key".   
+
+ <br>  
+<br>
+
+*************************************************************************************************   
+
+ <br>  
+<br>
+   
+Configure and set the credentials for AWS CLI.   
+
+Execute:
+\`\`\`
+aws configure
+\`\`\`   
+   
+The following information will be entered:   
+
+\`\`\`
+AWS Access Key ID: This is a unique identifier associated with an AWS IAM user or role.   
+It's used to identify who is making the request.   
+
+AWS Secret Access Key: This is the secret key corresponding to the Access Key ID.   
+It's used to cryptographically sign requests and verify the identity of the user or role.   
+
+Default Region Name: This specifies the AWS region that the CLI should use by default when   
+making API calls, unless a different region is explicitly specified in a command.   
+Examples include us-east-1 or eu-west-2.   
+
+Default Output Format: This determines how the results of AWS CLI commands are formatted.   
+Common options include json, text, or table.
+\`\`\`
+
+ <br>  
+<br>
+
+*************************************************************************************************
+
+ <br>  
+<br>
+
+Prepare the directory, where the terraform configuration files will live, by running the init command.   
+
+\`\`\`
+terraform init
+\`\`\`
+
+The terraform init command initializes a working directory containing Terraform configuration files.   
+This is the first command executed when starting a new Terraform project or when cloning an existing configuration from version control.   
+
+
+\`\`\`
+Initializes the Backend:
+Terraform uses a backend to store state data, which tracks the real-world state of provisioned resources.
+Terraform init configures this backend as defined in the configuration, enabling state sharing in collaborative environments.   
+
+Downloads and Installs Providers: Terraform interacts with various remote systems through plugins called "providers."
+This command downloads and installs the necessary provider plugins specified in the configuration files.   
+
+Installs Modules: If the configuration utilizes Terraform modules, terraform init downloads and installs these modules,
+including those sourced from external locations like the Terraform Registry or GitHub.    
+
+Prepares the Working Directory: It creates a hidden .terraform directory within the working directory to manage cached plugins,
+modules, and other state-related information, making the directory ready for subsequent Terraform commands like terraform plan and terraform apply.   
+
+Creates terraform.lock.hcl: This file locks the versions of providers used, ensuring consistent provider versions across different users
+and environments.   
+
+It is safe to run terraform init multiple times as it is an idempotent operation, meaning it will only make changes if updates are required.
+If configuration changes necessitate reinitialization, such as adding new providers or modifying backend configurations,
+terraform init must be run again to update the working directory accordingly.
+\`\`\`
+
+
+ <br>  
+<br>
+
+*************************************************************************************************
+
+ <br>  
+<br>   
+
+
+From here on, Terraform can be used to push the infrastructure needed up to AWS.   
+
+Some useful commands below to check on the configuration details.   
+
+\`\`\`
+PS C:\\WINDOWS\\system32> aws configure list
+NAME       : VALUE                    : TYPE             : LOCATION
+profile    : <not set>                : None             : None
+access_key : ****************PTWY     : shared-credentials-file :
+secret_key : ****************ENWZ     : shared-credentials-file :
+region     : us-east-1                : config-file      : ~/.aws/config
+PS C:\\WINDOWS\\system32> cat ~/.aws/config
+[default]
+region = us-east-1
+output = json
+\`\`\`
+
+\`\`\`
+PS C:\\WINDOWS\\system32> cat  ~/.aws/credentials
+[default]
+aws_access_key_id = ****************PTWY
+aws_secret_access_key = ****************ENWZ
+PS C:\\WINDOWS\\system32> aws sts get-caller-identity
+{
+    "UserId": "4OYVNBGCSW",
+    "Account": "4400044000",
+    "Arn": "arn:aws:iam::4400044000:user/Lucas"
+}
+\`\`\`
+
+*************************************************************************************************
+            `},
             {
                 id: 26,
                 title: "Linux - Filesystem - Delete, Create and Format Partition",
