@@ -644,7 +644,194 @@ More notes to come...
 </video>
             `},
             //////////////////////////////////////////////////// TEMPLATE ////////////////////////////////////////////////////////////
-            {
+
+        {
+                id: 29,
+                title: "Ansible - reachability test",
+                excerpt: "Test reachability from the Ansible Server down to the clients",
+                date: "10-10-2025",
+                content: `# Ansible - reachability test
+
+Test by specifying the nodes list.   
+
+Having the nodes file
+\`\`\`
+192.168.20.50
+192.168.20.51
+192.168.20.52
+192.168.20.53
+\`\`\`   
+
+Run
+
+\`\`\`
+ansible all -i nodes -m ping
+\`\`\`   
+
+ <br>  
+<br>
+
+*************************************************************************************************   
+
+ <br>  
+<br>
+If we add the config file; ansible.cfg.   
+
+\`\`\`
+[defaults]
+192.168.20.50
+192.168.20.51
+192.168.20.52
+192.168.20.53
+\`\`\`   
+
+Run
+\`\`\`
+ansible all -i nodes -m ping
+\`\`\`
+ <br>  
+<br>
+
+*************************************************************************************************
+
+ <br>  
+<br>
+To check which nodes will be affected from the nodes list.   
+
+\`\`\`
+ansible all --list-hosts
+\`\`\`
+
+ <br>  
+<br>
+
+*************************************************************************************************
+
+ <br>  
+<br>
+
+To specify an ip the playbook will have effect on for this particular run.
+
+\`\`\`
+ansible all --list-hosts --limit 192.168.20.50
+\`\`\`
+
+ <br>  
+<br>
+
+*************************************************************************************************
+
+ <br>  
+<br>
+To extract information from the listed servers under nodes.
+
+\`\`\`
+ansible all -m gather_facts
+\`\`\`
+
+ <br>  
+<br>
+            `},
+
+
+//            {
+//                id: 28,
+//                title: "Terraform - AWS - Apply and Destroy Infrastructure",
+//                excerpt: "Reference notes on how to implement IaaS using Terraform and the AWS ecosystem",
+//                date: "10-05-2025",
+//                content: `# Terraform - AWS - Apply and Destroy Infrastructure
+// <br>  
+//<br>
+//First information to gather is the profile to be used, which can be obtained from the credentials file.   
+//These credentials will grant us access to the default profile in AWS.   
+
+//\`\`\`
+//PS C:\WINDOWS\system32> cat  ~/.aws/credentials
+//[default]
+//aws_access_key_id = ****************PTWY
+//aws_secret_access_key = ****************ENWZ
+//\`\`\`   
+
+//Going now to the terraform folder, where our configuration files will exist, the main.tf initial block should look somewhat like this.
+
+//\`\`\`
+//# Provider definition
+//provider "aws" \{
+//    profile = "default"
+//    region = "us-east-1"
+//\}
+//\`\`\`
+
+//When the basic main.tf file is ready, run
+//\`\`\`
+//terraform init
+//\`\`\`
+
+//When init is complete, start putting together the configuration for the desired resources.   
+//Terraform documentation with AWs provider, https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance.   
+
+
+//\`\`\`
+//# Provider definition
+//provider "aws" {
+//    profile = "default"
+//    region = "us-east-1"
+//}
+
+//# Create a VPC
+//resource "aws_vpc" "examplevpc" {
+//    cidr_block = "10.0.0.0/16"
+//}
+
+//# Create a subnet
+//resource "aws_subnet" "examplesubnet" {
+//    vpc_id     = aws_vpc.examplevpc.id
+//    cidr_block = "10.0.1.0/24"
+//}
+
+//# Create a security group
+//resource "aws_security_group" "examplesecuritygroup" {
+//    name        = "examplesecuritygroup"
+//   description = "Allow SSH and HTTP"
+//   vpc_id      = aws_vpc.examplevpc.id
+
+//    ingress {
+//        from_port   = 22
+//        to_port     = 22
+//        protocol    = "tcp"
+//        cidr_blocks = ["0.0.0.0/0"]
+//    }
+
+//    ingress {
+//        from_port   = 80
+//        to_port     = 80
+//        protocol    = "tcp"
+//        cidr_blocks = ["0.0.0.0/0"]
+//    }
+//}
+
+//# Create an instance
+//resource "aws_instance" "exampleinstance" {
+//    ami           = "ami-0bbdd8c17ed981ef9"
+//    instance_type = "t2.micro"
+//    vpc_security_group_ids = [aws_security_group.examplesecuritygroup.id]
+//    subnet_id     = aws_subnet.examplesubnet.id
+//}
+//\`\`\`   
+
+//When the main.tf file is ready, the following two commands would follow.   
+
+//\`\`\`   
+//terraform plan    # Will evaluate the main.tf file and inform which changes will be made.
+//terraform apply   # Will apply the changes and create the infrastructure.
+//\`\`\`   
+
+
+
+
+
+//            `},
+    {
                 id: 27,
                 title: "Terraform - AWS - Initial configuration",
                 excerpt: "Reference notes for the initial configuration of Terraform and AWS CLI",
@@ -682,7 +869,7 @@ msiexec.exe /i https://awscli.amazonaws.com/AWSCLIV2.msi
 
 Install Terraform (for Windows in this case).   
 Download the binary from https://developer.hashicorp.com/terraform/install.   
-Edit the Environment Variales > System variables to point to the executable.   
+Edit the Environment Variables > System variables to point to the executable.   
    
 ![](images/Win_env_variales.png)
 
@@ -694,8 +881,8 @@ Edit the Environment Variales > System variables to point to the executable.
 Create an Access key from the AWS Console to be able to push the code.   
 
 * Go to the top right of the AWS Console screen, select the user icon and click Security Credentials.   
-* Search for Access keys, and create a new one with "Create access key" (permisions are needed for this).  
-* Save the "Acces key ID" and "Secret access key".   
+* Search for Access keys, and create a new one with "Create access key" (permissions are needed for this).  
+* Save the "Access key ID" and "Secret access key".   
 
  <br>  
 <br>
@@ -731,6 +918,19 @@ Common options include json, text, or table.
 
  <br>  
 <br>
+
+*************************************************************************************************
+ <br>  
+<br>
+Put together the initial configuration block (main.tf), for AWS in this case, in whichever folder chosen to contain the terraform files.
+
+\`\`\`
+# Provider definition
+provider "aws" \{
+    profile = "default"
+    region = "us-east-1"
+\}
+\`\`\`
 
 *************************************************************************************************
 
