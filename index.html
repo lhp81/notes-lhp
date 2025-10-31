@@ -645,6 +645,32 @@ More notes to come...
             `},
             //////////////////////////////////////////////////// TEMPLATE ////////////////////////////////////////////////////////////
         {
+                id: 32,
+                title: "Docker - prune",
+                excerpt: "Brief list of Docker \"prune\" options.",
+                date: "10-30-2025",
+                content: `# Docker - prune
+ <br>  
+<br>
+
+Remove images that are not tagged or referenced by any container
+\`\`\`
+docker image prune
+\`\`\`   
+
+Remove images not used by existing containers
+\`\`\`
+docker image prune -a -f
+\`\`\`   
+
+Remove unused docker images, containers and networks
+\`\`\`
+docker system prune --volumes -f
+\`\`\`   
+
+
+            `},
+        {
                 id: 31,
                 title: "Docker - inspect",
                 excerpt: "Brief list of Docker \"inspect\" options.",
