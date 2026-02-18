@@ -1728,11 +1728,14 @@ By following these steps, you’ll have successfully enabled SSH and opened port
                 excerpt: "Which file to edit to avoid a notebook to suspend when closing the lid",
                 date: "09-23-2045",
                 content: `# Linux - Do not suspend when closing notebook lid
+Debian: /etc/systemd/logind.conf   
+Fedora: /usr/lib/systemd/logind.conf
+
 \`\`\`
-/etc/systemd/logind.conf
 HandleLidSwitch=ignore
 HandleLidSwitchExternalPower=ignore
-HandleLidSwitchDocked=ignore
+HandleLidSwitchDocked=ignore   
+
 systemctl restart systemd-logind
 \`\`\`
 
