@@ -644,6 +644,63 @@ More notes to come...
 </video>
             `},
             //////////////////////////////////////////////////// TEMPLATE ////////////////////////////////////////////////////////////
+                    {
+                id: 33,
+                title: "Github - Initial ssh key configuration",
+                excerpt: "List of commands used to perform the initial access to Github",
+                date: "02-18-2026",
+                content: `# Github - ssh key configuration
+ <br>  
+<br>
+
+Set up the local ssh key on your PC; you will receive a prompt to leave the ssh key file as default or you can enter a file name.
+Additionally, a passphrase can be set up if chosen.
+\`\`\`
+ssh-keygen -t ed25519 -C "youremailaddress@email.com"
+\`\`\`   
+
+List the .pub ssh key file content.
+\`\`\`
+cat /home/lucas/.ssh/sshkeyfile.pub
+\`\`\`
+
+On your Github Home page.
+
+In the upper-right corner of any page on GitHub, click your profile picture, then click Settings.   
+    • In the "Access" section of the sidebar, click SSH and GPG keys.   
+    • Click New SSH key or Add SSH key.   
+    • In the "Title" field, add a descriptive label for the new key. For example, if you're using a personal laptop, you might call this key "Personal laptop".   
+    • Select the type of key, either authentication or signing. For more information about commit signing, see About commit signature verification.   
+    • In the "Key" field, paste your public key.   
+    • Click Add SSH key.   
+   
+Set up your username and email, and confirm
+\`\`\`
+git config --global user.name "githubname"
+git config --global user.email "youremailaddress@email.com"   
+git config --list 
+user.name=githubname
+user.email=youremailaddress@email.com
+\`\`\`
+
+Execute "git init"; this is to ceate an empty Git repository or reinitialize an existing one.
+
+
+At this point, if we try "git clone", we will most likely get a Permission denied error. As well as if we test connectivity "ssh -T git@github.com".
+
+Do:
+\`\`\`
+eval "$(ssh-agent -s)" 
+ssh-add ~/.ssh/sshkeyfile
+\`\`\`
+ssh-add — adds private key identities to the OpenSSH authentication agent 
+
+"git clone" and the connectivity test should work now.
+
+ <br>  
+<br>
+
+            `},
         {
                 id: 32,
                 title: "Docker - prune",
