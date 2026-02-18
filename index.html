@@ -645,6 +645,26 @@ More notes to come...
             `},
             //////////////////////////////////////////////////// TEMPLATE ////////////////////////////////////////////////////////////
                     {
+                id: 35,
+                title: "Nextcloud - Untrusted Domain error",
+                excerpt: "Untrusted domain error on nextcloud",
+                date: "02-18-2026",
+                content: `# Nextcloud
+ <br>  
+<br>
+
+Received the Nextcloud error "Access through untrusted domain" after re-installing.
+![](images/nextcloud_error.png)
+
+Resolved as per:   
+https://docs.nextcloud.com/server/32/admin_manual/installation/installation_wizard.html#trusted-domains
+
+Added the server IP address to the /var/www/nextcloud/config/config.php under the 'trusted_domains' section.
+![](images/nextcloud.png)   
+
+
+            `},
+                    {
                 id: 34,
                 title: "DISKPART",
                 excerpt: "Quick reference commands for formatting an USB drive with Windows diskpart",
