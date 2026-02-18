@@ -645,6 +645,42 @@ More notes to come...
             `},
             //////////////////////////////////////////////////// TEMPLATE ////////////////////////////////////////////////////////////
                     {
+                id: 34,
+                title: "DISKPART",
+                excerpt: "Quick reference commands for formatting an USB drive with Windows diskpart",
+                date: "02-18-2026",
+                content: `# Diskpart
+ <br>  
+<br>
+
+\`\`\`
+DISKPART> list disk
+
+Disk ### Status size   Free    Dyn Gpt
+
+Disk 0   online 953 GB 2048 KB      *
+Disk 1   online 29 GB  28 GB        *
+
+DISKPART> select disk 1
+Disk 1 is now the selected disk.
+DISKPART> clean
+DiskPart succeeded in cleaning the disk
+DISKPART> create partition primary
+DiskPart succeeded in creating the specified partition
+DISKPART> format fs=ntfs quick
+166 percent completed
+DiskPart successfully formatted the volume
+DISKPART> assign
+DiskPart successfully assigned the drive letter or mount point.
+
+DISKPART>
+\`\`\`   
+
+ <br>  
+<br>
+
+            `},
+                    {
                 id: 33,
                 title: "Github - Initial ssh key configuration",
                 excerpt: "List of commands used to perform the initial access to Github",
