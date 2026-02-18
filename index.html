@@ -682,35 +682,56 @@ Added the server IP address to the /var/www/nextcloud/config/config.php under th
             `},
                     {
                 id: 34,
-                title: "DISKPART",
-                excerpt: "Quick reference commands for formatting an USB drive with Windows diskpart",
+                title: "Linux/Windows - Check running services",
+                excerpt: "Quick reference commands for checking running services on Linux ad Windows",
                 date: "02-18-2026",
-                content: `# Diskpart
+                content: `# Running Services
  <br>  
 <br>
 
-\`\`\`
-DISKPART> list disk
 
-Disk ### Status size   Free    Dyn Gpt
+Linux Services   
+    • Systemd (Modern): List all active services:   
+    \`\`\`
+    systemctl list-units --type=service --state=running
+    \`\`\`   
+    • Systemd (Check specific):   
+    \`\`\`
+    systemctl status <service_name>
+    \`\`\`   
+    • System V init (Debian):   
+    \`\`\`
+    service --status-all.
+    \`\`\`   
+    • Filtering (Debian, to see only running services):   
+    \`\`\`
+    service --status-all | grep '\[ + \]'
+    \`\`\`   
+    • Processes:   
+    \`\`\`
+    ps -aux
+    \`\`\`   
+   
+    
+   
+ Windows Services   
+    • PowerShell:   
+    \`\`\`
+    Get-Service | Where-Object {$_.Status -eq 'Running'}
+    \`\`\`   
+    • Command Prompt:   
+    \`\`\`
+    net start (lists running services) or tasklist.
+    \`\`\`   
+    • Remote Server:   
+    \`\`\`
+    Get-Service -ComputerName <server_name> -Status Running
+    \`\`\`   
+    • GUI:   
+    \`\`\`
+    Task Manager (Services tab) or services.msc.
+    \`\`\`
 
-Disk 0   online 953 GB 2048 KB      *
-Disk 1   online 29 GB  28 GB        *
-
-DISKPART> select disk 1
-Disk 1 is now the selected disk.
-DISKPART> clean
-DiskPart succeeded in cleaning the disk
-DISKPART> create partition primary
-DiskPart succeeded in creating the specified partition
-DISKPART> format fs=ntfs quick
-166 percent completed
-DiskPart successfully formatted the volume
-DISKPART> assign
-DiskPart successfully assigned the drive letter or mount point.
-
-DISKPART>
-\`\`\`   
 
  <br>  
 <br>
