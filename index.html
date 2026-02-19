@@ -1631,12 +1631,22 @@ The filesystems are mounted following their order in fstab.
                 date: "09-24-2045",
                 content: `# Linux - Add user to the sudoers group
 
-For Debian/Ubuntu-based systems:
+_ For Debian/Ubuntu-based systems:
 \`\`\`
 sudo usermod -aG sudo username
+\`\`\`   
+If the user still has no sudoer permissions, change to root by executing:   
+\`\`\`
+"su -"
+\`\`\`   
+Then run "visudo", and search for the line "# User privilege specification"; lastly add your user to the list.   
+\`\`\`
+# User privilege specification
+root    ALL=(ALL:ALL) ALL
+lucas   ALL=(ALL:ALL) ALL # new sudoer user
 \`\`\`
 
-For Fedora/RHEL-based systems:
+_ For Fedora/RHEL-based systems:
 \`\`\`
 sudo usermod -aG wheel username
 \`\`\`
