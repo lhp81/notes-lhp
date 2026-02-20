@@ -644,6 +644,84 @@ More notes to come...
 </video>
             `},
             //////////////////////////////////////////////////// TEMPLATE ////////////////////////////////////////////////////////////
+        {
+                id: 39,
+                title: "Linux - cron",
+                excerpt: "How to set up Linux cron to schedule running tasks",
+                date: "02-20-2026",
+                content: `# Linux - cron
+ <br>  
+<br>
+
+Introduction to cron, basic settings to have a script running, in this example, will be every minute.   
+Lets say we want to append the output of "echo $(date)", which prints the system date and time, to a text file named "date.txt"; we could create the following "script.sh" to that end.   
+\`\`\`
+#!/bin/bash
+
+echo $(date) >> date.txt
+\`\`\`   
+
+Giving the script permissions to execute.   
+ \`\`\`
+chmod +x script.sh
+ \`\`\`   
+ 
+Manually executing the script will effectively append the "date" output to te date.txt file
+\`\`\`
+./script.sh
+\`\`\`   
+
+Creating the cron job to have the script running automatically.   
+\`\`\`
+crontab -l # list already created cron jobs
+crontab -e # edit cron, if this is the first time a cron job is added, a prompt will request to confirm the text editor to be used.
+\`\`\`   
+
+The example below will have the script executed every minute of every hour of every day; this line will be added at the bottom of the cron scheduler after "crontab -e".   
+\`\`\`
+* * * * * /home/user/script.sh
+\`\`\`   
+
+At this point, script.sh will be executed as per the cronjob.   
+Useful links:   
+https://en.wikipedia.org/wiki/Cron   
+https://crontab.guru/examples.html
+
+
+<div>
+  <iframe width="600" height="315" src="https://www.youtube.com/embed/EK-57P6Ylto" 
+   frameborder="0" allowfullscreen></iframe>
+</div>
+
+
+ <br>  
+<br>
+
+            `},
+                    {
+                id: 38,
+                title: "Linux - ssh key",
+                excerpt: "Generate a ssh key and export it to a remote system for direct access without entering password.",
+                date: "02-19-2026",
+                content: `# Linux - ssh key
+ <br>  
+<br>
+
+Create the ssh key on your local system.   
+\`\`\`
+ssh-keygen -t ed25519
+\`\`\`   
+Transfer the public key to the remote system.   
+\`\`\`
+ssh-copy-id remoteuser@remoteip
+\`\`\`   
+Connect to the remote system without having to enter the renmote user password.   
+\`\`\`
+ssh remoteuser@remoteip
+\`\`\`
+
+
+            `},
                     {
                 id: 37,
                 title: "Linux/Windows - Check open ports",
