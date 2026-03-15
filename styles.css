@@ -188,3 +188,24 @@ body.dark-mode button:hover {
 body.dark-mode .theme-toggle label {
   color: #ccc;
 }
+
+/* Sets the container of the video responsive */
+/* .responsive-video { 
+/*    position: relative; 
+ /*   padding-bottom: 56.25%; /* 56.25% - 16:9 Aspect Ratio */ 
+ /*   padding-top: 25px;
+ /*   padding-left: 0%;
+ /*   padding-right: 0%;
+ /*   height: 0;
+ /*  }
+
+/* Sets the iframe of the video so that it fills the container completely */
+/* .responsive-video iframe
+/* { 
+ /*  position: absolute; 
+ /*  top: 0; 
+ /*  left: 0; 
+ /*  width: 150px; 
+  /* height: 100%; 
+/* }
+

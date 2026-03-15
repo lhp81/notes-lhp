@@ -645,6 +645,44 @@ More notes to come...
             `},
             //////////////////////////////////////////////////// TEMPLATE ////////////////////////////////////////////////////////////
         {
+                id: 40,
+                title: "Python - Set virtual environment",
+                excerpt: "Set up a Python virtual environment",
+                date: "03-15-2026",
+                content: `# Python - Virtual Environment
+ <br>  
+<br>
+
+Install python tool   
+\`\`\`
+sudo apt install python3
+sudo apt install python3-virtualenv
+\`\`\`   
+
+
+Do cd into the directory you will use for your project, change to the directory you will want your virtual environment to live   
+\`\`\`
+cd venvdir
+\`\`\`   
+
+Create the virtual environment   
+\`\`\`
+python3 -m venv venvname
+\`\`\`   
+
+Activate the virtual environment (note the space between the dot and bin/activate)   
+\`\`\`
+. bin/activate
+\`\`\`   
+
+Check that no previous packages are installed   
+\`\`\`
+pip freeze
+\`\`\`
+
+
+            `},
+        {
                 id: 39,
                 title: "Linux - cron",
                 excerpt: "How to set up Linux cron to schedule running tasks",
@@ -688,9 +726,9 @@ https://en.wikipedia.org/wiki/Cron
 https://crontab.guru/examples.html
 
 
-<div>
-  <iframe width="600" height="315" src="https://www.youtube.com/embed/EK-57P6Ylto" 
-   frameborder="0" allowfullscreen></iframe>
+<div class="responsive-video">
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/EK-57P6Ylto" 
+   frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 </div>
 
 
