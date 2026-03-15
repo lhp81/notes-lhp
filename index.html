@@ -645,6 +645,31 @@ More notes to come...
             `},
             //////////////////////////////////////////////////// TEMPLATE ////////////////////////////////////////////////////////////
         {
+                id: 41,
+                title: "Remove spaces from files - Linux and Windows",
+                excerpt: "How to remove spaces from file names on both Linux and Windows",
+                date: "03-15-2026",
+                content: `# Remove spaces from file names on both Linux and Windows
+ <br>  
+<br>
+
+Linux - Replace spaces from files   
+\`\`\`
+for f in *\ *; do mv "$f" "$\{f// /}"; done
+\`\`\`
+
+Replace spaces with underscore   
+\`\`\`
+for f in *\ *; do mv "$f" "$\{f// /_}"; done
+\`\`\`
+
+Windows - Replace spaces from files   
+\`\`\`
+get-childitem * | where {!$_.PSIsContainer} | rename-item -newname { $_.name -replace " """ }
+\`\`\`
+
+            `},
+        {
                 id: 40,
                 title: "Python - Set virtual environment",
                 excerpt: "Set up a Python virtual environment",
