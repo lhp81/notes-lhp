@@ -645,6 +645,55 @@ More notes to come...
             `},
             //////////////////////////////////////////////////// TEMPLATE ////////////////////////////////////////////////////////////
         {
+                id: 42,
+                title: "netcat - netcat for port scanning",
+                excerpt: "Brief note on netcat use for port reachability test",
+                date: "03-15-2026",
+                content: `# Test port reachability using netcat
+ <br>  
+<br>
+
+The general syntax to test a single port is:   
+\`\`\`
+nc -zv <hostname_or_IP_address> <port_number>
+\`\`\`   
+
+For example, to check if port 22 (SSH) is open on a local machine:   
+\`\`\`
+nc -zv localhost 22
+\`\`\`   
+
+To test a range of ports, specify the range instead of a single number:
+\`\`\`
+nc -zv <hostname_or_IP_address> <start_port>-<end_port>
+\`\`\`   
+
+    • -z: Sets nc to zero-I/O mode, meaning it will scan for listening services without sending any data or attempting to establish a full connection. This is faster and avoids generating unnecessary traffic logs.   
+
+    • -v: Enables verbose output, which provides a clear message indicating whether the connection succeeded or failed.   
+
+    • -w <seconds>: Sets a connection timeout. This prevents the command from hanging indefinitely if the target port is blocked by a firewall and does not respond.   
+
+    • -u: Use this flag to test UDP ports instead of the default TCP. Note that UDP is connectionless, so a "succeeded" message only means the packet was sent without an ICMP error, not necessarily that an application is actively listening.      
+
+    
+Alternative Method (Server/Client Pair)   
+
+You can also use netcat in a client-server configuration to manually test connectivity and bidirectional data transfer.   
+
+1. On the target machine (server), run netcat in listening mode on a specific port (e.g., 4444):
+\`\`\`
+nc -l 4444
+\`\`\`   
+
+2. On the source machine (client), connect to the server's IP address and port:
+
+\`\`\`
+nc <server_ip> 4444
+\`\`\`
+
+            `},
+        {
                 id: 41,
                 title: "Remove spaces from files - Linux and Windows",
                 excerpt: "How to remove spaces from file names on both Linux and Windows",
