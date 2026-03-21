@@ -644,6 +644,51 @@ More notes to come...
 </video>
             `},
             //////////////////////////////////////////////////// TEMPLATE ////////////////////////////////////////////////////////////
+                    {
+                id: 43,
+                title: "Linux - Check battery information/status",
+                excerpt: "Linux command for battery status details",
+                date: "03-21-2026",
+                content: `# Linux command for battery status details
+ <br>  
+<br>
+
+Linux command   
+
+\`\`\`
+upower -i $(upower -e | grep battery)
+\`\`\`   
+
+Output example   
+\`\`\`
+  native-path:          BAT0
+  vendor:               Hewlett-Packard
+  model:                Primary
+  serial:               06067 12/15/2015
+  power supply:         yes
+  updated:              Sat 21 Mar 2026 12:03:25 PM -03 (10 seconds ago)
+  has history:          yes
+  has statistics:       yes
+  battery
+    present:             yes
+    rechargeable:        yes
+    state:               discharging
+    warning-level:       none
+    energy:              26,2996 Wh
+    energy-empty:        0 Wh
+    energy-full:         28,268 Wh
+    energy-full-design:  28,268 Wh
+    energy-rate:         6,4676 W
+    voltage:             16,064 V
+    charge-cycles:       N/A
+    time to empty:       4,1 hours
+    percentage:          93%
+    capacity:            100%
+    technology:          lithium-ion
+    icon-name:          'battery-full-symbolic'
+\`\`\`
+
+            `},
         {
                 id: 42,
                 title: "netcat - netcat for port scanning",
