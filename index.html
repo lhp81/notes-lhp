@@ -645,6 +645,73 @@ More notes to come...
             `},
             //////////////////////////////////////////////////// TEMPLATE ////////////////////////////////////////////////////////////
                     {
+                id: 44,
+                title: "nmap - nmap for port scanning",
+                excerpt: "Basic nmap usage",
+                date: "03-21-2026",
+                content: `# Basic nmap usage
+ <br>  
+<br>
+
+Common Nmap Commands   
+
+Here are some common examples for scanning ports:   
+
+Default scan: Scans the 1,000 most common TCP ports.
+\`\`\`
+nmap [target] 
+Example: nmap scanme.nmap.org
+\`\`\`   
+
+
+Scan a specific port: Use the -p option followed by the port number.
+\`\`\`
+nmap -p [port_number] [target]
+Example: nmap -p 80 scanme.nmap.org
+\`\`\`   
+
+
+Scan multiple ports: Separate port numbers with commas.
+\`\`\`
+nmap -p [port1],[port2] [target]
+Example: nmap -p 22,80,443 scanme.nmap.org
+\`\`\`   
+
+
+Scan a range of ports: Specify the range using a hyphen.
+\`\`\`
+nmap -p [start_port]-[end_port] [target]
+Example: nmap -p 1-100 scanme.nmap.org
+\`\`\`   
+
+Scan all 65535 ports: Use the -p- option. This can take significant time.
+\`\`\`
+nmap -p- [target]
+\`\`\`
+
+Fast scan: Scans the 100 most common ports using the -F option.
+\`\`\`
+nmap -F [target]
+\`\`\`   
+
+TCP SYN stealth scan: A common, efficient scan type that doesn't complete the full TCP handshake. Requires sudo on Linux/macOS.
+\`\`\`
+sudo nmap -sS [target]
+\`\`\`   
+
+UDP scan: Scans for User Datagram Protocol ports using the -sU option.
+\`\`\`
+sudo nmap -sU [target]
+\`\`\`   
+
+Service and Version detection: Probes open ports to determine the exact service and application version running on them using -sV.
+\`\`\`
+nmap -sV [target]
+\`\`\`
+
+
+            `},
+                    {
                 id: 43,
                 title: "Linux - Check battery information/status",
                 excerpt: "Linux command for battery status details",
@@ -721,7 +788,21 @@ nc -zv <hostname_or_IP_address> <start_port>-<end_port>
 
     • -u: Use this flag to test UDP ports instead of the default TCP. Note that UDP is connectionless, so a "succeeded" message only means the packet was sent without an ICMP error, not necessarily that an application is actively listening.      
 
+   
+   
+
+
+Scan for UDP ports   
+\`\`\`
+nc -vzu <target_ip> <port>
+# Example: nc -vzu 192.168.1.10 53
+\`\`\`
     
+The -u option specifies the use of the UDP protocol instead of the default   
+   
+   
+
+
 Alternative Method (Server/Client Pair)   
 
 You can also use netcat in a client-server configuration to manually test connectivity and bidirectional data transfer.   
