@@ -645,6 +645,61 @@ More notes to come...
             `},
             //////////////////////////////////////////////////// TEMPLATE ////////////////////////////////////////////////////////////
                     {
+                id: 45,
+                title: "Linux - vnstat - network traffic monitoring",
+                excerpt: "vnStat is an open-source, console-based network traffic monitor for Linux and BSD systems that logs data usage without sniffing packets. Because it reads network interface statistics directly from the kernel, it uses virtually zero system resources.",
+                date: "08-11-2026",
+                content: `# vnstat - network traffic monitoring
+ <br>  
+<br>
+
+vnStat is an open-source, console-based network traffic monitor for Linux and BSD systems that logs data usage without sniffing packets.  
+Because it reads network interface statistics directly from the kernel, it uses virtually zero system resources.
+
+Github:  
+https://github.com/vergoh/vnstat
+
+Key FeaturesUltra-Lightweight: Does not analyze traffic contents, meaning no heavy CPU usage.  
+Persistent History: Keeps logs categorized by 5-minute windows, hours, days, months, and years.  
+Low Permissions: Can be run by regular users without root access on most distributions.  
+Graphical Output: Can generate PNG summary images using vnstati.  
+  
+Common Commands:  
+To check stats once installed, use these primary arguments in your terminal:  
+vnstat: Shows a general overview of the default interface.  
+vnstat -i eth0: Filters statistics for a specific interface, like eth0.  
+vnstat -h: Displays hourly network utilization.  
+vnstat -d: Breaks down traffic by calendar days.  
+vnstat -m: Summarizes bandwidth consumption by month.  
+vnstat -l: Displays real-time current transfer speed.  
+  
+Installation & Setup for Debian and Ubuntu-based systems:  
+\`\`\`
+sudo apt update && sudo apt install vnstat
+sudo systemctl enable vnstat --now
+\`\`\`   
+  
+The configuration file can be found here:  
+\`\`\`
+/etc/vnstat.conf
+\`\`\`  
+
+The service can be checked with:
+\`\`\`
+sudo systemctl status vnstat
+\`\`\`  
+
+And enabled and restarted as follows
+\`\`\`
+sudo systemctl enable vnstat
+sudo systemctl restart vnstat
+\`\`\`
+
+ <br>  
+<br>
+
+            `},
+                    {
                 id: 44,
                 title: "nmap - nmap for port scanning",
                 excerpt: "Basic nmap usage",
