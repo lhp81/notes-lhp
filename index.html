@@ -645,6 +645,20 @@ More notes to come...
             `},
             //////////////////////////////////////////////////// TEMPLATE ////////////////////////////////////////////////////////////
                     {
+                id: 48,
+                title: "RJ45 color code (T568A & T568B)",
+                excerpt: "T568A & T568B",
+                date: "01-01-2045",
+                content: `# T568A & T568B
+ <br>  
+<br>
+RJ45 LAN Cable Color Code (T568A & T568B) 
+
+![](images/RJ45_color_code.png)
+ <br>  
+<br>
+            `},
+                    {
                 id: 47,
                 title: "TCP and UDP most common port numbers",
                 excerpt: "TCP and UDP most common port numbers",
@@ -909,12 +923,45 @@ UDP scan: Scans for User Datagram Protocol ports using the -sU option.
 sudo nmap -sU [target]
 \`\`\`   
 
+TCP connect scan
+\`\`\`
+nmap -sT [target]
+\`\`\`
+
 Service and Version detection: Probes open ports to determine the exact service and application version running on them using -sV.
 \`\`\`
 nmap -sV [target]
 \`\`\`
 
+Ping scan
+\`\`\`
+nmap -sP [target]
+\`\`\`
 
+Input from list
+\`\`\`
+nmap -iL [target]
+\`\`\`
+
+XMAS scan
+\`\`\`
+nmap -sX [target]
+\`\`\`
+
+FIN scan
+\`\`\`
+nmap -sF [target]
+\`\`\`
+
+TCP Null scan
+\`\`\`
+nmap -sN [target]
+\`\`\`
+
+TCP ACK scan
+\`\`\`
+nmap -sA [target]
+\`\`\`
             `},
                     {
                 id: 43,
