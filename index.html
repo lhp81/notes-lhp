@@ -664,6 +664,138 @@ More notes to come...
 //            `},  
             //////////////////////////////////////////////////// PDF TEMPLATE ////////////////////////////////////////////////////////////
                     {
+                id: 52,
+                title: "Linux - sed command",
+                excerpt: "Linux - sed command explanation and examples",
+                date: "10-31-2026",
+                content: `# Linux - sed command explanation and examples
+ <br>  
+<br>
+The sed command (Stream Editor) in Linux is a powerful utility used to parse, filter, and transform text data line-by-line.  
+It is most commonly used for finding and replacing text, but it can also efficiently handle text insertion, deletion, and line-specific modifications without opening the file.  
+By default, sed processes data and prints the output to your terminal, leaving the source file completely untouched unless you tell it otherwise.
+
+
+The Basic Syntax  
+\`\`\`
+sed [options] 'command' filename
+\`\`\`   
+
+• s: The action token for substitution (find and replace).  
+• /: Delimiters separating the action, the search pattern, and the replacement text.  
+• g: The global flag, which tells sed to replace all occurrences on a single line instead of just the first one.
+
+
+Common Options and Flags  
+
+Option / Flag	Purpose	Example
+-i	In-place editing (overwrites the original file permanently)	sed -i 's/old/new/g' file.txt  
+-n	Suppresses automatic printing of lines	Used primarily alongside the /p flag to view specific lines.  
+-e	Chain multiple commands in a single execution line	sed -e 's/A/B/' -e 's/C/D/' file.txt  
+-E or -r	Enables extended regular expressions (ERE)	Useful for complex regex patterns like (this|that).
+
+
+Practical Examples
+
+
+1. Text Replacement (Find & Replace)
+
+• Replace the first occurrence per line  
+\`\`\`
+sed 's/unix/linux/' file.txt
+\`\`\`
+• Replace all occurrences across the entire file (Global)  
+\`\`\`
+sed 's/unix/linux/g' file.txt
+\`\`\`
+• Case-insensitive replacement (I flag):  
+\`\`\`
+sed 's/unix/linux/gI' file.txt
+\`\`\`
+
+2. Deleting Lines
+
+• Delete a specific line (e.g., line 5)  
+\`\`\`
+sed '5d' file.txt
+\`\`\`
+• Delete a range of lines (e.g., lines 2 through 4)  
+\`\`\`
+sed '2,4d' file.txt
+\`\`\`
+• Delete all blank lines  
+\`\`\`
+sed '/^$/d' file.txt
+\`\`\`
+
+3. Printing Specific Text
+
+• Print only a specific range of lines (e.g., lines 10 to 15)  
+\`\`\`
+sed -n '10,15p' file.txt
+\`\`\`
+• Print only the lines that match a specific pattern  
+\`\`\`
+sed -n '/error/p' log.txt
+\`\`\`
+
+4. Targeting Specific Lines for Replacement
+
+• Modify text only on line 3  
+\`\`\`
+sed '3 s/unix/linux/' file.txt
+\`\`\`
+• Modify text from line 2 to the end of the file ($)  
+\`\`\`
+sed '2,$ s/unix/linux/g' file.txt
+\`\`\`  
+  
+If your text contains a lot of forward slashes (like a file path or URL), you can change the delimiter to any other character, such as a hash mark (#) or pipe (|), to keep things clean  
+\`\`\`
+sed 's#http://example.org#https://example.com#g' file.txt
+\`\`\`  
+  
+Other examples created by Dan Nanni
+\`\`\`
+sed 's/old/new/' my.txt replace the first old with new in each line
+sed 's/old/new/g' my.txt replace all occurrences of old in each line
+sed 's/old/new/gi' my.txt replace all matches while ignoring case
+sed 's/old/new/3' my.txt replace 3rd occurrence of old in each line
+sed '3,8s/old/new/g' my.txt limit the change to specific lines (from 3 to 8)
+sed '/pattern/s/old/new/g' my.txt only those lines matching the pattern
+sed '/pattern/i\\text line' my.txt insert a line before the pattern match
+sed '/pattern/a\\text line' my.txt insert a line after the pattern match
+sed -n '/pattern/p' my.txt print only lines matching a pattern
+sed -n '5,10p' my.txt print a range of lines (from 5 to 10)
+sed -n -e '3,5p' -e '10,15p' my.txt print multiple ranges of lines
+sed -i 's/old/new/g' my.txt edit the file in place
+sed -i 's/\\r$//' my.txt remove trailing ^M (carriage return) in each line
+sed -i'.orig' 's/old/new/gi' my.txt edit in place; back up original as my.txt.orig
+sed -i 's/old/new/g;s/this/that/g' my.txt perform multiple substitutions
+sed -f sed_cmd_file my.txt read sed commands from file and apply them
+sed '5c\\this is a new line' my.txt modify a specific line (line 5)
+sed '/pattern/c this is a new line' my.txt replace each matching line
+sed = my.txt | sed 'N;s/\\n/ /' add a line number to each line
+sed 's/.*/\\U&/' my.txt convert text in each line to uppercase
+sed -r 's/(foo|bar)/new/g' my.txt sed with extended regex
+sed '/pattern/d' my.txt delete lines matching the pattern
+sed '5d' my.txt delete a specific line number (e.g. 5)
+sed '2,5d' my.txt delete a range of lines (e.g. from 2 to 5)
+\`\`\`
+
+
+
+ <br>  
+<br>
+
+References:
+<a href="https://www.google.com/url?sa=i&source=web&rct=j&url=https://www.geeksforgeeks.org/linux-unix/sed-command-in-linux-unix-with-examples/&ved=2ahUKEwj_7YDa0uSXAxXHs5UCHUUJNqYQr8wVegoIAggACAMICRAB&opi=89978449&cd&psig=AOvVaw1HRYS5UGT_fVHzZnTx0RAC&ust=1793549504321000">https://www.geeksforgeeks.org/linux-unix/sed-command-in-linux-unix-with-examples/</a>  
+<a href="https://www.google.com/url?sa=i&source=web&rct=j&url=https://medium.com/@lumenyx/the-sed-command-basics-in-linux-d7a3865cf2f9&ved=2ahUKEwj_7YDa0uSXAxXHs5UCHUUJNqYQr8wVegoIAggACAMIDRAB&opi=89978449&cd&psig=AOvVaw1HRYS5UGT_fVHzZnTx0RAC&ust=1793549504321000">https://medium.com/@lumenyx/the-sed-command-basics-in-linux-d7a3865cf2f9</a>
+
+
+
+            `},
+                    {
                 id: 51,
                 title: "Public DNS list",
                 excerpt: "Public DNS list",
