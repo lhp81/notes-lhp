@@ -664,6 +664,89 @@ More notes to come...
 //            `},  
             //////////////////////////////////////////////////// PDF TEMPLATE ////////////////////////////////////////////////////////////
             {
+                id: 50,
+                title: "fork bomb",
+                excerpt: "Classic bash function known as a fork bomb.",
+                date: "10-31-2026",
+                content: `# Classic bash function known as a fork bomb.
+ <br>  
+<br>
+
+
+The sequence :(){ :|:& };: is a classic bash function known as a "fork bomb."  
+It is a form of Denial-of-Service (DoS) attack against a Linux/Unix-based operating system.  
+When executed, it rapidly replicates itself until the system runs out of memory and CPU resources, causing the computer to freeze, crash, or lock up completely.
+  
+
+
+Breakdown of the Code
+
+• :() — Defines a new shell function named : (a colon is a valid, though unusual, character for a function name in Bash).  
+
+• { — Marks the beginning of the function's code block.  
+
+• :|: — Inside the function, it calls itself (:) and pipes (|) the output into another call of itself.  
+
+• & — Puts that pipeline execution into the background so it doesn't wait for completion before moving forward.  
+
+• } — Closes the function definition.  
+
+• ; — Separates the function definition from the execution command that follows.  
+
+• : — Invokes the function for the very first time to trigger the sequence.  
+  
+
+  
+
+  
+
+The Result  
+Because the function continually calls itself twice and runs in the background, it creates an exponential explosion of processes (\(2^{n}\)).  
+Within seconds, the operating system hits its maximum process limit, rendering the system completely unresponsive.  
+The only way to recover from it is usually a hard reboot.  
+  
+  
+To prevent a fork bomb from crashing a system, you must limit the maximum number of user processes using ulimit. By capping how many processes a single user can create, the fork bomb will hit a hard ceiling and fail to duplicate further, keeping the operating system stable.
+
+1. Temporary Prevention (Current Session Only)
+
+To apply a restriction immediately to your current terminal session, use the following command:
+bash
+ulimit -u 500
+Use code with caution.
+This restricts the current user to a maximum of 500 concurrent processes. If a fork bomb is executed now, it will safely error out with a "Resource temporarily unavailable" message once it hits process #500.
+
+2. Permanent Prevention (System-Wide)
+
+To make this limit permanent across restarts and all user sessions, you need to modify the system configuration file located at /etc/security/limits.conf.
+\`\`\` 
+Open the file with root privileges
+sudo nano /etc/security/limits.conf
+\`\`\` 
+\`\`\` 
+Scroll to the bottom and add the following lines (replace username with a specific user, or use @users for a group)
+# <domain>    <type>    <item>    <value>
+@users        hard      nproc     500
+@users        soft      nproc     400
+\`\`\` 
+
+Understanding the Configuration
+
+• nproc: This specifies the maximum number of processes.  
+• Hard Limit: The absolute ceiling enforced by the root user. Regular users cannot bypass this limit.  
+• Soft Limit: The baseline configuration that the user can temporarily increase on their own up to the hard limit.
+
+Setting a Safe Value
+
+A value of 400 to 500 is generally safe and generous enough for daily desktop use or regular development environments without hindering performance.  
+However, for servers running resource-heavy applications like database systems or heavy web servers, you may need to scale this value significantly higher (e.g., 2048 or 4096).
+
+
+ <br>  
+<br>
+
+            `},
+            {
                 id: 49,
                 title: "Structured cabling color coding",
                 excerpt: "Structured cabling color coding",
