@@ -663,6 +663,60 @@ More notes to come...
 //<br>
 //            `},  
             //////////////////////////////////////////////////// PDF TEMPLATE ////////////////////////////////////////////////////////////
+{
+                                id: 48,
+                title: "Networking - Transceivers and cable types.",
+                excerpt: "Networking - Transceivers and cable types",
+                date: "10-31-2026",
+                content: `# Networking - Transceivers and cable types
+ <br>  
+<br>
+Networking - Transceivers and cable types. 
+
+![](images/networking_transceiver_cables.jpeg)
+ <br>  
+<br>
+`},
+                    {
+                id: 53,
+                title: "Linux - +i immutable attribute",
+                excerpt: "Linux - +i immutable attribute",
+                date: "10-31-2026",
+                content: `# Linux - +i immutable attribute
+ <br>  
+<br>
+
+The immutable attribute in Linux is a special filesystem-level flag that prevents a file or directory from being modified, renamed, or deleted—even by the root superuser.  
+This attribute provides an extra layer of system security beyond traditional Unix file permissions (chmod).  
+  
+  
+
+Core Behavior
+
+• Root Restriction: Even root cannot delete or alter the file.  
+• Directory Locking: Files cannot be renamed or moved to different directories.  
+• Link Prevention: Disallows creating new hard links to the file.  
+• Filesystem Dependent: Supported on major filesystems like ext4, XFS, and Btrfs.  
+  
+  
+
+Managing the Immutable Attribute
+\`\`\`
+Command	                     Action	                     Purpose
+sudo chattr +i file.txt	     Set Immutable	             Applies the i attribute to lock the file.
+sudo chattr -i file.txt	     Remove Immutable	         Clears the flag to allow normal modifications.
+lsattr file.txt	             View Flag Status	         Displays active filesystem flags like ----i--------
+\`\`\`  
+
+
+Common Use Cases
+
+• System Hardening: Secures critical network or authentication files, as detailed on TecMint.  
+• Log Tamper Protection: Protects system log directories from unauthorized deletion by attackers.  
+• Accidental Prevention: Safeguards key system infrastructure from accidental rm -rf cleanup commands.
+  
+
+            `},
                     {
                 id: 52,
                 title: "Linux - sed command",
