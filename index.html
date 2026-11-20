@@ -663,6 +663,96 @@ More notes to come...
 //<br>
 //            `},  
             //////////////////////////////////////////////////// PDF TEMPLATE ////////////////////////////////////////////////////////////
+                    {
+                id: 56,
+                title: "Termux - Steps to enable apache",
+                excerpt: "How to enable apache on Termux for Android",
+                date: "11-19-2026",
+                content: `# How to enable apache on Termux for Android
+ <br>  
+<br>
+
+1_ Install termux-services   
+\`\`\`
+~ $ pkg install termux-services
+\`\`\`   
+
+2_ Install apache   
+\`\`\`
+~ $ pkg install apache2
+\`\`\`   
+
+3_ Check the http service status   
+\`\`\`
+~ $ sv status $PREFIX/var/service/httpd/
+down: /data/data/com.termux/files/usr/var/service/httpd/: 3228s; run: log: (pid 8712) 3228s
+\`\`\`   
+
+4_ Enable httpd and check its status again   
+\`\`\`
+~ $ sv up $PREFIX/var/service/httpd/
+~ $ sv status $PREFIX/var/service/httpd/
+run: /data/data/com.termux/files/usr/var/service/httpd/: (pid 9193) 4s, normally down; run: log: (pid 8712) 3282s
+\`\`\`   
+
+5_ Obtain the cellphone IP address with ifconfig and access http://IP:8080
+
+By default, Termux Apache index files are located at:   
+\`\`\`
+• Path: $PREFIX/share/apache2/default-site/htdocs/
+• Full absolute path: /data/data/com.termux/files/usr/share/apache2/default-site/htdocs/
+• Configuration file $PREFIX/etc/apache2/httpd.conf
+\`\`\`  
+            `},            
+                    {
+                id: 55,
+                title: "Termux - Steps to enable ssh",
+                excerpt: "How to enable ssh on Termux for Android",
+                date: "11-19-2026",
+                content: `# How to enable ssh on Termux for Android
+ <br>  
+<br>
+
+1_ Install termux-services   
+\`\`\`
+~ $ pkg install termux-services
+\`\`\`   
+
+2_ Install openssh   
+\`\`\`
+~ $ pkg install openssh
+\`\`\`   
+
+3_ Check ssh service status   
+\`\`\`
+~ $ sv status $PREFIX/var/service/sshd
+down: /data/data/com.termux/files/usr/var/service/sshd: 137s; run: log: (pid 6646) 137s
+\`\`\`   
+
+4_ Enable ssh and check its status again   
+\`\`\`
+~ $ sv up $PREFIX/var/service/sshd
+~ $ sv status $PREFIX/var/service/sshd
+run: /data/data/com.termux/files/usr/var/service/sshd: (pid 6794) 4s, normally down; run: log: (pid 6646) 159s
+\`\`\`   
+
+5_ Check current user's username   
+\`\`\`
+~ $ whoami
+u0_a182
+\`\`\`   
+
+6_ Set the user's password   
+\`\`\`
+~ $ passwd
+\`\`\`   
+
+7_ Connect from a remote system   
+\`\`\`
+~$ ssh u0_a182@192.168.88.34 -p 8022
+\`\`\`
+  
+            `},
 {
                                 id: 54,
                 title: "Networking - Transceivers and cable types.",
