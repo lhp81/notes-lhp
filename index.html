@@ -664,6 +664,50 @@ More notes to come...
 //            `},  
             //////////////////////////////////////////////////// PDF TEMPLATE ////////////////////////////////////////////////////////////
                     {
+                id: 57,
+                title: "Termux - battery status",
+                excerpt: "How to obtain battery status information on Termux",
+                date: "11-20-2026",
+                content: `# How to obtain battery status information on Termux
+ <br>  
+<br>
+
+1_ Install termux-api  
+\`\`\`
+~ $ pkg install termux-api
+\`\`\`   
+
+2_ Check battery status with  
+\`\`\`
+~ $ termux-battery-status
+\`\`\`   
+
+The result should be something like this.   
+\`\`\`
+~ $ termux-battery-status
+{
+  "present": true,
+  "technology": "Li-ion",
+  "health": "GOOD",
+  "plugged": "UNPLUGGED",
+  "status": "CHARGING",
+  "temperature": 30.0,
+  "voltage": 3927,
+  "current": 263000,
+  "current_average": -169,
+  "percentage": 64,
+  "level": 64,
+  "scale": 100,
+  "charge_counter": 2227000,
+  "cycle": 0
+}
+~ $ 
+\`\`\`   
+
+It could happen that the command hangs, in that case, install "Termux:API" from F-Droid
+ 
+            `},              
+                    {
                 id: 56,
                 title: "Termux - Steps to enable apache",
                 excerpt: "How to enable apache on Termux for Android",
