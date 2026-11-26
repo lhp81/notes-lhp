@@ -626,7 +626,7 @@
                 id: 1,
                 title: "Next note",
                 excerpt: "More notes to come...",
-                date: "01-01-2045",
+                date: "01-01-2025",
                 content: `# Next note
  <br>  
 <br>
@@ -642,6 +642,8 @@ More notes to come...
     <source src="images/rhinos_video.mp4" type="video/mp4">
     Your browser does not support the video tag.
 </video>
+
+#@ll
             `},
             //////////////////////////////////////////////////// Generic TEMPLATE ////////////////////////////////////////////////////////////
             //////////////////////////////////////////////////// PDF TEMPLATE ////////////////////////////////////////////////////////////
@@ -661,6 +663,7 @@ More notes to come...
 
 // <br>  
 //<br>
+// #@ll
 //            `},  
             //////////////////////////////////////////////////// PDF TEMPLATE ////////////////////////////////////////////////////////////
                     {
@@ -705,7 +708,8 @@ The result should be something like this.
 \`\`\`   
 
 It could happen that the command hangs, in that case, install "Termux:API" from F-Droid
- 
+
+#@ll
             `},              
                     {
                 id: 56,
@@ -747,6 +751,8 @@ By default, Termux Apache index files are located at:
 • Full absolute path: /data/data/com.termux/files/usr/share/apache2/default-site/htdocs/
 • Configuration file $PREFIX/etc/apache2/httpd.conf
 \`\`\`  
+
+#@ll
             `},            
                     {
                 id: 55,
@@ -795,7 +801,8 @@ u0_a182
 \`\`\`
 ~$ ssh u0_a182@192.168.88.34 -p 8022
 \`\`\`
-  
+ 
+#@ll
             `},
 {
                                 id: 54,
@@ -810,6 +817,8 @@ Networking - Transceivers and cable types.
 ![](images/networking_transceiver_cables.jpeg)
  <br>  
 <br>
+
+#@ll
 `},
                     {
                 id: 53,
@@ -981,7 +990,7 @@ References:
 <a href="https://www.google.com/url?sa=i&source=web&rct=j&url=https://medium.com/@lumenyx/the-sed-command-basics-in-linux-d7a3865cf2f9&ved=2ahUKEwj_7YDa0uSXAxXHs5UCHUUJNqYQr8wVegoIAggACAMIDRAB&opi=89978449&cd&psig=AOvVaw1HRYS5UGT_fVHzZnTx0RAC&ust=1793549504321000">https://medium.com/@lumenyx/the-sed-command-basics-in-linux-d7a3865cf2f9</a>
 
 
-
+#@ll
             `},
                     {
                 id: 51,
@@ -1031,6 +1040,7 @@ OpenDNS
  <br>  
 <br>
 
+#@ll
             `},
             {
                 id: 50,
@@ -1114,6 +1124,7 @@ However, for servers running resource-heavy applications like database systems o
  <br>  
 <br>
 
+#@ll
             `},
             {
                 id: 49,
@@ -1128,6 +1139,8 @@ RJ45 LAN Structured cabling color coding
 ![](images/cable_color_coding.jpeg)
  <br>  
 <br>
+
+#@ll
             `},
                     {
                 id: 48,
@@ -1291,7 +1304,7 @@ cat /var/log/system-health-$(date +%F).log
  <br>  
 <br>
 
-
+#@ll
             `},
                     {
                 id: 45,
@@ -1347,6 +1360,7 @@ sudo systemctl restart vnstat
  <br>  
 <br>
 
+#@ll
             `},
                     {
                 id: 44,
@@ -1447,6 +1461,8 @@ TCP ACK scan
 \`\`\`
 nmap -sA [target]
 \`\`\`
+
+#@ll
             `},
                     {
                 id: 43,
@@ -1492,6 +1508,7 @@ Output example
     icon-name:          'battery-full-symbolic'
 \`\`\`
 
+#@ll
             `},
         {
                 id: 42,
@@ -1555,6 +1572,7 @@ nc -l 4444
 nc <server_ip> 4444
 \`\`\`
 
+#@ll
             `},
         {
                 id: 41,
@@ -1580,6 +1598,7 @@ Windows - Replace spaces from files
 get-childitem * | where {!$_.PSIsContainer} | rename-item -newname { $_.name -replace " """ }
 \`\`\`
 
+#@ll
             `},
         {
                 id: 40,
@@ -1617,7 +1636,7 @@ Check that no previous packages are installed
 pip freeze
 \`\`\`
 
-
+#@ll
             `},
         {
                 id: 39,
@@ -1672,6 +1691,7 @@ https://crontab.guru/examples.html
  <br>  
 <br>
 
+#@ll
             `},
                     {
                 id: 38,
@@ -1695,7 +1715,7 @@ Connect to the remote system without having to enter the renmote user password.
 ssh remoteuser@remoteip
 \`\`\`
 
-
+#@ll
             `},
                     {
                 id: 37,
@@ -1707,7 +1727,10 @@ ssh remoteuser@remoteip
 <br>
 
 Netstat: netstat -ano (Windows) or netstat -tulpn (Linux) reveals which services are listening on specific network ports. 
-            `},
+
+#@ll
+
+`},
                     {
                 id: 36,
                 title: "Proxmox - LXC CLI access",
@@ -1722,7 +1745,7 @@ To access a Proxmox LXC CLI, execute the pct enter command; for an LXC container
 # pct enter 100
 \`\`\`   
 
-
+#@ll
             `},
                     {
                 id: 35,
@@ -1742,7 +1765,7 @@ https://docs.nextcloud.com/server/32/admin_manual/installation/installation_wiza
 Added the server IP address to the /var/www/nextcloud/config/config.php under the 'trusted_domains' section.
 ![](images/nextcloud.png)   
 
-
+#@ll
             `},
                     {
                 id: 34,
@@ -1800,6 +1823,7 @@ Linux Services
  <br>  
 <br>
 
+#@ll
             `},
                     {
                 id: 33,
@@ -1857,6 +1881,7 @@ ssh-add — adds private key identities to the OpenSSH authentication agent
  <br>  
 <br>
 
+#@ll
             `},
         {
                 id: 32,
@@ -1882,7 +1907,7 @@ Remove unused docker images, containers and networks
 docker system prune --volumes -f
 \`\`\`   
 
-
+#@ll
             `},
         {
                 id: 31,
@@ -1913,7 +1938,7 @@ Display container config section
 docker inspect --format=´{{json .Config}}´ ContainerName
 \`\`\`
 
-
+#@ll
             `},
         {
                 id: 30,
@@ -1993,7 +2018,7 @@ Display containers, in table format, only the columns needed
 docker ps --filter label="label" --format "table {{.ID}}\t{{.Names}}"
 \`\`\`   
 
-
+#@ll
             `},
         {
                 id: 29,
@@ -2081,6 +2106,8 @@ ansible all -m gather_facts
 
  <br>  
 <br>
+
+#@ll
             `},
 
 
@@ -2359,13 +2386,14 @@ PS C:\\WINDOWS\\system32> aws sts get-caller-identity
 }
 \`\`\`
 
+#@ll
 *************************************************************************************************
             `},
             {
                 id: 26,
                 title: "Linux - Filesystem - Delete, Create and Format Partition",
                 excerpt: "Step by step on how to discover available drives, delete existing partitions, creating new ones, and formatting",
-                date: "09-29-2045",
+                date: "09-29-2025",
                 content: `# Linux - Filesystem - Delete, Create and Format Partition
 
 For starters, list every available drive on the system with lsblk
@@ -2676,12 +2704,13 @@ mount -a
 Mount all filesystems (of the given types) mentioned in fstab (except for those whose line contains the noauto keyword).  
 The filesystems are mounted following their order in fstab.
 
+#@ll
             `},
         {
                 id: 25,
                 title: "Linux - Add user to the sudoers group",
                 excerpt: "Adding a user to the sudoers group for both Debian and RedHat based systems",
-                date: "09-24-2045",
+                date: "09-24-2025",
                 content: `# Linux - Add user to the sudoers group
 
 _ For Debian/Ubuntu-based systems:
@@ -2703,13 +2732,15 @@ _ For Fedora/RHEL-based systems:
 \`\`\`
 sudo usermod -aG wheel username
 \`\`\`
+
+#@ll
             `},
 
         {
                 id: 24,
                 title: "Windows - Enable SSH access",
                 excerpt: "Steps to enable ssh access on Windows",
-                date: "09-23-2045",
+                date: "09-23-2025",
                 content: `# Windows - Enable SSH access
 
 Enabling SSH and opening port 22 on Windows involves setting up an SSH server on your Windows machine and configuring the firewall to allow inbound connections on port 22. One common way to achieve this is by using third-party software like OpenSSH for Windows.
@@ -2815,13 +2846,15 @@ Always keep the Windows system and OpenSSH software up-to-date with the latest s
 
 By following these steps, you’ll have successfully enabled SSH and opened port 22 on your Windows machine, allowing you to securely connect to it using SSH clients from other devices on the same network.
 
+
+#@ll
             `},
 
         {
                 id: 23,
                 title: "Linux - Do not suspend when closing notebook lid",
                 excerpt: "Which file to edit to avoid a notebook to suspend when closing the lid",
-                date: "09-23-2045",
+                date: "09-23-2025",
                 content: `# Linux - Do not suspend when closing notebook lid
 Debian: /etc/systemd/logind.conf   
 Fedora: /usr/lib/systemd/logind.conf
@@ -2834,13 +2867,14 @@ HandleLidSwitchDocked=ignore
 systemctl restart systemd-logind
 \`\`\`
 
+#@ll
             `},
 
         {
                 id: 22,
                 title: "Linux - CLI built-in vs non-built-in commands",
                 excerpt: "Brief explanation on the difference between built-in and non-built-in commands Linux commands",
-                date: "09-23-2045",
+                date: "09-23-2025",
                 content: `# Linux - CLI built-in vs non-built-in commands
 
 Built-in commands are integrated directly into a shell (like Bash), while non-built-in (or external) commands are separate programs located on the system's file system, requiring the shell to locate and execute them.
@@ -2874,6 +2908,7 @@ echo is a shell builtin
 lucas@debian:/test/test_1$
 \`\`\`
 
+#@ll
             `},
 
         {
@@ -2887,13 +2922,14 @@ Obtain Wifi capabilities and related information from the Linux CLI.
 iw phy
 \`\`\`
 
+#@ll
             `},
 
         {
                 id: 20,
                 title: "PowerShell - Ethernet information",
                 excerpt: "Obtain Ethernet capabilities from PowerShell",
-                date: "09-21-2045",
+                date: "09-21-2025",
                 content: `# PowerShell - Ethernet information
 Obtain Ethernet capabilities and related information using Windows PowerShell.
 
@@ -2911,6 +2947,8 @@ Get-NetAdapter -Name \"Ethernet\" | Format-List -Property *
 \`\`\`
 Get-NetAdapterAdvancedProperty -Name \"Ethernet\"
 \`\`\`
+
+#@ll
             `},
         {
                 id: 19,
@@ -2950,6 +2988,8 @@ Get-NetAdapter | select interfaceDescription, name, status, linkSpeed
 \`\`\`
 netsh wlan show profile name="SSID" key=clear
 \`\`\`
+
+#@ll
             `},
             {
                 id: 18,
@@ -2999,6 +3039,8 @@ Run aircrack-ng against the .pcap file obteined above.
 \`\`\`
 sudo aircrack-ng -b 12:34:56:AB:CD:AG -w rockyou.txt audit.cap
 \`\`\`
+
+#@ll
             `},
             {
                 id: 17,
@@ -3345,6 +3387,7 @@ To connect to the container instance. And CTRL+P+Q to exit without shutting down
 sudo docker exec -ti “CONTAINER ID” bash
 \`\`\`
 
+#@ll
             `},
             {
                 id: 16,
@@ -3385,6 +3428,7 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
 sudo docker run hello-world
 \`\`\`
 
+#@ll
             `},
             {
                 id: 15,
@@ -3429,6 +3473,7 @@ Select the newly created connection and enter the password when prompted.
 
 ![](images/windsurfssh3.png)
 
+#@ll
             `},
             {
                 id: 14,
@@ -3456,6 +3501,8 @@ ssh -m hmac-sha2-512 lucas@192.168.88.32
 \`\`\`
 
 #ssh #ssh_dispatch_run_fatal #authentication
+
+#@ll
 
             `},
             {
@@ -3736,6 +3783,8 @@ Go to “Set Printer Options” for additional settings
 You should be able to add the Printer on Windows, in my case, Windows was able to find it on the network by itself.
 
 #CUPS #Printer #Brother #Linux #Ubuntu #samba #printserver
+
+#@ll
             `},
             {
                 id: 12,
@@ -3761,6 +3810,7 @@ The 3182 value will be the current temperature; divide by 10 and substract 273.1
 
 In this case (3182  /10) - 273,15 = 45.05°C
 
+#@ll
             `},
             {
                 id: 11,
@@ -3781,6 +3831,7 @@ _ Check permissions, any other user besides the Administrator should not have ex
 
 ![](images/whoamipriv.png)
 
+#@ll
             `},
             {
                 id: 10,
@@ -3802,6 +3853,8 @@ Extract Wi-fi password
 \`\`\`
 netsh wlan show profile name="SSID" key=clear
 \`\`\`
+
+#@ll
             `},
             {
                 id: 9,
@@ -3853,6 +3906,7 @@ netsh wlan show profile name="SSID" key=clear
     assign
     \`\`\`
 
+#@ll
             `},
             {
                 id: 8,
@@ -4124,6 +4178,8 @@ Test the new fstab entries without rebooting by mounting all filesystems
 \`\`\`
 sudo mount -a
 \`\`\`
+
+#@ll
             `},
             {
                 id: 7,
@@ -4172,6 +4228,7 @@ sudo systemctl restart networking
 \`\`\`
 
 #proxmox #changeip #staticip #proxmoxip #proxmoxstaticip #proxmoxchangeip
+#@ll
             `},
             {
                 id: 2,
@@ -4194,6 +4251,7 @@ When you're ready, we can host it using **GitHub Pages** (free hosting). Here is
 
 
 #github #website #freewebsite
+#@ll
             `},
             //////////////////////////////////////////////////// START of Articles ////////////////////////////////////////////////////////////
             {
@@ -4303,6 +4361,7 @@ client.close()
 \`\`\`
 
 #Python #Cisco #AP #AccessPoint #Radio #TurnRadioUpAndDown #Paramiko
+#@ll
             `},
             {
                 id: 4,
@@ -4340,6 +4399,7 @@ client.close()
 \`\`\`
 
 #python #ubiquity #ap #radio #turnradioonandoff #paramiko
+#@ll
             `},
              {
                 id: 5,
@@ -4359,6 +4419,7 @@ nohup python3 -m http.server &
 \`\`\`
 
 #python #web #sharing #python3 #http #server
+#@ll
             `},
             {
                 id: 6,
@@ -4431,6 +4492,7 @@ sudo docker inspect [container_name]
 Load Trilium by navigating to http://hostIP:8080 (_replace 8080 for the port on your yaml file_)
 
 #trilium #docker #install #ubuntu #docker-compose #triliumnext #docker-server-installation
+#@ll
      `}
     //////////////////////////////// END of Articles ////////////////////////////////////////////////////////////
         ];
@@ -4461,7 +4523,9 @@ Load Trilium by navigating to http://hostIP:8080 (_replace 8080 for the port on 
         const backBtn = document.getElementById('backBtn');
 
         // State
-        let currentArticles = articlesData;
+        // Sort articles by their publication date, newest first.
+        const newestFirstArticles = [...articlesData].sort((a, b) => parseArticleDate(b.date) - parseArticleDate(a.date));
+        let currentArticles = newestFirstArticles.slice(0, 6);
         let currentView = 'list'; // 'list' or 'article'
         let adRotationIndex = 0;
         let sidebarAdVisible = true;
@@ -4560,7 +4624,9 @@ Load Trilium by navigating to http://hostIP:8080 (_replace 8080 for the port on 
 
         // Initialize
         function init() {
-            renderArticles(articlesData);
+            // Always render the six newest posts on initial page load or refresh.
+            currentArticles = newestFirstArticles.slice(0, 6);
+            renderArticles(currentArticles);
             setupEventListeners();
             addHeaderAd();
             
@@ -4631,9 +4697,10 @@ Load Trilium by navigating to http://hostIP:8080 (_replace 8080 for the port on 
             const query = searchInput.value.trim().toLowerCase();
             
             if (query === '') {
-                currentArticles = articlesData;
+                currentArticles = newestFirstArticles.slice(0, 6);
             } else {
-                currentArticles = articlesData.filter(article => 
+                // Search the complete archive, not just the six default articles.
+                currentArticles = newestFirstArticles.filter(article => 
                     article.title.toLowerCase().includes(query) ||
                     article.excerpt.toLowerCase().includes(query) ||
                     article.content.toLowerCase().includes(query)
@@ -4680,9 +4747,17 @@ Load Trilium by navigating to http://hostIP:8080 (_replace 8080 for the port on 
             renderArticles(currentArticles);
         }
 
+        // Parse dates reliably for sorting (supports MM-DD-YYYY and ISO YYYY-MM-DD).
+        function parseArticleDate(dateString) {
+            const parts = String(dateString).split('-');
+            if (parts.length !== 3) return new Date(dateString);
+            if (parts[0].length === 4) return new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+            return new Date(Number(parts[2]), Number(parts[0]) - 1, Number(parts[1]));
+        }
+
         // Format date
         function formatDate(dateString) {
-            const date = new Date(dateString);
+            const date = parseArticleDate(dateString);
             return date.toLocaleDateString('en-US', {
                 year: 'numeric',
                 month: 'long',

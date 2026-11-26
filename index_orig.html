@@ -1,0 +1,4702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LHP Notes</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.2/marked.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-card: #ffffff;
+            --text-primary: #212529;
+            --text-secondary: #6c757d;
+            --border-color: #dee2e6;
+            --accent-color: #ff5e00;
+            --accent-hover: #0056b3;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --code-bg: #f8f9fa;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-card: #21262d;
+            --text-primary: #f0f6fc;
+            --text-secondary: #8b949e;
+            --border-color: #30363d;
+            --accent-color: #58a6ff;
+            --accent-hover: #58a6ff;
+            --shadow: rgba(0, 0, 0, 0.3);
+            --code-bg: #161b22;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            padding: 2rem 0;
+            box-shadow: 0 4px 20px var(--shadow);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .search-container {
+            flex: 1;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 3rem 0.75rem 1rem;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .search-input:focus {
+            outline: none;
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: scale(1.02);
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 0.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: background-color 0.3s ease;
+        }
+
+        .search-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .theme-toggle {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            padding: 0.75rem;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1) rotate(15deg);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .article-card {
+            background-color: var(--bg-card);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 25px var(--shadow);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .article-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-hover));
+        }
+
+        .article-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px var(--shadow);
+        }
+
+        .article-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+            line-height: 1.3;
+        }
+
+        .article-excerpt {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .article-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .article-date {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .read-more {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .read-more:hover {
+            color: var(--accent-hover);
+        }
+
+        .read-more::after {
+            content: "→";
+            transition: transform 0.3s ease;
+        }
+
+        .read-more:hover::after {
+            transform: translateX(3px);
+        }
+
+        .article-content {
+            background-color: var(--bg-card);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: 0 8px 25px var(--shadow);
+            border: 1px solid var(--border-color);
+            display: none;
+        }
+
+        .article-content.active {
+            display: block;
+        }
+
+        .article-content h1,
+        .article-content h2,
+        .article-content h3 {
+            color: var(--text-primary);
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .article-content h1 {
+            font-size: 2rem;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .article-content p {
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .article-content code {
+            background-color: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+        }
+
+        .article-content pre {
+            background-color: var(--code-bg);
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .article-content blockquote {
+            border-left: 4px solid var(--accent-color);
+            padding-left: 1rem;
+            margin: 1rem 0;
+            font-style: italic;
+            color: var(--text-secondary);
+        }
+
+        .back-btn {
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            display: none;
+        }
+
+        .back-btn.active {
+            display: inline-block;
+        }
+
+        .back-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+        }
+
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        .spinner {
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--accent-color);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin-right: 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Advertisement Styles */
+        .ad-banner {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        [data-theme="dark"] .ad-banner {
+            background: linear-gradient(135deg, #21262d, #30363d);
+        }
+
+        .ad-banner:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px var(--shadow);
+            border-color: var(--accent-color);
+        }
+
+        .ad-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .ad-banner:hover::before {
+            left: 100%;
+        }
+
+        .ad-label {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--accent-color);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .ad-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .ad-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .ad-description {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .ad-cta {
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .ad-cta:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .ad-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        /* Sidebar Ad */
+        .sidebar-ad {
+            position: fixed;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 200px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 8px 25px var(--shadow);
+            border: 1px solid var(--border-color);
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-ad:hover {
+            transform: translateY(-50%) scale(1.02);
+        }
+
+        .sidebar-ad .ad-close {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar-ad .ad-close:hover {
+            background: var(--border-color);
+        }
+
+        /* Inline Ad (between articles) */
+        .inline-ad {
+            grid-column: 1 / -1;
+            margin: 1rem 0;
+        }
+
+        /* Header Banner Ad */
+        .header-ad {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            text-align: center;
+        }
+
+        .header-ad .ad-banner {
+            margin: 0;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1400px) {
+            .sidebar-ad {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .ad-banner {
+                padding: 1rem;
+                margin: 1rem 0;
+            }
+            
+            .ad-title {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .search-container {
+                order: 3;
+                max-width: 100%;
+            }
+
+            .articles-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body data-theme="light">
+    <header class="header">
+        <div class="header-content">
+            <a href="#" class="logo">LHP Notes</a>
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Search articles..." id="searchInput">
+                <button class="search-btn" id="searchBtn">🔍</button>
+            </div>
+            <button class="theme-toggle" id="themeToggle">🌙</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <button class="back-btn" id="backBtn">← Back to Articles</button>
+        
+        <div id="articlesContainer" class="articles-grid">
+            <div class="loading">
+                <div class="spinner"></div>
+                Loading articles...
+            </div>
+        </div>
+
+        <div id="articleContent" class="article-content"></div>
+    </div>
+
+    <script>
+        //////////////////////////////////////////////////// START of Advertisements ////////////////////////////////////////////////////////////
+        const advertisementsData = [
+            //{
+            //    id: 1,
+            //    type: 'banner',
+            //    title: 'Master Web Development#1',
+            //    description: 'Learn modern web development with our comprehensive course. From HTML to React, become a full-stack developer in 12 weeks.',
+            //    cta: 'Start Learning',
+            //    url: 'https://example.com/web-dev-course',
+            //    image: null,
+            //    placement: ['header'],
+            //    active: true,
+            //   impressions: 0,
+            //    clicks: 0
+            //},
+            //{
+            //    id: 3,
+            //    type: 'sidebar',
+            //    title: 'VS Code Extensions',
+             //   description: 'Boost your productivity with the best VS Code extensions for developers.',
+             //   cta: 'Download Now',
+             //   url: 'https://example.com/vscode-extensions',
+            //    image: null,
+             //   placement: ['sidebar'],
+             //   active: true,
+            //    impressions: 0,
+            //    clicks: 0
+            //},
+            //{
+            //    id: 4,
+            //    type: 'banner',
+            //    title: 'Cloud Hosting Solutions',
+            //    description: 'Deploy your applications with confidence. Fast, reliable, and scalable cloud hosting starting at $5/month.',
+            //    cta: 'Get Started',
+            //    url: 'https://example.com/cloud-hosting',
+            //    image: null,
+            //    placement: ['footer'],
+            //    active: true,
+            //    impressions: 0,
+            //    clicks: 0
+            //},
+            // {
+             //   id: 6,
+             //   type: 'sidebar',
+            //    title: 'Developer Tools',
+            //    description: 'Essential tools every developer needs. Increase your productivity today!',
+            //    cta: 'Explore Tools',
+            //    url: 'https://example.com/dev-tools',
+            //    image: null,
+             //   placement: ['sidebar'],
+             //   active: true,
+             //   impressions: 0,
+             //   clicks: 0
+            //}
+        ];        
+        const articlesData = [
+
+
+        
+            //////////////////////////////////////////////////// Generic TEMPLATE ////////////////////////////////////////////////////////////
+        {
+                id: 1,
+                title: "Next note",
+                excerpt: "More notes to come...",
+                date: "01-01-2045",
+                content: `# Next note
+ <br>  
+<br>
+
+\`\`\`
+More notes to come...
+\`\`\`   
+
+ <br>  
+<br>
+
+<video width="100%" height="auto" controls autoplay muted loop>
+    <source src="images/rhinos_video.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
+            `},
+            //////////////////////////////////////////////////// Generic TEMPLATE ////////////////////////////////////////////////////////////
+            //////////////////////////////////////////////////// PDF TEMPLATE ////////////////////////////////////////////////////////////
+
+//       {
+//               id: 50,
+//              title: "PDF content",
+//                excerpt: "PDF content",
+//                date: "08-11-2026",
+//                content: `# PDF content
+// <br>  
+//<br>
+
+//<iframe src="pdf/Ethial_Hacking_Course_NMAP_for_Pentesters_Host_Discovery.pdf" width="100%" height="600px" frameborder="0">
+//  <p>Your browser does not support iframes. <a href="pdf/Ethial_Hacking_Course_NMAP_for_Pentesters_Host_Discovery.pdf">Download the PDF</a>.</p>
+//</iframe>
+
+// <br>  
+//<br>
+//            `},  
+            //////////////////////////////////////////////////// PDF TEMPLATE ////////////////////////////////////////////////////////////
+                    {
+                id: 57,
+                title: "Termux - battery status",
+                excerpt: "How to obtain battery status information on Termux",
+                date: "11-20-2026",
+                content: `# How to obtain battery status information on Termux
+ <br>  
+<br>
+
+1_ Install termux-api  
+\`\`\`
+~ $ pkg install termux-api
+\`\`\`   
+
+2_ Check battery status with  
+\`\`\`
+~ $ termux-battery-status
+\`\`\`   
+
+The result should be something like this.   
+\`\`\`
+~ $ termux-battery-status
+{
+  "present": true,
+  "technology": "Li-ion",
+  "health": "GOOD",
+  "plugged": "UNPLUGGED",
+  "status": "CHARGING",
+  "temperature": 30.0,
+  "voltage": 3927,
+  "current": 263000,
+  "current_average": -169,
+  "percentage": 64,
+  "level": 64,
+  "scale": 100,
+  "charge_counter": 2227000,
+  "cycle": 0
+}
+~ $ 
+\`\`\`   
+
+It could happen that the command hangs, in that case, install "Termux:API" from F-Droid
+ 
+            `},              
+                    {
+                id: 56,
+                title: "Termux - Steps to enable apache",
+                excerpt: "How to enable apache on Termux for Android",
+                date: "11-19-2026",
+                content: `# How to enable apache on Termux for Android
+ <br>  
+<br>
+
+1_ Install termux-services   
+\`\`\`
+~ $ pkg install termux-services
+\`\`\`   
+
+2_ Install apache   
+\`\`\`
+~ $ pkg install apache2
+\`\`\`   
+
+3_ Check the http service status   
+\`\`\`
+~ $ sv status $PREFIX/var/service/httpd/
+down: /data/data/com.termux/files/usr/var/service/httpd/: 3228s; run: log: (pid 8712) 3228s
+\`\`\`   
+
+4_ Enable httpd and check its status again   
+\`\`\`
+~ $ sv up $PREFIX/var/service/httpd/
+~ $ sv status $PREFIX/var/service/httpd/
+run: /data/data/com.termux/files/usr/var/service/httpd/: (pid 9193) 4s, normally down; run: log: (pid 8712) 3282s
+\`\`\`   
+
+5_ Obtain the cellphone IP address with ifconfig and access http://IP:8080
+
+By default, Termux Apache index files are located at:   
+\`\`\`
+• Path: $PREFIX/share/apache2/default-site/htdocs/
+• Full absolute path: /data/data/com.termux/files/usr/share/apache2/default-site/htdocs/
+• Configuration file $PREFIX/etc/apache2/httpd.conf
+\`\`\`  
+            `},            
+                    {
+                id: 55,
+                title: "Termux - Steps to enable ssh",
+                excerpt: "How to enable ssh on Termux for Android",
+                date: "11-19-2026",
+                content: `# How to enable ssh on Termux for Android
+ <br>  
+<br>
+
+1_ Install termux-services   
+\`\`\`
+~ $ pkg install termux-services
+\`\`\`   
+
+2_ Install openssh   
+\`\`\`
+~ $ pkg install openssh
+\`\`\`   
+
+3_ Check ssh service status   
+\`\`\`
+~ $ sv status $PREFIX/var/service/sshd
+down: /data/data/com.termux/files/usr/var/service/sshd: 137s; run: log: (pid 6646) 137s
+\`\`\`   
+
+4_ Enable ssh and check its status again   
+\`\`\`
+~ $ sv up $PREFIX/var/service/sshd
+~ $ sv status $PREFIX/var/service/sshd
+run: /data/data/com.termux/files/usr/var/service/sshd: (pid 6794) 4s, normally down; run: log: (pid 6646) 159s
+\`\`\`   
+
+5_ Check current user's username   
+\`\`\`
+~ $ whoami
+u0_a182
+\`\`\`   
+
+6_ Set the user's password   
+\`\`\`
+~ $ passwd
+\`\`\`   
+
+7_ Connect from a remote system   
+\`\`\`
+~$ ssh u0_a182@192.168.88.34 -p 8022
+\`\`\`
+  
+            `},
+{
+                                id: 54,
+                title: "Networking - Transceivers and cable types.",
+                excerpt: "Networking - Transceivers and cable types",
+                date: "10-31-2026",
+                content: `# Networking - Transceivers and cable types
+ <br>  
+<br>
+Networking - Transceivers and cable types. 
+
+![](images/networking_transceiver_cables.jpeg)
+ <br>  
+<br>
+`},
+                    {
+                id: 53,
+                title: "Linux - +i immutable attribute",
+                excerpt: "Linux - +i immutable attribute",
+                date: "10-31-2026",
+                content: `# Linux - +i immutable attribute
+ <br>  
+<br>
+
+The immutable attribute in Linux is a special filesystem-level flag that prevents a file or directory from being modified, renamed, or deleted—even by the root superuser.  
+This attribute provides an extra layer of system security beyond traditional Unix file permissions (chmod).  
+  
+  
+
+Core Behavior
+
+• Root Restriction: Even root cannot delete or alter the file.  
+• Directory Locking: Files cannot be renamed or moved to different directories.  
+• Link Prevention: Disallows creating new hard links to the file.  
+• Filesystem Dependent: Supported on major filesystems like ext4, XFS, and Btrfs.  
+  
+  
+
+Managing the Immutable Attribute
+\`\`\`
+Command	                     Action	                     Purpose
+sudo chattr +i file.txt	     Set Immutable	             Applies the i attribute to lock the file.
+sudo chattr -i file.txt	     Remove Immutable	         Clears the flag to allow normal modifications.
+lsattr file.txt	             View Flag Status	         Displays active filesystem flags like ----i--------
+\`\`\`  
+
+
+Common Use Cases
+
+• System Hardening: Secures critical network or authentication files, as detailed on TecMint.  
+• Log Tamper Protection: Protects system log directories from unauthorized deletion by attackers.  
+• Accidental Prevention: Safeguards key system infrastructure from accidental rm -rf cleanup commands.
+  
+
+            `},
+                    {
+                id: 52,
+                title: "Linux - sed command",
+                excerpt: "Linux - sed command explanation and examples",
+                date: "10-31-2026",
+                content: `# Linux - sed command explanation and examples
+ <br>  
+<br>
+The sed command (Stream Editor) in Linux is a powerful utility used to parse, filter, and transform text data line-by-line.  
+It is most commonly used for finding and replacing text, but it can also efficiently handle text insertion, deletion, and line-specific modifications without opening the file.  
+By default, sed processes data and prints the output to your terminal, leaving the source file completely untouched unless you tell it otherwise.
+
+
+The Basic Syntax  
+\`\`\`
+sed [options] 'command' filename
+\`\`\`   
+
+• s: The action token for substitution (find and replace).  
+• /: Delimiters separating the action, the search pattern, and the replacement text.  
+• g: The global flag, which tells sed to replace all occurrences on a single line instead of just the first one.
+
+
+Common Options and Flags  
+
+Option / Flag	Purpose	Example
+-i	In-place editing (overwrites the original file permanently)	sed -i 's/old/new/g' file.txt  
+-n	Suppresses automatic printing of lines	Used primarily alongside the /p flag to view specific lines.  
+-e	Chain multiple commands in a single execution line	sed -e 's/A/B/' -e 's/C/D/' file.txt  
+-E or -r	Enables extended regular expressions (ERE)	Useful for complex regex patterns like (this|that).
+
+
+Practical Examples
+
+
+1. Text Replacement (Find & Replace)
+
+• Replace the first occurrence per line  
+\`\`\`
+sed 's/unix/linux/' file.txt
+\`\`\`
+• Replace all occurrences across the entire file (Global)  
+\`\`\`
+sed 's/unix/linux/g' file.txt
+\`\`\`
+• Case-insensitive replacement (I flag):  
+\`\`\`
+sed 's/unix/linux/gI' file.txt
+\`\`\`
+
+2. Deleting Lines
+
+• Delete a specific line (e.g., line 5)  
+\`\`\`
+sed '5d' file.txt
+\`\`\`
+• Delete a range of lines (e.g., lines 2 through 4)  
+\`\`\`
+sed '2,4d' file.txt
+\`\`\`
+• Delete all blank lines  
+\`\`\`
+sed '/^$/d' file.txt
+\`\`\`
+
+3. Printing Specific Text
+
+• Print only a specific range of lines (e.g., lines 10 to 15)  
+\`\`\`
+sed -n '10,15p' file.txt
+\`\`\`
+• Print only the lines that match a specific pattern  
+\`\`\`
+sed -n '/error/p' log.txt
+\`\`\`
+
+4. Targeting Specific Lines for Replacement
+
+• Modify text only on line 3  
+\`\`\`
+sed '3 s/unix/linux/' file.txt
+\`\`\`
+• Modify text from line 2 to the end of the file ($)  
+\`\`\`
+sed '2,$ s/unix/linux/g' file.txt
+\`\`\`  
+  
+If your text contains a lot of forward slashes (like a file path or URL), you can change the delimiter to any other character, such as a hash mark (#) or pipe (|), to keep things clean  
+\`\`\`
+sed 's#http://example.org#https://example.com#g' file.txt
+\`\`\`  
+  
+Other examples created by Dan Nanni
+\`\`\`
+sed 's/old/new/' my.txt replace the first old with new in each line
+sed 's/old/new/g' my.txt replace all occurrences of old in each line
+sed 's/old/new/gi' my.txt replace all matches while ignoring case
+sed 's/old/new/3' my.txt replace 3rd occurrence of old in each line
+sed '3,8s/old/new/g' my.txt limit the change to specific lines (from 3 to 8)
+sed '/pattern/s/old/new/g' my.txt only those lines matching the pattern
+sed '/pattern/i\\text line' my.txt insert a line before the pattern match
+sed '/pattern/a\\text line' my.txt insert a line after the pattern match
+sed -n '/pattern/p' my.txt print only lines matching a pattern
+sed -n '5,10p' my.txt print a range of lines (from 5 to 10)
+sed -n -e '3,5p' -e '10,15p' my.txt print multiple ranges of lines
+sed -i 's/old/new/g' my.txt edit the file in place
+sed -i 's/\\r$//' my.txt remove trailing ^M (carriage return) in each line
+sed -i'.orig' 's/old/new/gi' my.txt edit in place; back up original as my.txt.orig
+sed -i 's/old/new/g;s/this/that/g' my.txt perform multiple substitutions
+sed -f sed_cmd_file my.txt read sed commands from file and apply them
+sed '5c\\this is a new line' my.txt modify a specific line (line 5)
+sed '/pattern/c this is a new line' my.txt replace each matching line
+sed = my.txt | sed 'N;s/\\n/ /' add a line number to each line
+sed 's/.*/\\U&/' my.txt convert text in each line to uppercase
+sed -r 's/(foo|bar)/new/g' my.txt sed with extended regex
+sed '/pattern/d' my.txt delete lines matching the pattern
+sed '5d' my.txt delete a specific line number (e.g. 5)
+sed '2,5d' my.txt delete a range of lines (e.g. from 2 to 5)
+\`\`\`
+
+
+
+ <br>  
+<br>
+
+References:
+<a href="https://www.google.com/url?sa=i&source=web&rct=j&url=https://www.geeksforgeeks.org/linux-unix/sed-command-in-linux-unix-with-examples/&ved=2ahUKEwj_7YDa0uSXAxXHs5UCHUUJNqYQr8wVegoIAggACAMICRAB&opi=89978449&cd&psig=AOvVaw1HRYS5UGT_fVHzZnTx0RAC&ust=1793549504321000">https://www.geeksforgeeks.org/linux-unix/sed-command-in-linux-unix-with-examples/</a>  
+<a href="https://www.google.com/url?sa=i&source=web&rct=j&url=https://medium.com/@lumenyx/the-sed-command-basics-in-linux-d7a3865cf2f9&ved=2ahUKEwj_7YDa0uSXAxXHs5UCHUUJNqYQr8wVegoIAggACAMIDRAB&opi=89978449&cd&psig=AOvVaw1HRYS5UGT_fVHzZnTx0RAC&ust=1793549504321000">https://medium.com/@lumenyx/the-sed-command-basics-in-linux-d7a3865cf2f9</a>
+
+
+
+            `},
+                    {
+                id: 51,
+                title: "Public DNS list",
+                excerpt: "Public DNS list",
+                date: "10-31-2026",
+                content: `# Public DNS list
+ <br>  
+<br>
+
+AdGuard DNS
+\`\`\`
+• Ads & trackers blocking:
+	• 94.140.14.14
+	• 94.140.15.15
+• Ads, trackers + Adult filtering:
+	• 94.140.14.15
+	• 94.140.15.16
+\`\`\`
+Cloudflare DNS
+\`\`\`
+• Unfiltered:
+	• 1.1.1.1
+	• 1.0.0.1
+• Malware filtering:
+	• 1.1.1.2
+• Malware + Adult filtering:
+	• 1.1.1.3
+\`\`\`
+Google Public DNS
+\`\`\`
+• Unfiltered:
+	• 8.8.8.8
+	• 8.8.4.4
+\`\`\`
+OpenDNS
+\`\`\`
+• Standard:
+	• 208.67.222.222
+	• 208.67.220.220
+• FamilyShield (Adult filtering):
+	• 208.67.222.123
+	• 208.67.220.123
+\`\`\`
+
+
+ <br>  
+<br>
+
+            `},
+            {
+                id: 50,
+                title: "fork bomb",
+                excerpt: "Classic bash function known as a fork bomb.",
+                date: "10-31-2026",
+                content: `# Classic bash function known as a fork bomb.
+ <br>  
+<br>
+
+
+The sequence :(){ :|:& };: is a classic bash function known as a "fork bomb."  
+It is a form of Denial-of-Service (DoS) attack against a Linux/Unix-based operating system.  
+When executed, it rapidly replicates itself until the system runs out of memory and CPU resources, causing the computer to freeze, crash, or lock up completely.
+  
+
+
+Breakdown of the Code
+
+• :() — Defines a new shell function named : (a colon is a valid, though unusual, character for a function name in Bash).  
+
+• { — Marks the beginning of the function's code block.  
+
+• :|: — Inside the function, it calls itself (:) and pipes (|) the output into another call of itself.  
+
+• & — Puts that pipeline execution into the background so it doesn't wait for completion before moving forward.  
+
+• } — Closes the function definition.  
+
+• ; — Separates the function definition from the execution command that follows.  
+
+• : — Invokes the function for the very first time to trigger the sequence.  
+  
+
+  
+
+  
+
+The Result  
+Because the function continually calls itself twice and runs in the background, it creates an exponential explosion of processes (\(2^{n}\)).  
+Within seconds, the operating system hits its maximum process limit, rendering the system completely unresponsive.  
+The only way to recover from it is usually a hard reboot.  
+  
+  
+To prevent a fork bomb from crashing a system, you must limit the maximum number of user processes using ulimit. By capping how many processes a single user can create, the fork bomb will hit a hard ceiling and fail to duplicate further, keeping the operating system stable.
+
+1. Temporary Prevention (Current Session Only)
+
+To apply a restriction immediately to your current terminal session, use the following command:
+bash
+ulimit -u 500
+Use code with caution.
+This restricts the current user to a maximum of 500 concurrent processes. If a fork bomb is executed now, it will safely error out with a "Resource temporarily unavailable" message once it hits process #500.
+
+2. Permanent Prevention (System-Wide)
+
+To make this limit permanent across restarts and all user sessions, you need to modify the system configuration file located at /etc/security/limits.conf.
+\`\`\` 
+Open the file with root privileges
+sudo nano /etc/security/limits.conf
+\`\`\` 
+\`\`\` 
+Scroll to the bottom and add the following lines (replace username with a specific user, or use @users for a group)
+# <domain>    <type>    <item>    <value>
+@users        hard      nproc     500
+@users        soft      nproc     400
+\`\`\` 
+
+Understanding the Configuration
+
+• nproc: This specifies the maximum number of processes.  
+• Hard Limit: The absolute ceiling enforced by the root user. Regular users cannot bypass this limit.  
+• Soft Limit: The baseline configuration that the user can temporarily increase on their own up to the hard limit.
+
+Setting a Safe Value
+
+A value of 400 to 500 is generally safe and generous enough for daily desktop use or regular development environments without hindering performance.  
+However, for servers running resource-heavy applications like database systems or heavy web servers, you may need to scale this value significantly higher (e.g., 2048 or 4096).
+
+
+ <br>  
+<br>
+
+            `},
+            {
+                id: 49,
+                title: "Structured cabling color coding",
+                excerpt: "Structured cabling color coding",
+                date: "08-11-2026",
+                content: `# Structured cabling color coding
+ <br>  
+<br>
+RJ45 LAN Structured cabling color coding
+
+![](images/cable_color_coding.jpeg)
+ <br>  
+<br>
+            `},
+                    {
+                id: 48,
+                title: "RJ45 color code (T568A & T568B)",
+                excerpt: "T568A & T568B",
+                date: "08-11-2026",
+                content: `# T568A & T568B
+ <br>  
+<br>
+RJ45 LAN Cable Color Code (T568A & T568B) 
+
+![](images/RJ45_color_code.png)
+ <br>  
+<br>
+            `},
+                    {
+                id: 47,
+                title: "TCP and UDP most common port numbers",
+                excerpt: "TCP and UDP most common port numbers",
+                date: "08-11-2026",
+                content: `# TCP and UDP most common port numbers
+ <br>  
+<br>
+
+\`\`\`
+Common TCP Ports
+Port 20 / 21: FTP (File Transfer Protocol) for data and control
+Port 22: SSH (Secure Shell) for secure remote login
+Port 23: Telnet for unencrypted text communications
+Port 25: SMTP (Simple Mail Transfer Protocol) for routing email
+Port 80: HTTP (Hypertext Transfer Protocol) for standard web traffic
+Port 110: POP3 (Post Office Protocol) for receiving email
+Port 139 / 445: NetBIOS and SMB for file and printer sharing
+Port 143: IMAP (Internet Message Access Protocol) for accessing email
+Port 443: HTTPS (HTTP Secure) for encrypted web browsing
+Port 3389: RDP (Remote Desktop Protocol) for Windows desktop control
+\`\`\`
+\`\`\`
+Common UDP Ports
+Port 53: DNS (Domain Name System) for name resolution
+Port 67 / 68: DHCP (Dynamic Host Configuration Protocol) for IP assignment
+Port 69: TFTP (Trivial File Transfer Protocol)
+Port 123: NTP (Network Time Protocol) for clock synchronization
+Port 161 / 162: SNMP (Simple Network Management Protocol)
+\`\`\`   
+https://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers
+
+ <br>  
+<br>
+
+            `},
+                    {
+                id: 46,
+                title: "Linux - Health Check (from tecmint)",
+                excerpt: "Linux script for a comprehensive Linux health check",
+                date: "8-11-2026",
+                content: `# Linux script for a comprehensive Linux health check
+ <br>  
+<br>
+From https://www.tecmint.com/bash-script-automate-system-health-checks/  
+
+Create a bash script document, for example system-health.sh, and copy the script below:  
+
+\`\`\`
+#!/bin/bash
+
+# Author: Ravi Saive (Tecmint)
+# Description: Simple System Health Check Script
+
+LOGFILE="/var/log/system-health-$(date +%F).log"
+HOSTNAME=$(hostname)
+DATE=$(date)
+
+{
+echo "============================================"
+echo " System Health Report for $HOSTNAME"
+echo " Generated on: $DATE"
+echo "============================================"
+
+# Disk Usage
+echo -e "\\nDisk Usage:"
+printf "%-20s %-10s %-10s %-10s %-6s %-s\\n" "Filesystem" "Size" "Used" "Avail" "Use%" "Mounted on"
+df -h --output=source,size,used,avail,pcent,target | tail -n +2
+
+# CPU Load
+echo -e "\\nCPU Load (1/5/15 min average):"
+uptime | awk -F'load average:' '{ print "  " $2 }'
+
+# Memory Usage
+echo -e "\\nMemory Usage:"
+free -h | awk 'NR==1 || /Mem|Swap/ { printf "  %-10s %-10s %-10s %-10s %-10s %-10s\\n", $1, $2, $3, $4, $5, $6 }'
+
+# Failed Services
+echo -e "\\nFailed Systemd Services:"
+FAILED=$(systemctl --failed --no-legend)
+if [ -z "$FAILED" ]; then
+    echo "  No failed services."
+else
+    echo "$FAILED" | while read -r line; do
+        echo "  $line"
+    done
+fi
+
+# Top 5 Memory-Consuming Processes
+echo -e "\\nTop 5 Memory Consuming Processes:"
+ps -eo user,pid,%cpu,%mem,command --sort=-%mem | head -n 6 | \\
+awk '{ printf "  %-10s %-6s %-6s %-6s %-s\\n", $1, $2, $3, $4, substr($0, index($0,$5), 60) }'
+
+# Top 5 CPU-Consuming Processes
+echo -e "\\nTop 5 CPU Consuming Processes:"
+ps -eo user,pid,%cpu,%mem,command --sort=-%cpu | head -n 6 | \\
+awk '{ printf "  %-10s %-6s %-6s %-6s %-s\\n", $1, $2, $3, $4, substr($0, index($0,$5), 60) }'
+
+# Uptime
+echo -e "\\nSystem Uptime:"
+echo "  $(uptime -p)"
+
+# Package Updates
+echo -e "\\nAvailable Package Updates:"
+if command -v apt &> /dev/null; then
+    UPDATES=$(apt list --upgradable 2>/dev/null | grep -v "Listing...")
+    if [ -z "$UPDATES" ]; then
+        echo "  System is up to date."
+    else
+        echo "$UPDATES" | awk '{ print "  " $0 }'
+    fi
+elif command -v dnf &> /dev/null; then
+    dnf check-update || echo "  System is up to date."
+elif command -v yum &> /dev/null; then
+    yum check-update || echo "  System is up to date."
+else
+    echo "  Package manager not supported."
+fi
+
+echo -e "\\nEnd of Report"
+
+} > "$LOGFILE"
+
+# Optional: Send report via mail (if mail is configured)
+MAIL_TO="your@email.com"
+if command -v mail > /dev/null 2>&1; then
+    mail -s "Daily Health Report for $HOSTNAME" "$MAIL_TO" < "$LOGFILE"
+fi
+\`\`\` 
+
+Give it executable permissions
+\`\`\`
+sudo chmod +x system-health.sh
+\`\`\`  
+
+Execute the script (giving a couple of seconds for the log file to get created):
+\`\`\`
+sudo /home/lucas/Documents/scripts/system-health.sh | (sleep 2; cat /var/log/system-health-$(date +%F).log)
+\`\`\`
+
+Check the current output report at:
+\`\`\`
+cat /var/log/system-health-$(date +%F).log
+\`\`\`
+
+ <br>  
+<br>
+
+
+            `},
+                    {
+                id: 45,
+                title: "Linux - vnstat - network traffic monitoring",
+                excerpt: "vnStat is an open-source, console-based network traffic monitor for Linux and BSD systems that logs data usage without sniffing packets. Because it reads network interface statistics directly from the kernel, it uses virtually zero system resources.",
+                date: "08-11-2026",
+                content: `# vnstat - network traffic monitoring
+ <br>  
+<br>
+
+vnStat is an open-source, console-based network traffic monitor for Linux and BSD systems that logs data usage without sniffing packets.  
+Because it reads network interface statistics directly from the kernel, it uses virtually zero system resources.
+
+Github:  
+https://github.com/vergoh/vnstat
+
+Key FeaturesUltra-Lightweight: Does not analyze traffic contents, meaning no heavy CPU usage.  
+Persistent History: Keeps logs categorized by 5-minute windows, hours, days, months, and years.  
+Low Permissions: Can be run by regular users without root access on most distributions.  
+Graphical Output: Can generate PNG summary images using vnstati.  
+  
+Common Commands:  
+To check stats once installed, use these primary arguments in your terminal:  
+vnstat: Shows a general overview of the default interface.  
+vnstat -i eth0: Filters statistics for a specific interface, like eth0.  
+vnstat -h: Displays hourly network utilization.  
+vnstat -d: Breaks down traffic by calendar days.  
+vnstat -m: Summarizes bandwidth consumption by month.  
+vnstat -l: Displays real-time current transfer speed.  
+  
+Installation & Setup for Debian and Ubuntu-based systems:  
+\`\`\`
+sudo apt update && sudo apt install vnstat
+sudo systemctl enable vnstat --now
+\`\`\`   
+  
+The configuration file can be found here:  
+\`\`\`
+/etc/vnstat.conf
+\`\`\`  
+
+The service can be checked with:
+\`\`\`
+sudo systemctl status vnstat
+\`\`\`  
+
+And enabled and restarted as follows
+\`\`\`
+sudo systemctl enable vnstat
+sudo systemctl restart vnstat
+\`\`\`
+
+ <br>  
+<br>
+
+            `},
+                    {
+                id: 44,
+                title: "nmap - nmap for port scanning",
+                excerpt: "Basic nmap usage",
+                date: "03-21-2026",
+                content: `# Basic nmap usage
+ <br>  
+<br>
+
+Common Nmap Commands   
+
+Here are some common examples for scanning ports:   
+
+Default scan: Scans the 1,000 most common TCP ports.
+\`\`\`
+nmap [target] 
+Example: nmap scanme.nmap.org
+\`\`\`   
+
+
+Scan a specific port: Use the -p option followed by the port number.
+\`\`\`
+nmap -p [port_number] [target]
+Example: nmap -p 80 scanme.nmap.org
+\`\`\`   
+
+
+Scan multiple ports: Separate port numbers with commas.
+\`\`\`
+nmap -p [port1],[port2] [target]
+Example: nmap -p 22,80,443 scanme.nmap.org
+\`\`\`   
+
+
+Scan a range of ports: Specify the range using a hyphen.
+\`\`\`
+nmap -p [start_port]-[end_port] [target]
+Example: nmap -p 1-100 scanme.nmap.org
+\`\`\`   
+
+Scan all 65535 ports: Use the -p- option. This can take significant time.
+\`\`\`
+nmap -p- [target]
+\`\`\`
+
+Fast scan: Scans the 100 most common ports using the -F option.
+\`\`\`
+nmap -F [target]
+\`\`\`   
+
+TCP SYN stealth scan: A common, efficient scan type that doesn't complete the full TCP handshake. Requires sudo on Linux/macOS.
+\`\`\`
+sudo nmap -sS [target]
+\`\`\`   
+
+UDP scan: Scans for User Datagram Protocol ports using the -sU option.
+\`\`\`
+sudo nmap -sU [target]
+\`\`\`   
+
+TCP connect scan
+\`\`\`
+nmap -sT [target]
+\`\`\`
+
+Service and Version detection: Probes open ports to determine the exact service and application version running on them using -sV.
+\`\`\`
+nmap -sV [target]
+\`\`\`
+
+Ping scan
+\`\`\`
+nmap -sP [target]
+\`\`\`
+
+Input from list
+\`\`\`
+nmap -iL [target]
+\`\`\`
+
+XMAS scan
+\`\`\`
+nmap -sX [target]
+\`\`\`
+
+FIN scan
+\`\`\`
+nmap -sF [target]
+\`\`\`
+
+TCP Null scan
+\`\`\`
+nmap -sN [target]
+\`\`\`
+
+TCP ACK scan
+\`\`\`
+nmap -sA [target]
+\`\`\`
+            `},
+                    {
+                id: 43,
+                title: "Linux - Check battery information/status",
+                excerpt: "Linux command for battery status details",
+                date: "03-21-2026",
+                content: `# Linux command for battery status details
+ <br>  
+<br>
+
+Linux command   
+
+\`\`\`
+upower -i $(upower -e | grep battery)
+\`\`\`   
+
+Output example   
+\`\`\`
+  native-path:          BAT0
+  vendor:               Hewlett-Packard
+  model:                Primary
+  serial:               06067 12/15/2015
+  power supply:         yes
+  updated:              Sat 21 Mar 2026 12:03:25 PM -03 (10 seconds ago)
+  has history:          yes
+  has statistics:       yes
+  battery
+    present:             yes
+    rechargeable:        yes
+    state:               discharging
+    warning-level:       none
+    energy:              26,2996 Wh
+    energy-empty:        0 Wh
+    energy-full:         28,268 Wh
+    energy-full-design:  28,268 Wh
+    energy-rate:         6,4676 W
+    voltage:             16,064 V
+    charge-cycles:       N/A
+    time to empty:       4,1 hours
+    percentage:          93%
+    capacity:            100%
+    technology:          lithium-ion
+    icon-name:          'battery-full-symbolic'
+\`\`\`
+
+            `},
+        {
+                id: 42,
+                title: "netcat - netcat for port scanning",
+                excerpt: "Brief note on netcat use for port reachability test",
+                date: "03-15-2026",
+                content: `# Test port reachability using netcat
+ <br>  
+<br>
+
+The general syntax to test a single port is:   
+\`\`\`
+nc -zv <hostname_or_IP_address> <port_number>
+\`\`\`   
+
+For example, to check if port 22 (SSH) is open on a local machine:   
+\`\`\`
+nc -zv localhost 22
+\`\`\`   
+
+To test a range of ports, specify the range instead of a single number:
+\`\`\`
+nc -zv <hostname_or_IP_address> <start_port>-<end_port>
+\`\`\`   
+
+    • -z: Sets nc to zero-I/O mode, meaning it will scan for listening services without sending any data or attempting to establish a full connection. This is faster and avoids generating unnecessary traffic logs.   
+
+    • -v: Enables verbose output, which provides a clear message indicating whether the connection succeeded or failed.   
+
+    • -w <seconds>: Sets a connection timeout. This prevents the command from hanging indefinitely if the target port is blocked by a firewall and does not respond.   
+
+    • -u: Use this flag to test UDP ports instead of the default TCP. Note that UDP is connectionless, so a "succeeded" message only means the packet was sent without an ICMP error, not necessarily that an application is actively listening.      
+
+   
+   
+
+
+Scan for UDP ports   
+\`\`\`
+nc -vzu <target_ip> <port>
+# Example: nc -vzu 192.168.1.10 53
+\`\`\`
+    
+The -u option specifies the use of the UDP protocol instead of the default   
+   
+   
+
+
+Alternative Method (Server/Client Pair)   
+
+You can also use netcat in a client-server configuration to manually test connectivity and bidirectional data transfer.   
+
+1. On the target machine (server), run netcat in listening mode on a specific port (e.g., 4444):
+\`\`\`
+nc -l 4444
+\`\`\`   
+
+2. On the source machine (client), connect to the server's IP address and port:
+
+\`\`\`
+nc <server_ip> 4444
+\`\`\`
+
+            `},
+        {
+                id: 41,
+                title: "Remove spaces from files - Linux and Windows",
+                excerpt: "How to remove spaces from file names on both Linux and Windows",
+                date: "03-15-2026",
+                content: `# Remove spaces from file names on both Linux and Windows
+ <br>  
+<br>
+
+Linux - Replace spaces from files   
+\`\`\`
+for f in *\ *; do mv "$f" "$\{f// /}"; done
+\`\`\`
+
+Replace spaces with underscore   
+\`\`\`
+for f in *\ *; do mv "$f" "$\{f// /_}"; done
+\`\`\`
+
+Windows - Replace spaces from files   
+\`\`\`
+get-childitem * | where {!$_.PSIsContainer} | rename-item -newname { $_.name -replace " """ }
+\`\`\`
+
+            `},
+        {
+                id: 40,
+                title: "Python - Set virtual environment",
+                excerpt: "Set up a Python virtual environment",
+                date: "03-15-2026",
+                content: `# Python - Virtual Environment
+ <br>  
+<br>
+
+Install python tool   
+\`\`\`
+sudo apt install python3
+sudo apt install python3-virtualenv
+\`\`\`   
+
+
+Do cd into the directory you will use for your project, change to the directory you will want your virtual environment to live   
+\`\`\`
+cd venvdir
+\`\`\`   
+
+Create the virtual environment   
+\`\`\`
+python3 -m venv venvname
+\`\`\`   
+
+Activate the virtual environment (note the space between the dot and bin/activate)   
+\`\`\`
+. bin/activate
+\`\`\`   
+
+Check that no previous packages are installed   
+\`\`\`
+pip freeze
+\`\`\`
+
+
+            `},
+        {
+                id: 39,
+                title: "Linux - cron",
+                excerpt: "How to set up Linux cron to schedule running tasks",
+                date: "02-20-2026",
+                content: `# Linux - cron
+ <br>  
+<br>
+
+Introduction to cron, basic settings to have a script running, in this example, will be every minute.   
+Lets say we want to append the output of "echo $(date)", which prints the system date and time, to a text file named "date.txt"; we could create the following "script.sh" to that end.   
+\`\`\`
+#!/bin/bash
+
+echo $(date) >> date.txt
+\`\`\`   
+
+Giving the script permissions to execute.   
+ \`\`\`
+chmod +x script.sh
+ \`\`\`   
+ 
+Manually executing the script will effectively append the "date" output to te date.txt file
+\`\`\`
+./script.sh
+\`\`\`   
+
+Creating the cron job to have the script running automatically.   
+\`\`\`
+crontab -l # list already created cron jobs
+crontab -e # edit cron, if this is the first time a cron job is added, a prompt will request to confirm the text editor to be used.
+\`\`\`   
+
+The example below will have the script executed every minute of every hour of every day; this line will be added at the bottom of the cron scheduler after "crontab -e".   
+\`\`\`
+* * * * * /home/user/script.sh
+\`\`\`   
+
+At this point, script.sh will be executed as per the cronjob.   
+Useful links:   
+https://en.wikipedia.org/wiki/Cron   
+https://crontab.guru/examples.html
+
+
+<div class="responsive-video">
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/EK-57P6Ylto" 
+   frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+</div>
+
+
+ <br>  
+<br>
+
+            `},
+                    {
+                id: 38,
+                title: "Linux - ssh key",
+                excerpt: "Generate a ssh key and export it to a remote system for direct access without entering password.",
+                date: "02-19-2026",
+                content: `# Linux - ssh key
+ <br>  
+<br>
+
+Create the ssh key on your local system.   
+\`\`\`
+ssh-keygen -t ed25519
+\`\`\`   
+Transfer the public key to the remote system.   
+\`\`\`
+ssh-copy-id remoteuser@remoteip
+\`\`\`   
+Connect to the remote system without having to enter the renmote user password.   
+\`\`\`
+ssh remoteuser@remoteip
+\`\`\`
+
+
+            `},
+                    {
+                id: 37,
+                title: "Linux/Windows - Check open ports",
+                excerpt: "Check open ports on Linux and Windows",
+                date: "02-18-2026",
+                content: `# Check open ports on Linux and Windows
+ <br>  
+<br>
+
+Netstat: netstat -ano (Windows) or netstat -tulpn (Linux) reveals which services are listening on specific network ports. 
+            `},
+                    {
+                id: 36,
+                title: "Proxmox - LXC CLI access",
+                excerpt: "Command used to access a Proxmox LXC container",
+                date: "02-18-2026",
+                content: `# Proxmox LXC
+ <br>  
+<br>
+
+To access a Proxmox LXC CLI, execute the pct enter command; for an LXC container with ID 100:
+\`\`\`
+# pct enter 100
+\`\`\`   
+
+
+            `},
+                    {
+                id: 35,
+                title: "Nextcloud - Untrusted Domain error",
+                excerpt: "Untrusted domain error on nextcloud",
+                date: "02-18-2026",
+                content: `# Nextcloud
+ <br>  
+<br>
+
+Received the Nextcloud error "Access through untrusted domain" after re-installing.
+![](images/nextcloud_error.png)
+
+Resolved as per:   
+https://docs.nextcloud.com/server/32/admin_manual/installation/installation_wizard.html#trusted-domains
+
+Added the server IP address to the /var/www/nextcloud/config/config.php under the 'trusted_domains' section.
+![](images/nextcloud.png)   
+
+
+            `},
+                    {
+                id: 34,
+                title: "Linux/Windows - Check running services",
+                excerpt: "Quick reference commands for checking running services on Linux ad Windows",
+                date: "02-18-2026",
+                content: `# Running Services
+ <br>  
+<br>
+
+
+Linux Services   
+    • Systemd (Modern): List all active services:   
+    \`\`\`
+    systemctl list-units --type=service --state=running
+    \`\`\`   
+    • Systemd (Check specific):   
+    \`\`\`
+    systemctl status <service_name>
+    \`\`\`   
+    • System V init (Debian):   
+    \`\`\`
+    service --status-all.
+    \`\`\`   
+    • Filtering (Debian, to see only running services):   
+    \`\`\`
+    service --status-all | grep '\[ + \]'
+    \`\`\`   
+    • Processes:   
+    \`\`\`
+    ps -aux
+    \`\`\`   
+   
+    
+   
+ Windows Services   
+    • PowerShell:   
+    \`\`\`
+    Get-Service | Where-Object {$_.Status -eq 'Running'}
+    \`\`\`   
+    • Command Prompt:   
+    \`\`\`
+    net start (lists running services) or tasklist.
+    \`\`\`   
+    • Remote Server:   
+    \`\`\`
+    Get-Service -ComputerName <server_name> -Status Running
+    \`\`\`   
+    • GUI:   
+    \`\`\`
+    Task Manager (Services tab) or services.msc.
+    \`\`\`
+
+
+ <br>  
+<br>
+
+            `},
+                    {
+                id: 33,
+                title: "Github - Initial ssh key configuration",
+                excerpt: "List of commands used to perform the initial access to Github",
+                date: "02-18-2026",
+                content: `# Github - ssh key configuration
+ <br>  
+<br>
+
+Set up the local ssh key on your PC; you will receive a prompt to leave the ssh key file as default or you can enter a file name.
+Additionally, a passphrase can be set up if chosen.
+\`\`\`
+ssh-keygen -t ed25519 -C "youremailaddress@email.com"
+\`\`\`   
+
+List the .pub ssh key file content.
+\`\`\`
+cat /home/lucas/.ssh/sshkeyfile.pub
+\`\`\`
+
+On your Github Home page.
+
+In the upper-right corner of any page on GitHub, click your profile picture, then click Settings.   
+    • In the "Access" section of the sidebar, click SSH and GPG keys.   
+    • Click New SSH key or Add SSH key.   
+    • In the "Title" field, add a descriptive label for the new key. For example, if you're using a personal laptop, you might call this key "Personal laptop".   
+    • Select the type of key, either authentication or signing. For more information about commit signing, see About commit signature verification.   
+    • In the "Key" field, paste your public key.   
+    • Click Add SSH key.   
+   
+Set up your username and email, and confirm
+\`\`\`
+git config --global user.name "githubname"
+git config --global user.email "youremailaddress@email.com"   
+git config --list 
+user.name=githubname
+user.email=youremailaddress@email.com
+\`\`\`
+
+Execute "git init"; this is to ceate an empty Git repository or reinitialize an existing one.
+
+
+At this point, if we try "git clone", we will most likely get a Permission denied error. As well as if we test connectivity "ssh -T git@github.com".
+
+Do:
+\`\`\`
+eval "$(ssh-agent -s)" 
+ssh-add ~/.ssh/sshkeyfile
+\`\`\`
+ssh-add — adds private key identities to the OpenSSH authentication agent 
+
+"git clone" and the connectivity test should work now.
+
+ <br>  
+<br>
+
+            `},
+        {
+                id: 32,
+                title: "Docker - prune",
+                excerpt: "Brief list of Docker \"prune\" options.",
+                date: "10-30-2025",
+                content: `# Docker - prune
+ <br>  
+<br>
+
+Remove images that are not tagged or referenced by any container
+\`\`\`
+docker image prune
+\`\`\`   
+
+Remove images not used by existing containers
+\`\`\`
+docker image prune -a -f
+\`\`\`   
+
+Remove unused docker images, containers and networks
+\`\`\`
+docker system prune --volumes -f
+\`\`\`   
+
+
+            `},
+        {
+                id: 31,
+                title: "Docker - inspect",
+                excerpt: "Brief list of Docker \"inspect\" options.",
+                date: "10-30-2025",
+                content: `# Docker - inspect
+ <br>  
+<br>
+
+Display detailed information of a container
+\`\`\`
+docker inspect “Name|ID”
+\`\`\`   
+
+Display container ID
+\`\`\`
+docker inspect --format=´{{.Id}}´ ContainerName
+\`\`\`   
+
+Display container log path
+\`\`\`
+docker inspect --format=´{{.LogPath}}´ ContainerName
+\`\`\`   
+
+Display container config section
+\`\`\`
+docker inspect --format=´{{json .Config}}´ ContainerName
+\`\`\`
+
+
+            `},
+        {
+                id: 30,
+                title: "Docker - ps",
+                excerpt: "Brief list of Docker \"ps\" options.",
+                date: "10-30-2025",
+                content: `# Docker - ps
+ <br>  
+<br>
+
+Display running containers
+\`\`\`
+docker ps
+\`\`\`   
+
+Display all containers
+\`\`\`
+docker ps -a
+\`\`\`   
+
+Display the last “x” number of containers created
+\`\`\`
+docker ps -n 1
+\`\`\`   
+
+Display containers IDs
+\`\`\`
+docker ps -q
+\`\`\`   
+
+Display containers file size
+\`\`\`
+docker ps -s
+\`\`\`   
+
+Display last created container
+\`\`\`
+docker ps -l
+\`\`\`   
+
+Display containers full output
+\`\`\`   
+docker ps --no-trunc
+\`\`\`   
+
+
+Display specific container by label
+\`\`\`
+docker ps --filter label="label"
+\`\`\`   
+
+Display by exit code
+\`\`\`   
+docker ps -a --filter ‘exited=137’
+\`\`\`   
+
+\`\`\`   
+* COMMON DOCKER CONTAINER EXIT CODES *
+Exit Code 0        Purposely stopped
+Exit Code 1        Application error
+Exit Code 125    Container failed to run error
+Exit Code 126    Command invoke error
+Exit Code 127     File or directory not found
+Exit Code 128     Invalid argument used on exit
+Exit Code 134     Abnormal termination (SIGABRT)
+Exit Code 137     Immediate termination (SIGKILL)
+Exit Code 139     Segmentation fault (SIGSEGV)
+Exit Code 143     Graceful termination (SIGTERM)
+Exit Code 255     Exit Status Out Of Range
+
+Display containers in JSON format
+
+docker ps --filter label="label" --format-json
+
+Display containers, in table format, only the columns needed
+
+docker ps --filter label="label" --format "table {{.ID}}\t{{.Names}}"
+\`\`\`   
+
+
+            `},
+        {
+                id: 29,
+                title: "Ansible - reachability test",
+                excerpt: "Test reachability from the Ansible Server down to the clients",
+                date: "10-10-2025",
+                content: `# Ansible - reachability test
+
+Test by specifying the nodes list.   
+
+Having the nodes file
+\`\`\`
+192.168.20.50
+192.168.20.51
+192.168.20.52
+192.168.20.53
+\`\`\`   
+
+Run
+
+\`\`\`
+ansible all -i nodes -m ping
+\`\`\`   
+
+ <br>  
+<br>
+
+*************************************************************************************************   
+
+ <br>  
+<br>
+If we add the config file; ansible.cfg.   
+
+\`\`\`
+[defaults]
+192.168.20.50
+192.168.20.51
+192.168.20.52
+192.168.20.53
+\`\`\`   
+
+Run
+\`\`\`
+ansible all -i nodes -m ping
+\`\`\`
+ <br>  
+<br>
+
+*************************************************************************************************
+
+ <br>  
+<br>
+To check which nodes will be affected from the nodes list.   
+
+\`\`\`
+ansible all --list-hosts
+\`\`\`
+
+ <br>  
+<br>
+
+*************************************************************************************************
+
+ <br>  
+<br>
+
+To specify an ip the playbook will have effect on for this particular run.
+
+\`\`\`
+ansible all --list-hosts --limit 192.168.20.50
+\`\`\`
+
+ <br>  
+<br>
+
+*************************************************************************************************
+
+ <br>  
+<br>
+To extract information from the listed servers under nodes.
+
+\`\`\`
+ansible all -m gather_facts
+\`\`\`
+
+ <br>  
+<br>
+            `},
+
+
+//            {
+//                id: 28,
+//                title: "Terraform - AWS - Apply and Destroy Infrastructure",
+//                excerpt: "Reference notes on how to implement IaaS using Terraform and the AWS ecosystem",
+//                date: "10-05-2025",
+//                content: `# Terraform - AWS - Apply and Destroy Infrastructure
+// <br>  
+//<br>
+//First information to gather is the profile to be used, which can be obtained from the credentials file.   
+//These credentials will grant us access to the default profile in AWS.   
+
+//\`\`\`
+//PS C:\WINDOWS\system32> cat  ~/.aws/credentials
+//[default]
+//aws_access_key_id = ****************PTWY
+//aws_secret_access_key = ****************ENWZ
+//\`\`\`   
+
+//Going now to the terraform folder, where our configuration files will exist, the main.tf initial block should look somewhat like this.
+
+//\`\`\`
+//# Provider definition
+//provider "aws" \{
+//    profile = "default"
+//    region = "us-east-1"
+//\}
+//\`\`\`
+
+//When the basic main.tf file is ready, run
+//\`\`\`
+//terraform init
+//\`\`\`
+
+//When init is complete, start putting together the configuration for the desired resources.   
+//Terraform documentation with AWs provider, https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance.   
+
+
+//\`\`\`
+//# Provider definition
+//provider "aws" {
+//    profile = "default"
+//    region = "us-east-1"
+//}
+
+//# Create a VPC
+//resource "aws_vpc" "examplevpc" {
+//    cidr_block = "10.0.0.0/16"
+//}
+
+//# Create a subnet
+//resource "aws_subnet" "examplesubnet" {
+//    vpc_id     = aws_vpc.examplevpc.id
+//    cidr_block = "10.0.1.0/24"
+//}
+
+//# Create a security group
+//resource "aws_security_group" "examplesecuritygroup" {
+//    name        = "examplesecuritygroup"
+//   description = "Allow SSH and HTTP"
+//   vpc_id      = aws_vpc.examplevpc.id
+
+//    ingress {
+//        from_port   = 22
+//        to_port     = 22
+//        protocol    = "tcp"
+//        cidr_blocks = ["0.0.0.0/0"]
+//    }
+
+//    ingress {
+//        from_port   = 80
+//        to_port     = 80
+//        protocol    = "tcp"
+//        cidr_blocks = ["0.0.0.0/0"]
+//    }
+//}
+
+//# Create an instance
+//resource "aws_instance" "exampleinstance" {
+//    ami           = "ami-0bbdd8c17ed981ef9"
+//    instance_type = "t2.micro"
+//    vpc_security_group_ids = [aws_security_group.examplesecuritygroup.id]
+//    subnet_id     = aws_subnet.examplesubnet.id
+//}
+//\`\`\`   
+
+//When the main.tf file is ready, the following two commands would follow.   
+
+//\`\`\`   
+//terraform plan    # Will evaluate the main.tf file and inform which changes will be made.
+//terraform apply   # Will apply the changes and create the infrastructure.
+//\`\`\`   
+
+
+
+
+
+//            `},
+    {
+                id: 27,
+                title: "Terraform - AWS - Initial configuration",
+                excerpt: "Reference notes for the initial configuration of Terraform and AWS CLI",
+                date: "10-05-2025",
+                content: `# Terraform - AWS - Initial configuration
+   
+
+The intent of this note is to serve as a quick reference for setting up Terraform and AWS CLI for provisioning.
+
+\`\`\`
+Terraform is an open-source Infrastructure as Code (IaC) tool developed by HashiCorp.   
+It allows users to define and provision data center infrastructure using a declarative   
+configuration language, either HashiCorp Configuration Language (HCL) or JSON.
+\`\`\`
+\`\`\`
+The AWS Command Line Interface (AWS CLI) is a unified, open-source tool that allows users   
+to interact with and manage various Amazon Web Services (AWS) from their command-line shell.   
+It provides a consistent interface to control a wide range of AWS services, such as Amazon S3,   
+Amazon EC2, and Amazon DynamoDB, by executing commands directly in the terminal.
+\`\`\`
+*************************************************************************************************
+ <br>  
+<br>
+Install AWS CLI (for Windows in this case).   
+
+https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html#getting-started-install-instructions
+\`\`\`
+msiexec.exe /i https://awscli.amazonaws.com/AWSCLIV2.msi
+\`\`\`   
+   
+
+*************************************************************************************************
+ <br>  
+<br>
+
+Install Terraform (for Windows in this case).   
+Download the binary from https://developer.hashicorp.com/terraform/install.   
+Edit the Environment Variables > System variables to point to the executable.   
+   
+![](images/Win_env_variales.png)
+
+
+*************************************************************************************************
+ <br>  
+<br>   
+
+Create an Access key from the AWS Console to be able to push the code.   
+
+* Go to the top right of the AWS Console screen, select the user icon and click Security Credentials.   
+* Search for Access keys, and create a new one with "Create access key" (permissions are needed for this).  
+* Save the "Access key ID" and "Secret access key".   
+
+ <br>  
+<br>
+
+*************************************************************************************************   
+
+ <br>  
+<br>
+   
+Configure and set the credentials for AWS CLI.   
+
+Execute:
+\`\`\`
+aws configure
+\`\`\`   
+   
+The following information will be entered:   
+
+\`\`\`
+AWS Access Key ID: This is a unique identifier associated with an AWS IAM user or role.   
+It's used to identify who is making the request.   
+
+AWS Secret Access Key: This is the secret key corresponding to the Access Key ID.   
+It's used to cryptographically sign requests and verify the identity of the user or role.   
+
+Default Region Name: This specifies the AWS region that the CLI should use by default when   
+making API calls, unless a different region is explicitly specified in a command.   
+Examples include us-east-1 or eu-west-2.   
+
+Default Output Format: This determines how the results of AWS CLI commands are formatted.   
+Common options include json, text, or table.
+\`\`\`
+
+ <br>  
+<br>
+
+*************************************************************************************************
+ <br>  
+<br>
+Put together the initial configuration block (main.tf), for AWS in this case, in whichever folder chosen to contain the terraform files.
+
+\`\`\`
+# Provider definition
+provider "aws" \{
+    profile = "default"
+    region = "us-east-1"
+\}
+\`\`\`
+
+*************************************************************************************************
+
+ <br>  
+<br>
+
+Prepare the directory, where the terraform configuration files will live, by running the init command.   
+
+\`\`\`
+terraform init
+\`\`\`
+
+The terraform init command initializes a working directory containing Terraform configuration files.   
+This is the first command executed when starting a new Terraform project or when cloning an existing configuration from version control.   
+
+
+\`\`\`
+Initializes the Backend:
+Terraform uses a backend to store state data, which tracks the real-world state of provisioned resources.
+Terraform init configures this backend as defined in the configuration, enabling state sharing in collaborative environments.   
+
+Downloads and Installs Providers: Terraform interacts with various remote systems through plugins called "providers."
+This command downloads and installs the necessary provider plugins specified in the configuration files.   
+
+Installs Modules: If the configuration utilizes Terraform modules, terraform init downloads and installs these modules,
+including those sourced from external locations like the Terraform Registry or GitHub.    
+
+Prepares the Working Directory: It creates a hidden .terraform directory within the working directory to manage cached plugins,
+modules, and other state-related information, making the directory ready for subsequent Terraform commands like terraform plan and terraform apply.   
+
+Creates terraform.lock.hcl: This file locks the versions of providers used, ensuring consistent provider versions across different users
+and environments.   
+
+It is safe to run terraform init multiple times as it is an idempotent operation, meaning it will only make changes if updates are required.
+If configuration changes necessitate reinitialization, such as adding new providers or modifying backend configurations,
+terraform init must be run again to update the working directory accordingly.
+\`\`\`
+
+
+ <br>  
+<br>
+
+*************************************************************************************************
+
+ <br>  
+<br>   
+
+
+From here on, Terraform can be used to push the infrastructure needed up to AWS.   
+
+Some useful commands below to check on the configuration details.   
+
+\`\`\`
+PS C:\\WINDOWS\\system32> aws configure list
+NAME       : VALUE                    : TYPE             : LOCATION
+profile    : <not set>                : None             : None
+access_key : ****************PTWY     : shared-credentials-file :
+secret_key : ****************ENWZ     : shared-credentials-file :
+region     : us-east-1                : config-file      : ~/.aws/config
+PS C:\\WINDOWS\\system32> cat ~/.aws/config
+[default]
+region = us-east-1
+output = json
+\`\`\`
+
+\`\`\`
+PS C:\\WINDOWS\\system32> cat  ~/.aws/credentials
+[default]
+aws_access_key_id = ****************PTWY
+aws_secret_access_key = ****************ENWZ
+PS C:\\WINDOWS\\system32> aws sts get-caller-identity
+{
+    "UserId": "4OYVNBGCSW",
+    "Account": "4400044000",
+    "Arn": "arn:aws:iam::4400044000:user/Lucas"
+}
+\`\`\`
+
+*************************************************************************************************
+            `},
+            {
+                id: 26,
+                title: "Linux - Filesystem - Delete, Create and Format Partition",
+                excerpt: "Step by step on how to discover available drives, delete existing partitions, creating new ones, and formatting",
+                date: "09-29-2045",
+                content: `# Linux - Filesystem - Delete, Create and Format Partition
+
+For starters, list every available drive on the system with lsblk
+\`\`\`
+root@proxmox20:~# lsblk
+NAME               MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
+sda                  8:0    0 931.5G  0 disk
+└─sda1               8:1    0 931.5G  0 part /mnt/sda1
+sdb                  8:16   0 931.5G  0 disk
+├─sdb1               8:17   0   118G  0 part
+└─sdb2               8:18   0 813.5G  0 part
+sdc                  8:32   0 223.6G  0 disk
+├─sdc1               8:33   0 222.6G  0 part
+├─sdc2               8:34   0     1K  0 part
+└─sdc5               8:37   0   975M  0 part
+sdd                  8:48   0 223.6G  0 disk
+├─sdd1               8:49   0   100M  0 part
+├─sdd2               8:50   0    16M  0 part
+├─sdd3               8:51   0 222.8G  0 part
+└─sdd4               8:52   0   657M  0 part
+nvme0n1            259:0    0 931.5G  0 disk
+├─nvme0n1p1        259:1    0  1007K  0 part
+├─nvme0n1p2        259:2    0     1G  0 part /boot/efi
+└─nvme0n1p3        259:3    0 930.5G  0 part
+  ├─pve-swap       252:0    0     8G  0 lvm  [SWAP]
+  ├─pve-root       252:1    0    96G  0 lvm  /
+  ├─pve-data_tmeta 252:2    0   8.1G  0 lvm
+  │ └─pve-data     252:4    0 794.3G  0 lvm
+  └─pve-data_tdata 252:3    0 794.3G  0 lvm
+    └─pve-data     252:4    0 794.3G  0 lvm
+root@proxmox20:~#
+\`\`\`
+
+There is a three step process when wiping a drive and making it available for use:
+1. Delete all existing partitions with fdisk.  
+2. Format the drive with mkfs. (we will format the drive as ext4).  
+3. Mount the drive and make it permanent by editing /etc/fstab.  
+  
+  
+  
+\`\`\`
+Steps below:
+\`\`\`
+
+1. Use fdisk to delete partitions and to create a new one, or several, as needed.
+\`\`\`
+root@proxmox20:~# fdisk /dev/sdc
+
+Welcome to fdisk (util-linux 2.41).
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
+
+
+Command (m for help): m
+
+Help:
+
+  DOS (MBR)
+   a   toggle a bootable flag
+   b   edit nested BSD disklabel
+   c   toggle the dos compatibility flag
+
+  Generic
+   d   delete a partition
+   F   list free unpartitioned space
+   l   list known partition types
+   n   add a new partition
+   p   print the partition table
+   t   change a partition type
+   v   verify the partition table
+   i   print information about a partition
+   e   resize a partition
+   T   discard (trim) sectors
+
+  Misc
+   m   print this menu
+   u   change display/entry units
+   x   extra functionality (experts only)
+
+  Script
+   I   load disk layout from sfdisk script file
+   O   dump disk layout to sfdisk script file
+
+  Save & Exit
+   w   write table to disk and exit
+   q   quit without saving changes
+
+  Create a new label
+   g   create a new empty GPT partition table
+   G   create a new empty SGI (IRIX) partition table
+   o   create a new empty MBR (DOS) partition table
+   s   create a new empty Sun partition table
+
+
+Command (m for help): p
+Disk /dev/sdc: 223.57 GiB, 240057409536 bytes, 468862128 sectors
+Disk model: SanDisk SDSSDA24
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: dos
+Disk identifier: 0x2b46a5cf
+
+Device     Boot     Start       End   Sectors   Size Id Type
+/dev/sdc1  *         2048 466862079 466860032 222.6G 83 Linux
+/dev/sdc2       466864126 468860927   1996802   975M  5 Extended
+/dev/sdc5       466864128 468860927   1996800   975M 82 Linux swap / Solaris
+
+Command (m for help): d
+Partition number (1,2,5, default 5):
+
+Partition 5 has been deleted.
+
+Command (m for help): d
+Partition number (1,2, default 2):
+
+Partition 2 has been deleted.
+
+Command (m for help): d
+Selected partition 1
+Partition 1 has been deleted.
+
+Command (m for help): p
+Disk /dev/sdc: 223.57 GiB, 240057409536 bytes, 468862128 sectors
+Disk model: SanDisk SDSSDA24
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: dos
+Disk identifier: 0x2b46a5cf
+
+Command (m for help):
+\`\`\`
+
+We have deleted all partitions with the d option, and then printed the current status with p.
+
+Check the free unpartitioned space with F.
+
+\`\`\`
+Command (m for help): F
+Unpartitioned space /dev/sdc: 223.57 GiB, 240056360960 bytes, 468860080 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+
+Start       End   Sectors   Size
+ 2048 468862127 468860080 223.6G
+
+Command (m for help):
+\`\`\`
+
+
+With the confirmation of the available space, lets create a new partition; I am using the entire disk in this case.
+
+Use the n option to create the new partition.
+\`\`\`
+Command (m for help): n
+Partition type
+   p   primary (0 primary, 0 extended, 4 free)
+   e   extended (container for logical partitions)
+Select (default p): p
+Partition number (1-4, default 1):
+First sector (2048-468862127, default 2048):
+Last sector, +/-sectors or +/-size{K,M,G,T,P} (2048-468862127, default 468862127):
+
+Created a new partition 1 of type 'Linux' and of size 223.6 GiB.
+Partition #1 contains a ext4 signature.
+
+Do you want to remove the signature? [Y]es/[N]o: Y
+
+The signature will be removed by a write command.
+
+Command (m for help): p
+Disk /dev/sdc: 223.57 GiB, 240057409536 bytes, 468862128 sectors
+Disk model: SanDisk SDSSDA24
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: dos
+Disk identifier: 0x2b46a5cf
+
+Device     Boot Start       End   Sectors   Size Id Type
+/dev/sdc1        2048 468862127 468860080 223.6G 83 Linux
+
+Filesystem/RAID signature on partition 1 will be wiped.
+
+Command (m for help):
+\`\`\`
+
+All steps above have not been confirmed yet, if not sure, press q.
+If you are comfortable with the changes, press w.
+\`\`\`
+Command (m for help): w
+The partition table has been altered.
+Calling ioctl() to re-read partition table.
+Syncing disks.
+\`\`\`
+
+Check the drives with lsblk again, there is only sdc1 listed, sdc2 and sdc5 are gone.
+\`\`\`
+root@proxmox20:~# lsblk
+NAME               MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
+sda                  8:0    0 931.5G  0 disk
+└─sda1               8:1    0 931.5G  0 part /mnt/sda1
+sdb                  8:16   0 931.5G  0 disk
+├─sdb1               8:17   0   118G  0 part
+└─sdb2               8:18   0 813.5G  0 part
+sdc                  8:32   0 223.6G  0 disk
+└─sdc1               8:33   0 223.6G  0 part
+sdd                  8:48   0 223.6G  0 disk
+├─sdd1               8:49   0   100M  0 part
+├─sdd2               8:50   0    16M  0 part
+├─sdd3               8:51   0 222.8G  0 part
+└─sdd4               8:52   0   657M  0 part
+nvme0n1            259:0    0 931.5G  0 disk
+├─nvme0n1p1        259:1    0  1007K  0 part
+├─nvme0n1p2        259:2    0     1G  0 part /boot/efi
+└─nvme0n1p3        259:3    0 930.5G  0 part
+  ├─pve-swap       252:0    0     8G  0 lvm  [SWAP]
+  ├─pve-root       252:1    0    96G  0 lvm  /
+  ├─pve-data_tmeta 252:2    0   8.1G  0 lvm
+  │ └─pve-data     252:4    0 794.3G  0 lvm
+  └─pve-data_tdata 252:3    0 794.3G  0 lvm
+    └─pve-data     252:4    0 794.3G  0 lvm
+root@proxmox20:~#
+\`\`\`
+
+
+
+2. Lets format the drive; ext4 in this case.
+
+\`\`\`
+root@proxmox20:~# mkfs.ext4 /dev/sdc1
+mke2fs 1.47.2 (1-Jan-2025)
+Discarding device blocks: done
+Creating filesystem with 58607510 4k blocks and 14655488 inodes
+Filesystem UUID: f33815e7-1658-4c5b-8833-849473c05b1d
+Superblock backups stored on blocks:
+        32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632, 2654208,
+        4096000, 7962624, 11239424, 20480000, 23887872
+
+Allocating group tables: done
+Writing inode tables: done
+Creating journal (262144 blocks): done
+Writing superblocks and filesystem accounting information: done
+
+root@proxmox20:~#
+\`\`\`
+
+3. Mount the drives; I have created mounting points beforehand.
+\`\`\`
+mount /dev/sdc1 /mnt/sdc1/
+\`\`\`
+
+\`\`\`
+root@proxmox20:~# ls /mnt
+sda1  sdb1  sdc1  sdd1
+root@proxmox20:~# mount /dev/sdc
+sdc   sdc1
+root@proxmox20:~# mount /dev/sdc1 /mnt/sdc1/
+root@proxmox20:~# df -h
+Filesystem            Size  Used Avail Use% Mounted on
+udev                  7.5G     0  7.5G   0% /dev
+tmpfs                 1.5G  1.4M  1.5G   1% /run
+/dev/mapper/pve-root   94G  3.4G   86G   4% /
+tmpfs                 7.5G   40M  7.5G   1% /dev/shm
+efivarfs              128K   13K  111K  10% /sys/firmware/efi/efivars
+tmpfs                 5.0M     0  5.0M   0% /run/lock
+tmpfs                 1.0M     0  1.0M   0% /run/credentials/systemd-journald.service
+tmpfs                 7.5G     0  7.5G   0% /tmp
+/dev/nvme0n1p2       1022M  8.8M 1014M   1% /boot/efi
+/dev/sda1             909G  244G  619G  29% /mnt/sda1
+/dev/fuse             128M   16K  128M   1% /etc/pve
+tmpfs                 1.0M     0  1.0M   0% /run/credentials/getty@tty1.service
+tmpfs                 1.5G  4.0K  1.5G   1% /run/user/0
+/dev/sdc1             220G  2.1M  208G   1% /mnt/sdc1
+root@proxmox20:~#
+\`\`\`
+
+The disk will be available at /mnt/sdc1/, however, after reboot, changes will be lost.
+
+The /etc/fstab needs to be edited to make the disk mount permanent.
+
+Run lsblk -f and look for the UUID of the device.
+\`\`\`
+sdc
+└─sdc1             ext4        1.0              f33815e7-1658-4c5b-8833-849473c05b1d    207.8G     0% /mnt/sdc1
+\`\`\`
+
+Run nano /etc/fstab and add a line as below
+\`\`\`
+UUID=f33815e7-1658-4c5b-8833-849473c05b1d /mnt/sdc1 ext4 defaults 0 0
+\`\`\`
+
+Lastly
+\`\`\`
+systemctl daemon-reload
+\`\`\`
+You should use this command after you have made changes to unit files, such as: 
+
+_ Adding or modifying a new service unit file.  
+_ Changing the configuration of an existing unit file.  
+_ Making changes to files that affect dependencies, like /etc/fstab.
+
+And
+\`\`\`
+mount -a
+\`\`\`
+Mount all filesystems (of the given types) mentioned in fstab (except for those whose line contains the noauto keyword).  
+The filesystems are mounted following their order in fstab.
+
+            `},
+        {
+                id: 25,
+                title: "Linux - Add user to the sudoers group",
+                excerpt: "Adding a user to the sudoers group for both Debian and RedHat based systems",
+                date: "09-24-2045",
+                content: `# Linux - Add user to the sudoers group
+
+_ For Debian/Ubuntu-based systems:
+\`\`\`
+sudo usermod -aG sudo username
+\`\`\`   
+If the user still has no sudoer permissions, change to root by executing:   
+\`\`\`
+"su -"
+\`\`\`   
+Then run "visudo", and search for the line "# User privilege specification"; lastly add your user to the list.   
+\`\`\`
+# User privilege specification
+root    ALL=(ALL:ALL) ALL
+lucas   ALL=(ALL:ALL) ALL # new sudoer user
+\`\`\`
+
+_ For Fedora/RHEL-based systems:
+\`\`\`
+sudo usermod -aG wheel username
+\`\`\`
+            `},
+
+        {
+                id: 24,
+                title: "Windows - Enable SSH access",
+                excerpt: "Steps to enable ssh access on Windows",
+                date: "09-23-2045",
+                content: `# Windows - Enable SSH access
+
+Enabling SSH and opening port 22 on Windows involves setting up an SSH server on your Windows machine and configuring the firewall to allow inbound connections on port 22. One common way to achieve this is by using third-party software like OpenSSH for Windows.
+Prerequisites:
+
+Before setting up SSH on Windows and opening port 22, ensure the following:
+
+Windows Version:
+
+You must be using a compatible version of Windows that supports the OpenSSH feature. This typically includes Windows 10 version 1809 (October 2018 Update) or later, or Windows Server 2019.
+
+Administrator Access:
+
+You need administrative privileges on the Windows machine to install and configure the OpenSSH server and firewall rules.
+
+Network Connectivity:
+
+Ensure that your Windows machine is connected to a network, and you have a valid IP address assigned to it.
+
+Windows PowerShell:
+
+You should have basic familiarity with Windows PowerShell, as some steps involve running PowerShell commands as an administrator.
+
+SSH Client (for remote access):
+
+Prepare an SSH client on another device (e.g., PuTTY on Windows, OpenSSH on Linux/macOS) to connect to your Windows SSH server once it’s set up.
+
+Step 1: Install OpenSSH Server on Windows
+
+Enable OpenSSH Feature:
+
+Open the “Settings” app on your Windows machine.
+
+Go to “Apps” > “Optional features” > “Add a feature”.
+
+Look for “OpenSSH Server” in the list and click to install it.
+
+Install via PowerShell (if Settings app is not used):
+
+Open PowerShell as Administrator.
+
+Run the following command to install OpenSSH Server:
+\`\`\`
+Add-WindowsCapability -Online -Name OpenSSH.Server
+\`\`\`
+Step 2: Configure OpenSSH Server
+
+Start SSH Service:
+
+Open PowerShell as Administrator.
+
+Start the SSH server service:
+\`\`\`
+Start-Service sshd
+\`\`\`
+(Optional) Set SSH Service to Start Automatically:
+
+Run the following command to set the SSH server service to start automatically:
+\`\`\`
+Set-Service -Name sshd -StartupType 'Automatic'
+\`\`\`
+Verify SSH Server Status:
+
+You can check the status of the SSH server service to ensure it’s running:
+\`\`\`
+Get-Service sshd
+\`\`\`
+Step 3: Allow SSH Through Windows Firewall
+
+Allow SSH Service:
+
+Open PowerShell as Administrator.
+
+Run the following commands to allow SSH traffic through the firewall:
+\`\`\`
+New-NetFirewallRule -Name sshd -DisplayName 'OpenSSH Server (sshd)' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22
+\`\`\`
+Step 4: Accessing Windows SSH Server
+
+Find Windows IP Address:
+
+Open PowerShell.
+
+Run:
+\`\`\`
+ipconfig
+\`\`\`
+Connect via SSH:
+
+Use an SSH client on another machine (like PuTTY on Windows or OpenSSH on Linux/macOS).
+
+In the SSH client, enter the Windows machine’s IP address and port 22 (default for SSH) to establish a connection.
+\`\`\`
+ssh username@hostname_or_ip_address
+\`\`\`
+Additional Notes:
+
+Ensure that Windows Defender Firewall (or any other firewall software) is configured to allow inbound TCP traffic on port 22.
+
+Use appropriate security practices, such as setting up SSH keys for authentication instead of passwords, to enhance security.
+
+Always keep the Windows system and OpenSSH software up-to-date with the latest security patches.
+
+By following these steps, you’ll have successfully enabled SSH and opened port 22 on your Windows machine, allowing you to securely connect to it using SSH clients from other devices on the same network.
+
+            `},
+
+        {
+                id: 23,
+                title: "Linux - Do not suspend when closing notebook lid",
+                excerpt: "Which file to edit to avoid a notebook to suspend when closing the lid",
+                date: "09-23-2045",
+                content: `# Linux - Do not suspend when closing notebook lid
+Debian: /etc/systemd/logind.conf   
+Fedora: /usr/lib/systemd/logind.conf
+
+\`\`\`
+HandleLidSwitch=ignore
+HandleLidSwitchExternalPower=ignore
+HandleLidSwitchDocked=ignore   
+
+systemctl restart systemd-logind
+\`\`\`
+
+            `},
+
+        {
+                id: 22,
+                title: "Linux - CLI built-in vs non-built-in commands",
+                excerpt: "Brief explanation on the difference between built-in and non-built-in commands Linux commands",
+                date: "09-23-2045",
+                content: `# Linux - CLI built-in vs non-built-in commands
+
+Built-in commands are integrated directly into a shell (like Bash), while non-built-in (or external) commands are separate programs located on the system's file system, requiring the shell to locate and execute them.
+
+The help command lists all the builtin programs on bash
+\`\`\`
+help
+\`\`\`
+
+To confirm if a command is a builtin one or not, run command -V
+\`\`\`
+lucas@debian:/test/test_1$ command -V cat
+cat is /usr/bin/cat
+lucas@debian:/test/test_1$ command -V df
+df is /usr/bin/df
+lucas@debian:/test/test_1$ command -V echo
+echo is a shell builtin
+lucas@debian:/test/test_1$
+\`\`\`
+
+To set a command to use either the builtin or the command version
+\`\`\`
+lucas@debian:/test/test_1$ command -V echo
+echo is a shell builtin
+lucas@debian:/test/test_1$ enable -n echo
+lucas@debian:/test/test_1$ command -V echo
+echo is /usr/bin/echo
+lucas@debian:/test/test_1$ enable echo
+lucas@debian:/test/test_1$ command -V echo
+echo is a shell builtin
+lucas@debian:/test/test_1$
+\`\`\`
+
+            `},
+
+        {
+                id: 21,
+                title: "Linux - Wifi information",
+                excerpt: "Obtain Wifi capabilities from the Linux CLI",
+                date: "09-21-2025",
+                content: `# Linux - Wifi information
+Obtain Wifi capabilities and related information from the Linux CLI.
+\`\`\`
+iw phy
+\`\`\`
+
+            `},
+
+        {
+                id: 20,
+                title: "PowerShell - Ethernet information",
+                excerpt: "Obtain Ethernet capabilities from PowerShell",
+                date: "09-21-2045",
+                content: `# PowerShell - Ethernet information
+Obtain Ethernet capabilities and related information using Windows PowerShell.
+
+1. Basic Ethernet adapter information:
+\`\`\`
+Get-NetAdapter | Selec-Object InterfaceDescription, Name, Status, LinkSpeed
+\`\`\`
+
+2. Get detailed Ethernet adapter properties:
+\`\`\`
+Get-NetAdapter -Name \"Ethernet\" | Format-List -Property *
+\`\`\`
+
+3. Explore advanced Ethernet capabilities
+\`\`\`
+Get-NetAdapterAdvancedProperty -Name \"Ethernet\"
+\`\`\`
+            `},
+        {
+                id: 19,
+                title: "PowerShell - Wifi information",
+                excerpt: "Obtain Wfi capabilities from PowerShell",
+                date: "09-21-2025",
+                content: `# PowerShell - Wifi information
+
+Obtain Wifi capabilities and related information using Windows PowerShell.
+
+1. View Detailed Wifi Interface Information:
+\`\`\`
+netsh wlan show interfaces
+\`\`\`
+
+2. Check Supported Radio Types (5GHz Capability):
+\`\`\`
+netsh wlan show drivers
+\`\`\`
+
+3. List Saved Wi-Fi Profiles:
+\`\`\`
+netsh wlan show profiles
+\`\`\`
+
+4. Generate a Wifi Report:
+\`\`\`
+netsh wlan show wlanreport
+\`\`\`
+
+5. Get Network Adapter Information (including Link Speed):
+\`\`\`
+Get-NetAdapter | select interfaceDescription, name, status, linkSpeed
+\`\`\`
+
+6. Extract Wi-fi password
+\`\`\`
+netsh wlan show profile name="SSID" key=clear
+\`\`\`
+            `},
+            {
+                id: 18,
+                title: "Security - Wifi audit - airmon-ng - dictionary attack",
+                excerpt: "Audit YOUR Wifi network with Linux.",
+                date: "09-19-2025",
+                content: `# Security - Wifi audit - airmon-ng - dictionary attack
+
+Using airmon-ng and its related tools to audit your own wifi network
+
+Provided you already have the tool installed (https://www.aircrack-ng.org/).
+
+Look for your system wireless interface with "ip a" or "ifconfig".
+
+Remove any conflicting running processes.
+\`\`\`
+sudo airmon-ng check kill
+\`\`\`
+
+Turn the wifi interface in monitor mode.
+\`\`\`
+sudo airmon-ng start wlp2s0
+\`\`\`
+
+Start scanning for all available SSIDs.
+
+Find your wifi SSID and channel.
+\`\`\`
+sudo airodump-ng wlp2s0
+\`\`\`
+
+Capture your wifi traffic; specify BSSID, channel, output file and monitoring interface.
+
+Obtain associated stations.
+\`\`\`
+sudo airodump-ng -c 6 --bssid 12:34:56:AB:CD:AG -w audit wlp2s0
+\`\`\`
+
+Perform a deauth attack against that station found above.
+
+Run the command below 5 times to gather authentication attempts from the station.
+\`\`\`
+sudo aireplay-ng -0 3 -a 12:34:56:AB:CD:AG -c 66:77:88:DD:AA:BB  wlp2s0  --ignore-negative-one
+\`\`\`
+
+Run aircrack-ng against the .pcap file obteined above.
+\`\`\`
+sudo aircrack-ng -b 12:34:56:AB:CD:AG -w rockyou.txt audit.cap
+\`\`\`
+            `},
+            {
+                id: 17,
+                title: "Docker - Commands",
+                excerpt: "Docker - Commands",
+                date: "09-18-2025",
+                content: `# Docker - Commands
+
+Check docker service status
+\`\`\`
+systemctl status docker
+\`\`\`
+
+List running containers
+\`\`\`
+sudo docker ps
+\`\`\`
+
+List also stopped containers
+\`\`\`
+sudo docker ps -a
+\`\`\`
+
+Show container details
+\`\`\`
+sudo docker inspect “CONTAINER ID”
+\`\`\`
+
+Show container logs
+\`\`\`
+sudo docker logs “CONTAINER ID”
+\`\`\`
+
+Watch container logs
+\`\`\`
+sudo watch docker logs “CONTAINER ID”
+\`\`\`
+
+Test docker installation by downloading and running the “hello-world” container
+\`\`\`
+sudo docker run hello-world
+\`\`\`
+
+Check for existing docker images
+\`\`\`
+sudo docker images
+\`\`\`
+
+Search for available docker images; i.e. nginx
+\`\`\`
+sudo docker search nginx
+\`\`\`
+
+Download a docker image, without installing it
+\`\`\`
+sudo docker pull nginx
+\`\`\`
+
+Add login user to the docker group, to avoid running “sudo” for every command
+\`\`\`
+sudo usermod -aG docker lucas
+\`\`\`
+
+Connecting to the container
+
+Run a container, ubuntu in this case, and access its CLI.
+(i stands for interactive - t stands for terminal - /bin/bash indicates where we want to be placed on when the container starts)
+
+\`\`\`
+sudo docker run -it ubuntu /bin/bash
+\`\`\`
+
+Run the container as a daemon, thus allowing us to stay on the terminal without terminating the container.
+(d sends the container to the background, it will detach it)
+\`\`\`
+sudo docker run -it -d ubuntu
+\`\`\`
+
+With the container running in the background, to connect to it, check its “CONTAINER ID”, and then “attach” to it
+\`\`\`
+sudo docker ps
+sudo docker attach “CONTAINER ID”
+\`\`\`
+
+If we exit from the container after we attached to it, it will terminate it; in order to exit the container command line, and avoid terminating the instance, do CTRL+P+Q.
+
+To start a container, and keep it from ending.
+\`\`\`
+sudo docker run -it -d --restart unless-stopped ubuntu
+\`\`\`
+
+Specify a port, for a web server for example
+\`\`\`
+sudo docker run -it -d --restart unless-stopped -p 8080:80 nginx
+\`\`\`
+
+Creating a container
+
+Will create a container with apache2 installed
+\`\`\`
+sudo docker run -it -d ubuntu
+sudo docker attach “CONTAINER ID”
+\`\`\`
+
+While connected to the container, update the OS and install apache2
+\`\`\`
+apt update
+apt upgrade
+apt install apache2
+\`\`\`
+
+Check the service status and start if not running
+\`\`\`
+service apache2 status
+service apache2 start
+\`\`\`
+
+Run this command to create a container image
+\`\`\`
+sudo docker commit “CONTAINER ID” lhp/ubuntu:1.0
+\`\`\`
+
+Check the image just created.
+\`\`\`
+$ sudo docker images
+REPOSITORY      TAG       IMAGE ID       CREATED         SIZE
+lhp/ubuntu1.0   latest    4108547976a3   3 minutes ago   240MB
+nginx           latest    4e1b6bae1e48   6 days ago      192MB
+ubuntu          latest    602eb6fb314b   2 weeks ago     78.1MB
+hello-world     latest    74cc54e27dc4   3 months ago    10.1kB
+\`\`\`
+
+Create a container instance from the self created image
+\`\`\`
+sudo docker run -it -d -p 8080:80 lhp/ubuntu1.0
+\`\`\`
+
+The container gets created.
+\`\`\`
+$ sudo docker ps
+CONTAINER ID   IMAGE           COMMAND       CREATED              STATUS              PORTS                                     NAMES
+b884eff5a00b   lhp/ubuntu1.0   "/bin/bash"   About a minute ago   Up About a minute   0.0.0.0:8080->80/tcp, [::]:8080->80/tcp   friendly_lumiere
+\`\`\`
+
+Now, going to the hostIP:8080 will not bring the apache welcome page.
+If we check on the container, apache2 will not be running, it will need to be started manually.
+\`\`\`
+# service apache2 status
+* apache2 is not running
+# service apache2 start
+* Starting Apache httpd web server apache2                                                                          AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 172.17.0.2. Set the 'ServerName' directive globally to suppress this message
+*
+\`\`\`
+
+If we want to have an image where apache is running as soon as the container starts, we can modify and create a new image as follows.
+\`\`\`
+$ sudo docker commit --change='ENTRYPOINT ["apachectl", "-DFOREGROUND"]' b884eff5a00b lhp/ubuntu1.1
+sha256:e12fd95e9f847bff41891314c87cd96430c248ba97b76ab1f35a0ab54374777e
+$ sudo docker images
+REPOSITORY      TAG       IMAGE ID       CREATED          SIZE
+lhp/ubuntu1.1   latest    e12fd95e9f84   12 seconds ago   240MB
+lhp/ubuntu1.0   latest    4108547976a3   23 minutes ago   240MB
+nginx           latest    4e1b6bae1e48   6 days ago       192MB
+ubuntu          latest    602eb6fb314b   2 weeks ago      78.1MB
+hello-world     latest    74cc54e27dc4   3 months ago     10.1kB
+\`\`\`
+
+To test the new image, stop the previous container, and start a new one with the new image.
+\`\`\`
+sudo docker run -it -d -p 8080:80 lhp/ubuntu1.1
+7ea2222d8e36d15fade661dde602ea8e2a5813336ccad50e6eb4f8c0c7440719
+sudo docker ps
+CONTAINER ID   IMAGE           COMMAND                  CREATED          STATUS          PORTS                                     NAMES
+7ea2222d8e36   lhp/ubuntu1.1   "apachectl -DFOREGRO…"   49 seconds ago   Up 48 seconds   0.0.0.0:8080->80/tcp, [::]:8080->80/tcp   amazing_elgamal
+\`\`\`
+
+Automating the container creation process further.
+
+On a known destination path, create a “Dockerfile”
+\`\`\`
+$ pwd
+/home/lucas/docker
+$ nano Dockerfile
+FROM ubuntu
+MAINTAINER lhp <lhp@email.com>
+# Skip prompts if presented during deploy
+ARG DEBIAN_FRONTEND=noninteractive
+# Update packages
+RUN apt update; apt upgrade -y
+# Install packages
+RUN apt install -y apache2 nano
+# Set entrypoint
+ENTRYPOINT apache2ctl -D FOREGROUND
+\`\`\`
+
+Now build the image by using the configuration file.
+(When specifying the Dockerfile path, just make sure you are at the file location, and just use the dot (.) expression for current directory; entering the full path keeps giving me an error)
+\`\`\`
+lucas@dockertraining:~/docker$ pwd
+/home/lucas/docker
+lucas@dockertraining:~/docker$ ls
+Dockerfile
+lucas@dockertraining:~/docker$ docker build -t lhp/ubuntu1.2 /home/lucas/docker/Dockerfile
+[+] Building 0.0s (0/0)                                                                               docker:default
+ERROR: unable to prepare context: path "/home/lucas/docker/Dockerfile" not found
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$ docker build -t lhp/ubuntu1.2 .
+[+] Building 269.2s (7/7) FINISHED                                                                    docker:default
+=> [internal] load build definition from Dockerfile                                                            0.4s
+=> => transferring dockerfile: 316B                                                                            0.2s
+=> [internal] load metadata for docker.io/library/ubuntu:latest                                                0.0s
+=> [internal] load .dockerignore                                                                               0.2s
+=> => transferring context: 2B                                                                                 0.0s
+=> [1/3] FROM docker.io/library/ubuntu:latest                                                                  0.1s
+=> [2/3] RUN apt update; apt upgrade -y                                                                       86.4s
+=> [3/3] RUN apt install -y apache2 nano                                                                     164.6s
+=> exporting to image                                                                                         15.9s
+=> => exporting layers                                                                                        15.7s
+=> => writing image sha256:e20f942af7144d2ab60c64cec3d9751b24e77e6289185fd405d47ce88a54c686                    0.0s
+=> => naming to docker.io/lhp/ubuntu1.2                                                                        0.0s
+2 warnings found (use docker --debug to expand):
+- JSONArgsRecommended: JSON arguments recommended for ENTRYPOINT to prevent unintended behavior related to OS signals (line 14)
+- MaintainerDeprecated: Maintainer instruction is deprecated in favor of using label (line 2)
+lucas@dockertraining:~/docker$ sudo docker ps
+[sudo] password for lucas:
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+lucas@dockertraining:~/docker$
+lucas@dockertraining:~/docker$ sudo docker images
+REPOSITORY      TAG       IMAGE ID       CREATED             SIZE
+lhp/ubuntu1.2   latest    e20f942af714   24 minutes ago      242MB
+lhp/ubuntu1.1   latest    e12fd95e9f84   About an hour ago   240MB
+lhp/ubuntu1.0   latest    4108547976a3   About an hour ago   240MB
+nginx           latest    4e1b6bae1e48   6 days ago          192MB
+ubuntu          latest    602eb6fb314b   2 weeks ago         78.1MB
+hello-world     latest    74cc54e27dc4   3 months ago        10.1kB
+lucas@dockertraining:~/docker$
+\`\`\`
+
+Even though, the image got created, there were two warnings listed.
+\`\`\`
+- JSONArgsRecommended: JSON arguments recommended for ENTRYPOINT to prevent unintended behavior related to OS signals (line 14)
+# This one was address at https://docs.docker.com/reference/build-checks/json-args-recommended/
+
+- MaintainerDeprecated: Maintainer instruction is deprecated in favor of using label (line 2)
+# This one was addressed at https://docs.docker.com/reference/build-checks/maintainer-deprecated/
+\`\`\`
+
+With those two corrections in place, remove any previous images.
+\`\`\`
+lucas@dockertraining:~/docker$ sudo docker images
+REPOSITORY      TAG       IMAGE ID       CREATED             SIZE
+lhp/ubuntu1.2   latest    e20f942af714   36 minutes ago      242MB
+<none>          <none>    d6cd57534c90   36 minutes ago      242MB
+lhp/ubuntu1.3   latest    4fc056e7fe51   36 minutes ago      242MB
+lhp/ubuntu1.1   latest    e12fd95e9f84   About an hour ago   240MB
+lhp/ubuntu1.0   latest    4108547976a3   2 hours ago         240MB
+nginx           latest    4e1b6bae1e48   6 days ago          192MB
+ubuntu          latest    602eb6fb314b   2 weeks ago         78.1MB
+hello-world     latest    74cc54e27dc4   3 months ago        10.1kB
+lucas@dockertraining:~/docker$ sudo docker rmi 4fc056e7fe51
+Untagged: lhp/ubuntu1.3:latest
+Deleted: sha256:4fc056e7fe5112bf21d8ff7640d299447281003db21c401c0004a67effd296d5
+lucas@dockertraining:~/docker$ sudo docker rmi e20f942af714
+Untagged: lhp/ubuntu1.2:latest
+Deleted: sha256:e20f942af7144d2ab60c64cec3d9751b24e77e6289185fd405d47ce88a54c686
+lucas@dockertraining:~/docker$ sudo docker rmi e12fd95e9f84
+Error response from daemon: conflict: unable to delete e12fd95e9f84 (must be forced) - image is being used by stopped container 7ea2222d8e36
+lucas@dockertraining:~/docker$ sudo docker rm 7ea2222d8e36
+7ea2222d8e36
+lucas@dockertraining:~/docker$ sudo docker rmi e12fd95e9f84
+Untagged: lhp/ubuntu1.1:latest
+Deleted: sha256:e12fd95e9f847bff41891314c87cd96430c248ba97b76ab1f35a0ab54374777e
+Deleted: sha256:43f35a3eb896976408dae91700acd22cd5256682b226eb1fe28add0c8865765d
+lucas@dockertraining:~/docker$ sudo docker rmi 4108547976a3
+Error response from daemon: conflict: unable to delete 4108547976a3 (must be forced) - image is being used by stopped container b884eff5a00b
+lucas@dockertraining:~/docker$ sudo docker rm b884eff5a00b
+b884eff5a00b
+lucas@dockertraining:~/docker$ sudo docker rmi 4108547976a3
+Untagged: lhp/ubuntu1.0:latest
+Deleted: sha256:4108547976a3b34758a83e6db7c464a9e0fdca3b466844963383e14deb2b4ffc
+Deleted: sha256:920f1c63cfd4aed915e6c341b6b2df081b546f673678d9e088e70cd4e0614a7f
+lucas@dockertraining:~/docker$ sudo docker images
+REPOSITORY    TAG       IMAGE ID       CREATED          SIZE
+<none>        <none>    d6cd57534c90   38 minutes ago   242MB
+nginx         latest    4e1b6bae1e48   6 days ago       192MB
+ubuntu        latest    602eb6fb314b   2 weeks ago      78.1MB
+hello-world   latest    74cc54e27dc4   3 months ago     10.1kB
+lucas@dockertraining:~/docker$
+\`\`\`
+
+Lets create a new image from the Dockerfile configuration file below.
+\`\`\`
+FROM ubuntu
+LABEL lhp.net.ar="lhp@email.com"
+# Skip prompts if presented during deploy
+ARG DEBIAN_FRONTEND=noninteractive
+# Update packages
+RUN apt update; apt upgrade -y
+# Install packages
+RUN apt install -y apache2 nano
+# Set entrypoint
+ENTRYPOINT ["apache2ctl","-DFOREGROUND"]
+lucas@dockertraining:~/docker$ docker build -t lhp/ubuntu5.1 .
+[+] Building 1.2s (7/7) FINISHED                                                                      docker:default
+ => [internal] load build definition from Dockerfile                                                            0.1s
+ => => transferring dockerfile: 323B                                                                            0.1s
+ => [internal] load metadata for docker.io/library/ubuntu:latest                                                0.0s
+ => [internal] load .dockerignore                                                                               0.1s
+ => => transferring context: 2B                                                                                 0.0s
+ => [1/3] FROM docker.io/library/ubuntu:latest                                                                  0.0s
+ => CACHED [2/3] RUN apt update; apt upgrade -y                                                                 0.0s
+ => CACHED [3/3] RUN apt install -y apache2 nano                                                                0.0s
+ => exporting to image                                                                                          0.1s
+ => => exporting layers                                                                                         0.0s
+ => => writing image sha256:4dbec5ad08dd0fe118710e1e9cf2fe506d11032a73970380060e493ee6616daa                    0.0s
+ => => naming to docker.io/lhp/ubuntu5.1                                                                        0.0s
+lucas@dockertraining:~/docker$ sudo docker images
+REPOSITORY      TAG       IMAGE ID       CREATED             SIZE
+lhp/ubuntu5.1   latest    4dbec5ad08dd   About an hour ago   242MB
+nginx           latest    4e1b6bae1e48   6 days ago          192MB
+ubuntu          latest    602eb6fb314b   2 weeks ago         78.1MB
+hello-world     latest    74cc54e27dc4   3 months ago        10.1kB
+lucas@dockertraining:~/docker$
+\`\`\`
+
+Now, lets run a new container from the newly created image.
+\`\`\`
+lucas@dockertraining:~/docker$ sudo docker run -it -d -p 8080:80 lhp/ubuntu5.1
+60c1644a9ffd96bea558a540d08c997d3b43704e96eda6ed0741949b524ac05b
+lucas@dockertraining:~/docker$ sudo docker ps
+CONTAINER ID   IMAGE           COMMAND                  CREATED         STATUS         PORTS                                     NAMES
+60c1644a9ffd   lhp/ubuntu5.1   "apache2ctl -DFOREGR…"   9 seconds ago   Up 8 seconds   0.0.0.0:8080->80/tcp, [::]:8080->80/tcp   thirsty_cerf
+lucas@dockertraining:~/docker$
+\`\`\`
+
+If we go to hostIP:8080, the apache default web page will display without us having to do further configurations.
+
+
+
+To connect to the container instance. And CTRL+P+Q to exit without shutting down the container.
+\`\`\`
+sudo docker exec -ti “CONTAINER ID” bash
+\`\`\`
+
+            `},
+            {
+                id: 16,
+                title: "Docker - Installation on Ubuntu",
+                excerpt: "Quick guide on Docker on install",
+                date: "09-18-2025",
+                content: `# Docker - Installation on Ubuntu
+
+On an Ubuntu Server in this case, install docker https://docs.docker.com/engine/install/ubuntu/
+
+Uninstall previous conflicting packages, if any.
+\`\`\`
+for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt remove $pkg; done
+\`\`\`
+Install using apt.
+
+\`\`\`
+# Add Docker's official GPG key:
+sudo apt-get update
+sudo apt-get install ca-certificates curl # Installing ca-certificates and curl
+sudo install -m 0755 -d /etc/apt/keyrings # Setting keyrings that the repository for Docker will be using
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc # Finish setting up keyrings
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+# Add the repository to Apt sources:
+echo \\
+"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \\
+$(. /etc/os-release && echo "\{UBUNTU_CODENAME:-$VERSION_CODENAME\}") stable" | \\
+sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+\`\`\`
+
+Install docker packages and then verify they have been successfully installed.
+
+\`\`\`
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+\`\`\`
+\`\`\`
+sudo docker run hello-world
+\`\`\`
+
+            `},
+            {
+                id: 15,
+                title: "Windsurf Code Editor - Connect to remote server via ssh",
+                excerpt: "In this case, we are configuring Windsurf to connect to a remote Linux server, with a catch...",
+                date: "09-18-2025",
+                content: `# Windsurf Code Editor - Connect to remote server via ssh
+
+We need to edit the index.html file of a remote Linux Server, so the Windsurf ssh remote access feature is needed; in this case however, just connecting via ssh comes with an extra step.
+
+When connecting through ssh, we need to proceed as follows to indicate the mac_spec.
+
+\`\`\`
+ssh -m hmac-sha2-512 lucas@192.168.88.32
+\`\`\`
+
+In order to provide with the server specific details, we will be editing the C:\\Users\\lucas\\.ssh\\config file.
+We'll add Host, HostName and User, and will edit the MACs line by specifying "hmac-sha2-512".
+
+\`\`\`
+Host fedoraserver
+HostName 192.168.88.32
+User lucas
+#HostKeyAlgorithms = hmac-sha2-512
+#PubkeyAcceptedAlgorithms = hmac-sha2-512
+#KexAlgorithms +diffie-hellman-group1-sha1
+#KexAlgorithms +diffie-hellman-group14-sha1
+#Ciphers aes128-ctr,aes192-ctr,aes256-ctr,aes128-cbc,3des-cbc
+#MACs +hmac-sha1-96
+MACs hmac-sha2-512
+\`\`\`
+
+The new connection should be available on the bottom left of the screen.
+
+![](images/windsurfssh1.png)
+
+The "Connect to SSH Host" option opens.
+
+![](images/windsurfssh2.png)
+
+Select the newly created connection and enter the password when prompted.
+
+![](images/windsurfssh3.png)
+
+            `},
+            {
+                id: 14,
+                title: "SSH - ssh error 'ssh_dispatch_run_fatal - message authentication code incorrect'",
+                excerpt: "How to ssh into a remote server, when we receive the 'ssh_dispatch_run_fatal - message authentication code incorrect' error",
+                date: "09-18-2025",
+                content: `# SSH - ssh error 'ssh_dispatch_run_fatal - message authentication code incorrect'
+
+This is an issue I encountered when trying to connect to a new Fedora Server install.
+The client receives the error
+\`\`\`
+ssh_dispatch_run_fatal: Connection to 192.168.88.32 port 22: message authentication code incorrect
+\`\`\`
+
+On the server side, under /var/log/secure or /var/log/auth.log, we can see:
+\`\`\`
+Sep 18 19:29:04 fedoraserver sshd-session[28325]: Corrupted MAC on input. [preauth]
+Sep 18 19:29:04 fedoraserver sshd-session[28325]: ssh_dispatch_run_fatal: Connection from 192.168.88.254 port 1643: message authentication code incorrect [preauth]
+\`\`\`
+
+A way to overcome this is to specify the MAC Algorithm; if using Windows OpenSSH or encountering issues with specific server configurations, explicitly define a compatible MAC algorithm in your SSH command or configuration file.
+
+\`\`\`
+ssh -m hmac-sha2-512 lucas@192.168.88.32   
+\`\`\`
+
+#ssh #ssh_dispatch_run_fatal #authentication
+
+            `},
+            {
+                id: 13,
+                title: "Ubuntu Linux - Print Server",
+                excerpt: "How to set up a print server on Ubuntu Linux",
+                date: "09-14-2025",
+                content: `# Ubuntu Linux - Print Server
+
+How to set up a print server on Ubuntu Linux
+
+
+_ Update repository and install updates
+\`\`\`
+sudo apt update
+sudo apt upgrade
+\`\`\`
+
+_ Install the samba service
+\`\`\`
+sudo apt install samba
+\`\`\`
+
+_ Edit smb.conf
+\`\`\`
+sudo cp /etc/samba/smb.conf /etc/samba/smb.conf.old
+sudo nano /etc/samba/smb.conf
+
+
+###########################################
+
+# Change this to the workgroup/NT-domain name your Samba server will part of
+   workgroup = WORKGROUP
+   security = user                      # Add this line
+   
+[printers]
+   comment = All Printers
+   browseable = yes                   # Set to yes
+   path = /var/tmp
+   printable = yes
+   guest ok = yes                       # Set to yes
+   read only = yes
+   create mask = 0700
+\`\`\`
+
+_ Restart the samba service
+\`\`\`
+systemctl restart smbd.service nmbd.service
+\`\`\`
+
+_ Install the CUPS service
+\`\`\`
+sudo apt install -y cups
+\`\`\`
+
+_ Edit cupsd.conf
+\`\`\`
+sudo cp /etc/cups/cupsd.conf /etc/cups/cupsd.conf.old
+sudo nano /etc/cups/cupsd.conf
+
+###########################################
+
+# Only listen for connections from the local machine.
+#Listen localhost:631                   # Comment
+Port 631                                      # Add "Port 631"
+Listen /run/cups/cups.sock
+
+
+
+# Restrict access to the server...
+<Location />
+  Order allow,deny
+  Allow all                                    # Add
+</Location>
+
+# Restrict access to the admin pages...
+<Location /admin>
+  AuthType Default
+  Require user @SYSTEM
+  Order allow,deny
+  Allow all                                    # Add
+</Location>
+
+# Restrict access to configuration files...
+<Location /admin/conf>
+  AuthType Default
+  Require user @SYSTEM
+  Order allow,deny
+  Allow all                                    # Add
+</Location>
+\`\`\`
+
+_ Add your account to the lpadmin group
+\`\`\`
+sudo usermod -a -G lpadmin lucas
+\`\`\`
+
+_ Access CUPS with https://IP:631/admin
+\`\`\`
+https://serverIP:631/admin
+\`\`\`
+
+_ Add Printer
+
+![](images/ubuntuprn1.png)
+
+![](images/ubuntuprn2.png)
+
+(the printer will most likely be detected)
+
+![](images/ubuntuprn3.png)
+
+Mark “Share this Printer” and click continue.
+
+If your Printer Maker/Brand is not listed, you may need to look for the controllers yourself, in my case, Brother hl1212w; Utilities | Downloads | HL-1212W | Others | Brother
+
+https://support.brother.com/g/b/downloadhowto.aspx?c=us_ot&lang=en&prod=hl1212w_us_eu&os=128&dlid=dlf006893_000&flang=4&type3=625
+
+Follow the driver installation process.
+
+![](images/ubuntuprn4.png)
+
+\`\`\`
+lucas@server:~/PRN/driver/Brother$ sudo bash linux-brprinter-installer-2.2.4-1
+Input model name ->hl1210wlpr
+
+You are going to install following packages.
+   hl1210wlpr-3.0.1-1.i386.deb
+   hl1210wcupswrapper-3.0.1-1.i386.deb
+OK? [y/N] ->y
+
+Hit:1 http://security.ubuntu.com/ubuntu noble-security InRelease
+Hit:2 http://ar.archive.ubuntu.com/ubuntu noble InRelease
+Hit:3 http://ar.archive.ubuntu.com/ubuntu noble-updates InRelease
+Hit:4 http://ar.archive.ubuntu.com/ubuntu noble-backports InRelease
+Reading package lists... Done
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+Package ia32-libs is not available, but is referred to by another package.
+This may mean that the package is missing, has been obsoleted, or
+is only available from another source
+However the following packages replace it:
+  lib32z1
+
+E: Package 'ia32-libs' has no installation candidate
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following additional packages will be installed:
+  lib32gcc-s1 libc6-i386
+The following NEW packages will be installed:
+  lib32gcc-s1 lib32stdc++6 libc6-i386
+0 upgraded, 3 newly installed, 0 to remove and 2 not upgraded.
+Need to get 3,694 kB of archives.
+After this operation, 15.5 MB of additional disk space will be used.
+Do you want to continue? [Y/n] Y
+Get:1 http://ar.archive.ubuntu.com/ubuntu noble-updates/main amd64 libc6-i386 am                                                              d64 2.39-0ubuntu8.5 [2,787 kB]
+Get:2 http://ar.archive.ubuntu.com/ubuntu noble-updates/main amd64 lib32gcc-s1 a                                                              md64 14.2.0-4ubuntu2~24.04 [92.3 kB]
+Get:3 http://ar.archive.ubuntu.com/ubuntu noble-updates/main amd64 lib32stdc++6                                                               amd64 14.2.0-4ubuntu2~24.04 [814 kB]
+Fetched 3,694 kB in 3s (1,351 kB/s)
+Selecting previously unselected package libc6-i386.
+(Reading database ... 130584 files and directories currently installed.)
+Preparing to unpack .../libc6-i386_2.39-0ubuntu8.5_amd64.deb ...
+Unpacking libc6-i386 (2.39-0ubuntu8.5) ...
+Selecting previously unselected package lib32gcc-s1.
+Preparing to unpack .../lib32gcc-s1_14.2.0-4ubuntu2~24.04_amd64.deb ...
+Unpacking lib32gcc-s1 (14.2.0-4ubuntu2~24.04) ...
+Selecting previously unselected package lib32stdc++6.
+Preparing to unpack .../lib32stdc++6_14.2.0-4ubuntu2~24.04_amd64.deb ...
+Unpacking lib32stdc++6 (14.2.0-4ubuntu2~24.04) ...
+Setting up libc6-i386 (2.39-0ubuntu8.5) ...
+Setting up lib32gcc-s1 (14.2.0-4ubuntu2~24.04) ...
+Setting up lib32stdc++6 (14.2.0-4ubuntu2~24.04) ...
+Processing triggers for libc-bin (2.39-0ubuntu8.5) ...
+Scanning processes...
+Scanning linux images...
+
+Running kernel seems to be up-to-date.
+
+No services need to be restarted.
+
+No containers need to be restarted.
+
+No user sessions are running outdated binaries.
+
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+dpkg -x hl1210wlpr-3.0.1-1.i386.deb /
+dpkg -x hl1210wcupswrapper-3.0.1-1.i386.deb /
+dpkg-deb: building package 'hl1210wlpr' in 'hl1210wlpr-3.0.1-1a.i386.deb'.
+dpkg -b ./brother_driver_packdir hl1210wlpr-3.0.1-1a.i386.deb
+dpkg-deb: building package 'hl1210wcupswrapper' in 'hl1210wcupswrapper-3.0.1-1a.                                                              i386.deb'.
+dpkg -b ./brother_driver_packdir hl1210wcupswrapper-3.0.1-1a.i386.deb
+dpkg -i --force-all hl1210wlpr-3.0.1-1a.i386.deb
+dpkg: warning: overriding problem because --force enabled:
+dpkg: warning: package architecture (i386) does not match system (amd64)
+Selecting previously unselected package hl1210wlpr:i386.
+(Reading database ... 130875 files and directories currently installed.)
+Preparing to unpack hl1210wlpr-3.0.1-1a.i386.deb ...
+Unpacking hl1210wlpr:i386 (3.0.1-1) ...
+Setting up hl1210wlpr:i386 (3.0.1-1) ...
+dpkg -i --force-all hl1210wcupswrapper-3.0.1-1a.i386.deb
+dpkg: warning: overriding problem because --force enabled:
+dpkg: warning: package architecture (i386) does not match system (amd64)
+Selecting previously unselected package hl1210wcupswrapper:i386.
+(Reading database ... 130897 files and directories currently installed.)
+Preparing to unpack hl1210wcupswrapper-3.0.1-1a.i386.deb ...
+Unpacking hl1210wcupswrapper:i386 (3.0.1-1) ...
+Setting up hl1210wcupswrapper:i386 (3.0.1-1) ...
+lpadmin -p HL1210W -E -v dnssd://Brother%20HL-1210W%20series._pdl-datastream._tc                                                              p.local/?uuid=e3248000-80ce-11db-8000-e89eb4466714 -P /usr/share/ppd/brother/bro                                                              ther-HL1210W-cups-en.ppd
+lpadmin: Printer drivers are deprecated and will stop working in a future versio                                                              n of CUPS.
+#
+Will you specify the Device URI? [Y/n] ->
+
+
+0: beh
+1: socket
+2: ipps
+3: http
+4: https
+5: ipp
+6: lpd
+7: dnssd://Brother%20HL-1210W%20series._pdl-datastream._tcp.local/?uuid=e3248000                                                              -80ce-11db-8000-e89eb4466714
+8 (I): Specify IP address.
+9 (A): Auto. (dnssd://Brother%20HL-1210W%20series._pdl-datastream._tcp.local/?uu                                                              id=e3248000-80ce-11db-8000-e89eb4466714)
+
+select the number of destination Device URI. ->8
+
+ enter IP address ->192.168.88.100                   # Printer IP address
+lpadmin -p HL1210W -v lpd://192.168.88.100/BINARY_P1 -E
+Test Print? [y/N] ->y
+
+wait 5s.
+lpr -P HL1210W /usr/share/cups/data/testprint
+linux-brprinter-installer-2.2.4-1: line 3021: lpr: command not found
+apt-get install libusb-0.1-4
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following NEW packages will be installed:
+  libusb-0.1-4
+0 upgraded, 1 newly installed, 0 to remove and 2 not upgraded.
+Need to get 17.2 kB of archives.
+After this operation, 59.4 kB of additional disk space will be used.
+Get:1 http://ar.archive.ubuntu.com/ubuntu noble/main amd64 libusb-0.1-4 amd64 2:                                                              0.1.12-35build1 [17.2 kB]
+Fetched 17.2 kB in 1s (19.8 kB/s)
+Selecting previously unselected package libusb-0.1-4:amd64.
+(Reading database ... 130901 files and directories currently installed.)
+Preparing to unpack .../libusb-0.1-4_2%3a0.1.12-35build1_amd64.deb ...
+Unpacking libusb-0.1-4:amd64 (2:0.1.12-35build1) ...
+Setting up libusb-0.1-4:amd64 (2:0.1.12-35build1) ...
+Processing triggers for libc-bin (2.39-0ubuntu8.5) ...
+Scanning processes...
+Scanning linux images...
+
+Running kernel seems to be up-to-date.
+
+No services need to be restarted.
+
+No containers need to be restarted.
+
+No user sessions are running outdated binaries.
+
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+Hit Enter/Return key.
+lucas@server:~/PRN/driver/Brother$
+\`\`\`
+
+Refresh CUPS, the Printer's controllers should be displayed now.
+Select the Model and click “Add Printer”
+
+![](images/ubuntuprn5.png)
+
+Go to “Set Printer Options” for additional settings
+
+![](images/ubuntuprn6.png)
+
+You should be able to add the Printer on Windows, in my case, Windows was able to find it on the network by itself.
+
+#CUPS #Printer #Brother #Linux #Ubuntu #samba #printserver
+            `},
+            {
+                id: 12,
+                title: "Windows - Get CPU Temperature on Powershell",
+                excerpt: "Obtain the current CPU temperature feom Powershell",
+                date: "09-14-2025",
+                content: `# Windows - Get CPU Temperature on Powershell
+
+Run the command below on Windows Powershell as Administrator
+\`\`\`
+wmic /namespace:\\\\root\\wmi PATH MSAcpi_ThermalZoneTemperature get CurrentTemperature
+\`\`\`
+
+\`\`\`
+PS C:\\WINDOWS\\system32> wmic /namespace:\\\\root\\wmi PATH MSAcpi_ThermalZoneTemperature get CurrentTemperature
+CurrentTemperature
+3182
+
+PS C:\\WINDOWS\\system32>
+\`\`\`
+
+The 3182 value will be the current temperature; divide by 10 and substract 273.15 to get the value in Celcius
+
+In this case (3182  /10) - 273,15 = 45.05°C
+
+            `},
+            {
+                id: 11,
+                title: "Windows - quick security checks",
+                excerpt: "Quick security checks on Windows. Connections and user privileges",
+                date: "09-14-2025",
+                content: `# Windows - quick security checks
+
+_ Check connections with 
+\`\`\`
+netstat -ano
+\`\`\`
+
+_ If there seems to be suspicious connections, look for the IPs with nslookup, shodan or ipinfo.io
+
+_ Check permissions, any other user besides the Administrator should not have extended Privileges (i.e.: SeDebugPrivilege, SeImpersonatePrivilege).
+
+
+![](images/whoamipriv.png)
+
+            `},
+            {
+                id: 10,
+                title: "Windows - Wireless passwords",
+                excerpt: "Obtain wireless passwords on Windows from an already existing and saved Wi-Fi connection.",
+                date: "09-14-2025",
+                content: `# Windows Wireless passwords
+
+Obtain wireless passwords on Windows from an already existing and saved Wi-Fi connection.
+
+List learned Wi-fi SSIDs
+
+\`\`\`
+netsh wlan show profile
+\`\`\`
+
+Extract Wi-fi password
+
+\`\`\`
+netsh wlan show profile name="SSID" key=clear
+\`\`\`
+            `},
+            {
+                id: 9,
+                title: "Windows - diskpart",
+                excerpt: "How to format a hard drive on Windows from the command line",
+                date: "09-14-2025",
+                content: `# Windows diskpart
+1.  Open Terminal as Administrator; search cmd, Run as administrator  
+![](images/runasadmin.png)
+2.  Run diskpart
+    
+    \`\`\`
+    diskpart
+    \`\`\`
+    
+3.  List available disks on the system
+    
+    \`\`\`
+    list disk
+    \`\`\`
+    
+4.  Select the drive you need to format
+    
+    \`\`\`
+    select disk 2
+    \`\`\`
+    
+5.  Clean the disk
+    
+    \`\`\`
+    clean
+    \`\`\`
+    
+6.  Create a Primary partition
+    
+    \`\`\`
+    create partition primary
+    \`\`\`
+    
+7.  Format the drive
+    
+    \`\`\`
+    format fs=ntfs quick
+    \`\`\`
+    
+8.  Assign a letter to the drive
+    
+    \`\`\`
+    assign
+    \`\`\`
+
+            `},
+            {
+                id: 8,
+                title: "Linux - Filesystem - drives discover and mount",
+                excerpt: "How to discover and mount drives from the Linux CLI.",
+                date: "09-12-2025",
+                content: `# Linux - Filesystem - drives discover and mount
+
+There is a system here with four unmounted drives, we can list them with **lsblk -f**, **fdisk -l** and **cat /proc/partitions**
+
+\`\`\`
+root@proxmox20:~# lsblk
+NAME               MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
+sda                  8:0    0 931.5G  0 disk
+└─sda1               8:1    0 931.5G  0 part
+sdb                  8:16   0 931.5G  0 disk
+├─sdb1               8:17   0   118G  0 part
+└─sdb2               8:18   0 813.5G  0 part
+sdc                  8:32   0 223.6G  0 disk
+├─sdc1               8:33   0 222.6G  0 part
+├─sdc2               8:34   0     1K  0 part
+└─sdc5               8:37   0   975M  0 part
+sdd                  8:48   0 223.6G  0 disk
+├─sdd1               8:49   0   100M  0 part
+├─sdd2               8:50   0    16M  0 part
+├─sdd3               8:51   0 222.8G  0 part
+└─sdd4               8:52   0   657M  0 part
+nvme0n1            259:0    0 931.5G  0 disk
+├─nvme0n1p1        259:1    0  1007K  0 part
+├─nvme0n1p2        259:2    0     1G  0 part /boot/efi
+└─nvme0n1p3        259:3    0 930.5G  0 part
+ ├─pve-swap       252:0    0     8G  0 lvm  [SWAP]
+ ├─pve-root       252:1    0    96G  0 lvm  /
+ ├─pve-data_tmeta 252:2    0   8.1G  0 lvm
+ │ └─pve-data     252:4    0 794.3G  0 lvm
+ └─pve-data_tdata 252:3    0 794.3G  0 lvm
+   └─pve-data     252:4    0 794.3G  0 lvm
+root@proxmox20:~#
+\`\`\`
+
+\`\`\`
+root@proxmox20:~# lsblk -f
+NAME               FSTYPE      FSVER    LABEL   UUID                                   FSAVAIL FSUSE% MOUNTPOINTS
+sda
+└─sda1             ext4        1.0              6bc7b56d-4517-4aaf-8daf-ccdfb
+sdb
+├─sdb1             ntfs                 bookbak 94B418FCB4
+└─sdb2             ntfs                 Datos   701E33B51E3
+sdc
+├─sdc1             ext4        1.0              ec926e56-833f-4211-b7e9-e9c653
+├─sdc2
+└─sdc5             swap        1                4ece47d2-85f4-4fc9-87bb-5771
+sdd
+├─sdd1             vfat        FAT32            FC82-F323
+├─sdd2
+├─sdd3             ntfs                         00FA8763FA
+└─sdd4             ntfs                         04045BF50
+nvme0n1
+├─nvme0n1p1
+├─nvme0n1p2        vfat        FAT32            B69B-8480                              1013.2M     1% /boot/efi
+└─nvme0n1p3        LVM2_member LVM2 001         V4p55x-p9ry-hZ0-2aiC-PlD9-WMX-qVnl
+ ├─pve-swap       swap        1                bd4a8285-0b63-4cb5-a159-a919bd                  [SWAP]
+ ├─pve-root       ext4        1.0              ac99626b-6626-47a2-8a7a-a963       85G     4% /
+ ├─pve-data_tmeta
+ │ └─pve-data
+ └─pve-data_tdata
+   └─pve-data
+root@proxmox20:~#
+\`\`\`
+
+\`\`\`
+root@proxmox20:~# fdisk -l
+Disk /dev/nvme0n1: 931.51 GiB, 1000204886016 bytes, 1953525168 sectors
+Disk model: KINGSTON SNV2S1000G
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: gpt
+Disk identifier: EB216586-CF09-4143-B947-1CD92C726AD3
+
+Device           Start        End    Sectors   Size Type
+/dev/nvme0n1p1      34       2047       2014  1007K BIOS boot
+/dev/nvme0n1p2    2048    2099199    2097152     1G EFI System
+/dev/nvme0n1p3 2099200 1953525134 1951425935 930.5G Linux LVM
+
+
+Disk /dev/sda: 931.51 GiB, 1000204886016 bytes, 1953525168 sectors
+Disk model: WDC WD10EARX-22N
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 4096 bytes
+I/O size (minimum/optimal): 4096 bytes / 4096 bytes
+Disklabel type: dos
+Disk identifier: 0x00034569
+
+Device     Boot Start        End    Sectors   Size Id Type
+/dev/sda1        2048 1953525167 1953523120 931.5G 83 Linux
+
+
+Disk /dev/sdb: 931.51 GiB, 1000204886016 bytes, 1953525168 sectors
+Disk model: WDC WD10EZEX-60W
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 4096 bytes
+I/O size (minimum/optimal): 4096 bytes / 4096 bytes
+Disklabel type: dos
+Disk identifier: 0xda9e92fb
+
+Device     Boot     Start        End    Sectors   Size Id Type
+/dev/sdb1            2048  247537663  247535616   118G  7 HPFS/NTFS/exFAT
+/dev/sdb2       247537664 1953519615 1705981952 813.5G  7 HPFS/NTFS/exFAT
+
+
+Disk /dev/sdc: 223.57 GiB, 240057409536 bytes, 468862128 sectors
+Disk model: SanDisk SDSSDA24
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: dos
+Disk identifier: 0x2b46a5cf
+
+Device     Boot     Start       End   Sectors   Size Id Type
+/dev/sdc1  *         2048 466862079 466860032 222.6G 83 Linux
+/dev/sdc2       466864126 468860927   1996802   975M  5 Extended
+/dev/sdc5       466864128 468860927   1996800   975M 82 Linux swap / Solaris
+
+
+Disk /dev/sdd: 223.57 GiB, 240057409536 bytes, 468862128 sectors
+Disk model: WD Green 2.5 240
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: gpt
+Disk identifier: CB3A2CF3-5F2A-4E86-9E3B-6D82628204A2
+
+Device         Start       End   Sectors   Size Type
+/dev/sdd1       2048    206847    204800   100M EFI System
+/dev/sdd2     206848    239615     32768    16M Microsoft reserved
+/dev/sdd3     239616 467513343 467273728 222.8G Microsoft basic data
+/dev/sdd4  467513344 468858879   1345536   657M Windows recovery environment
+
+
+Disk /dev/mapper/pve-swap: 8 GiB, 8589934592 bytes, 16777216 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+
+
+Disk /dev/mapper/pve-root: 96 GiB, 103079215104 bytes, 201326592 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+root@proxmox20:~#
+\`\`\`
+
+\`\`\`
+root@proxmox20:~# cat /proc/partitions
+major minor  #blocks  name
+259        0  976762584 nvme0n1
+259        1       1007 nvme0n1p1
+259        2    1048576 nvme0n1p2
+259        3  975712967 nvme0n1p3
+  8        0  976762584 sda
+  8        1  976761560 sda1
+  8       16  976762584 sdb
+  8       17  123767808 sdb1
+  8       18  852990976 sdb2
+  8       32  234431064 sdc
+  8       33  233430016 sdc1
+  8       34          1 sdc2
+  8       37     998400 sdc5
+  8       48  234431064 sdd
+  8       49     102400 sdd1
+  8       50      16384 sdd2
+  8       51  233636864 sdd3
+  8       52     672768 sdd4
+252        0    8388608 dm-0
+252        1  100663296 dm-1
+252        2    8495104 dm-2
+252        3  832888832 dm-3
+252        4  832888832 dm-4
+root@proxmox20:~#
+\`\`\`
+
+In order to move forward with mounting the drive, we first need a place to mount them to.
+
+We will create mounting points under /mnt/, **mkdir /mnt/sda1**  
+The sda1 directory is just an example, it can be named whatever you like.
+
+Then, we will need to mount the drive to the mounting point.
+
+\`\`\`
+#Mounting points created
+root@proxmox20:~# mkdir /mnt/sda1
+root@proxmox20:~# mkdir /mnt/sdb1
+root@proxmox20:~# mkdir /mnt/sdb2
+root@proxmox20:~# mkdir /mnt/sdc1
+root@proxmox20:~# mkdir /mnt/sdd1
+root@proxmox20:~# mkdir /mnt/sdd3
+root@proxmox20:~# mkdir /mnt/sdd4
+root@proxmox20:~#
+
+#Mounting action performed
+root@proxmox20:~# ls /mnt
+sda1  sdb1  sdb2  sdc1  sdd1  sdd3  sdd4
+root@proxmox20:~# mount /dev/sda1 /mnt/sda1
+root@proxmox20:~# mount /dev/sdb1 /mnt/sdb1
+root@proxmox20:~# mount /dev/sdb2 /mnt/sdb2
+root@proxmox20:~# mount /dev/sdc1 /mnt/sdc1
+root@proxmox20:~# mount /dev/sdd1 /mnt/sdd1
+root@proxmox20:~# mount /dev/sdd3 /mnt/sdd3
+root@proxmox20:~# mount /dev/sdd4 /mnt/sdd4
+root@proxmox20:~#
+
+#Checking all partitions are available
+root@proxmox20:~# df -h
+Filesystem            Size  Used Avail Use% Mounted on
+udev                  7.5G     0  7.5G   0% /dev
+tmpfs                 1.5G  1.5M  1.5G   1% /run
+/dev/mapper/pve-root   94G  4.2G   85G   5% /
+tmpfs                 7.5G   46M  7.5G   1% /dev/shm
+efivarfs              128K   13K  111K  10% /sys/firmware/efi/efivars
+tmpfs                 5.0M     0  5.0M   0% /run/lock
+tmpfs                 1.0M     0  1.0M   0% /run/credentials/systemd-journald.service
+tmpfs                 7.5G     0  7.5G   0% /tmp
+/dev/nvme0n1p2       1022M  8.8M 1014M   1% /boot/efi
+/dev/fuse             128M   16K  128M   1% /etc/pve
+tmpfs                 1.0M     0  1.0M   0% /run/credentials/getty@tty1.service
+tmpfs                 1.5G  4.0K  1.5G   1% /run/user/0
+/dev/sda1             909G  244G  619G  29% /mnt/sda1
+/dev/sdb1             119G   94M  118G   1% /mnt/sdb1
+/dev/sdb2             814G  464G  350G  57% /mnt/sdb2
+/dev/sdc1             219G   70G  138G  34% /mnt/sdc1
+/dev/sdd1              96M   34M   63M  35% /mnt/sdd1
+/dev/sdd3             223G   91G  133G  41% /mnt/sdd3
+/dev/sdd4             657M  585M   73M  89% /mnt/sdd4
+root@proxmox20:~#
+\`\`\`
+
+To make the mounting process persistent after reboot, edit the **/etc/fstab** file.
+Pay attention to the following:
+
+- The UUID of the drive
+- The mount point of the drive
+- The drive formatting type
+- The options, dump and pass (Defaults are: defaults 0 0)
+
+\`\`\`
+# <file system> <mount point> <type> <options> <dump> <pass>
+/dev/pve/root / ext4 errors=remount-ro 0 1
+UUID=B69B-8480 /boot/efi vfat defaults 0 1
+/dev/pve/swap none swap sw 0 0
+proc /proc proc defaults 0 0
+UUID=6bc7b56d-4517-4aaf-8daf-ccdfb0cf1e87 /mnt/sda1 ext4 defaults 0 0    #Line added
+UUID=94B418FCB418E312 /mnt/sdb1 ntfs defaults 0 0                        #Line added
+UUID=701E33B51E3372E8 /mnt/sdb2 ntfs defaults 0 0                        #Line added
+UUID=ec926e56-833f-4211-b7e9-e9c65327e566 /mnt/sdc1 ext4 defaults 0 0    #Line added
+UUID=FC82-F323 /mnt/sdd1 vfat defaults 0 0                               #Line added
+UUID=00FA8763FA875436 /mnt/sdd3 ntfs defaults 0 0                        #Line added
+UUID=04045BF5045BE866 /mnt/sdd4 ntfs defaults 0 0                        #Line added
+\`\`\`
+
+Reload Systemd (Optional): For systemd-based systems, reload the daemon.
+
+\`\`\`
+sudo systemctl daemon-reload
+\`\`\`
+
+Test the new fstab entries without rebooting by mounting all filesystems
+
+\`\`\`
+sudo mount -a
+\`\`\`
+            `},
+            {
+                id: 7,
+                title: "Proxmox - Change static IP address",
+                excerpt: "How to change the static IP address of a Proxmox server.",
+                date: "09-12-2025",
+                content: `# Proxmox - Change static IP address
+How to change the static IP address of a Proxmox server in the event you happened to have installed it on a different network, and it got set with a different addressing schema
+
+Edit and change /etc/network/interfaces and /etc/hosts
+\`\`\`
+auto lo
+iface lo inet loopback
+
+iface eno1 inet manual
+
+auto vmbr0
+iface vmbr0 inet static
+        address 192.168.88.50/24  # change the IP address to the one you want
+        gateway 192.168.88.1
+        bridge-ports eno1
+        bridge-stp off
+        bridge-fd 0
+
+iface wlp6s0 inet manual
+\`\`\`
+
+\`\`\`
+127.0.0.1 localhost.localdomain localhost
+192.168.88.50 proxmox.pascual.ar proxmox  # change the IP address to the one you want
+
+# The following lines are desirable for IPv6 capable hosts
+
+::1     ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+ff02::3 ip6-allhosts
+\`\`\`
+
+Restart networking for the changes to take effect.
+
+\`\`\`
+sudo systemctl restart networking
+\`\`\`
+
+#proxmox #changeip #staticip #proxmoxip #proxmoxstaticip #proxmoxchangeip
+            `},
+            {
+                id: 2,
+                title: "GitHub - Publish web site",
+                excerpt: "How to Publish Online for Free.",
+                date: "09-09-2025",
+                content: `# GitHub - Publish web site
+
+How to Publish Online for Free
+
+When you're ready, we can host it using **GitHub Pages** (free hosting). Here is a quick summary:
+
+![GitHub Logo](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQIAAACUCAMAAABP2deIAAAAhFBMVEX///8aHiIXExIAAAASDQz5+flaWVkVEA+lpaXq6upSUVG/v7+Yl5cIAAApKCi8vLxra2sSFxxjYmKxsbHc3NwiICDNzc3i4uLW1tZAPz8yMTFKSUnx8fF9fHwtLS3GxsYAAAkJEBaGhoY4ODkcGhmOjo4lJytzc3QCDBcMDBAAABEXFhlZN6zCAAAMUElEQVR4nO1dh5aqOhRVY5QqIEgREAIi45v//79HCyUBBsECc2evdcswGJLNOSenJHG1ejsgdDSJCeQjF15C7hgHjKRB+P5+fAiQNVXXAil8H63XCkJ+9pMdqRr7D/Bg8AKXjDgZOgkFAbA+Ch776S6+FNATdn7b8EsafLCWGf3T/XwZoBqHfs/4MQu+5Xqf7utrwHAnpPxEQAb0dTn+QhJMu08BKFFAQP5lNsFwgT+cgAwACM6nu/08QCkEDxKQSgLY/Rpt0IJHdKAG//ZLBEHnwDAr2CYIsfHp7j8BavioFagDcMt3Epg1msBAMkGG/KeHMA1QGK0EJQffzKdHMQUwGjETkFCA+ulxjMdTGEhd5uVyIDyFgUQXgPTpoYyE6k+1AyUHV/PTgxkF74yexEDCgb1E/8Dg6gxkaaHhQqFk99cu/Cd/ejyPw4nrI/AZw+Dd8/egaFlBShhIBsvUfSoQfXpED6PRf8Tlcqy74Rda9wN9WW7uETbkSLktzSTqDUPgBzgrakYWNpJl2hQAH2HxUIAVacW9TtAQpN2yzAFsqEGiB9Wv9ODmp5lScLN3shulCOSdffsPAKT4t6AWE6hf9UYAs6jsstRgQLnU/XzI74DlMrxuGqwDUzisoek8E9hgJ9WH6V2URitLmhnhpaHxyG52ntXYtjxAwkQzWWY2JpU1iF/Y5WeDabqFaKf9/JkWGLsGBWuwnMDZITIE6DjOkrHHJgXIenJHXwcyNkAjjTkpBWuwFGvg2ETPETdOETSObGgpPqK6JqCE45RYtwhnUjksQwwcGZEUKOMCfolyp9Ey3GTdIilYA2GMV9OScUG7RWTVGTpjDNwxPXdcioJlRApOTFHwtBkhcbWXoAl6SJmC29g8uHcmrQE6LqDaqlJvDgWjGwsoOsP51xlpG6bcxr84NqTEYP7ZZPZImgIwXghaktAgmn3IrF3I9wampDpYkgJ//sZAJ/uM7EntUc62Nc7ZfiNUSnKFSe0RcfdaQXOPmGlrODHI16j25l5phpRHB6a5tA5ZfQBzLzQ75ISgnKZRAA+EMRgXb7wRdK7AntZjSDYIgrlTQPoyaDeRAjJt4sczDxadNUkB92wK5MVRYD1ZEWafMqAomGwOb5RmLY2C9X2aQwvvRIPzVwQ6RJhGgUMFCbM3h1TCZGLun4o5xiXh3gjKNZrqzZExwvyjZaKqnnb5OKnBFkrnTgGdNPInNahQtmX2OWRKcKcZA5Nqzp97sLzyaAqmJM4CSqjOs6+pmd+k5Crn8SbcIauKo2sSb4RBOrRJr8fnjRiqqjj7ObG1Cobssd5RC5+zz5is2uzh2h9rDQKqNqfc5l9KWXlkXJOuFRtX/1Apb3sJpiARXmKBUK4KY2YynVaDNXJn7hhliFq2Y/nc4/Kr23RDynr+9bQEEq0J6S6rR/vOWy1UInv2hZQUBpnqyt/f92PhTXT6amnFX8jqy6ikAN3v93L9PXhgu53XvsN3/EqFN8PAWWQl4D01tv4rfkTAloyfRQGyEtexw/drYi72fXCxFmcukRaXPjMCt4g3e84rgazJR2HnLvflbNczCilW3NwtrO1YVQCw5IhRPZoGx1OZSA5bzzkpPnxYihCsVjhv8i3ncyFTj/oVH/ht0SN0wR30bmpbgnOMweJaKMr9QkjEvKh17Q276Xz/+aes2UdINZRD/sqXAxATZUfmpyW8GPCpmcIpV6CivI7Q8JdQ2P46qbJJk4FF+MYV+FL7wS67wKBKDrrq46S+NNUgnH26qAmninNBYRLP2NR3b0GWuilQvueeOaZQ7SVAXH7Fc8/5jjwr6Eqh0MnSSgjmXkRqAV8unr0XL90xJUYQVE/rfJ0mVZHE+Jr/QrMWCFgVvqq9JLD/RD960SLGfSHBAQEZO4m3oX6tRi27LrAkp6gBu+AAWQOTRl1SsKgdig04OO/j2y0xQQu0QxsFiu++uqevg7Er5MC/CPoAi661+UbKff6lgx5oR2wPQOgykm6aps4zTNek2EZBwsDsF173wsA2cY18dAtt27bO984Jro0CP1iyDKSon2ahKApCyZ/Og0laKJj9ioohEMgcyAMULPc4nya8sHmEyWAKlIXkzAfAiG91QejeVaGd6hT458WbgQpQrZ95OIwC5B/5X2AGKmjMrSShh4LSNUomUXXZcyENaLj4bKceCopIUQH3aAEV5IcBjTgnoYeCzG4qwA8GlFyWCTY6I9RzxDG7AwjdLeG3qUADkI93breMm/Lutx4G/oc//OEPf/jD7wdkNdNLoWvGv/BtNxRMNYo563T/vl5D+xhHzJAc6W+C7tp7AIC4TSFm9UJLVoeLgufmiOslYyMoLg4onjBxfm/0ocQKdC/J6DcN7EVQnu7ICscj0ysUQnHyaaNUxJ+Ki9zPXdgVt14+41MbFiDGnwHgvaT8Ie3cua8UKIB9/pkGBYe82SG7unYgu3V7/ggFZghaCEh6XhR+9Gv2e3DpKaUJRRPLpEDj2hnYb/LhwAAPr+fAhUVT4ASFDOORp8h6U5xSy9p4ePgMHp5RUzC14S6aAu9e2YEtqCCKxbo49oyHxxUUcPieSiqWTIFzLNUgmRVd1dNNU9d5JpkjdsQdAK+P2YkFYUMpGDQjfIwCvVSDbTLEakzQ0fGUyOS3bMtVww9TMG8pkLEQiNuuehcrpy6TCGKcBvxdFEDsEWyv3Sto2MA6HKyo9I1+lyJ4ANuB3oKXIfG1POnvogDP+eIjZ/uWFFSXnksBq+mJWX5T/aGc8+Pu5xlqDqmwBaydU7AX8+upfPxMActLGdQyDjLzC5KePrqkQIdSJHPhOQlXXekdweom7yT2BNsAhc0pw0bKvlFV5q7FJLI/HU6nwz396M8USOEhwxWvOIPx6ZJeOGUHzWMKTrJ8yUJWMYlXT/Lr40anmBIT8jvvgQLIQuhtukRCSP4RS28yv5zu5C4pqG/rblCgnvJIHLsbqb+RX+BqFGz2W7HuqoUv58AsKBDtbpGDxfD2KQUuHU80KNiDOorBFBQUfNQoKH5bp4BsPHx1QY7H1hAbLKiZdRiPUlBIRg4sLf0UiFlaooOCzaRDI4aAwfKL+6VvGq8xLZr+SEHdFrQP4zEp2NfYS3ThxWJQUoD9tyRo2ldooyDpX9lZ2haMoqAhBUmodj8cQOm3TzxsdDgFeIG5fq/nj2gKUtNY2qt9ZuCy0EFoRtxDKICtiiDuY1XXdUnGDYJpR84+ToG37afAMRJwhWskaulPmQczgoJWW7A9q7lhduRyinitc6BSFIj9FGRo9Q6xrzDNHIrlQnf9XLgsL/5iGcoW/KQITQroGGF/vVQ4YVkeQ8GqTFO8dmdvKQV4UtTzmQD3/QEKigxywBolmFPDNXqQgjJl+dotHNgv2OKDagwhCILILRzAERTUX5l3mUKB+h4KNOwgNzcOGvvtWAo6Y4RhM0KDgpYmnw9YWL/9tfEcbf0GCn6SAn77FgpWF7GQtsZ+Ge37cQpapHYaBW9ShFWMPZLGritt+w9RIGG/tPFln7OQAuZNFFTp00stgTzGFoymoBEmtU2Kr97JUVZSgF09Sru+kALs88MfKDjix746a+JVIdk5wjPjMEXY1+LY4RSUbnU7BeWaBi3EkcirE4i1gtoW2HLEMEzk7nC6p4MCPN5qGvl5UuTPuNGimcp3rOcOD0X5GrrFnCgeXsxAKgZVVCCClPnEQcaC0U5BGcSJHON5qjmIAt3CVucUeJ4UWBs8HzdSJtuTFfOex+xwyPqGDb5pdnRToais91JQ5kfyTKG8GpREL0JsXL8WqziykTXai40wZfOObyBl49ZlNj0UmJt6ciBThwGllBhsWtGbPk0s1OsZSDhwgdjx/HYKmv3NPIoBFHjXdqabtoD45fZNh2CxwqZ9vVVWaGyhwNzXOBhKwcolMkv7XNrrFOxPgLilp8r1VEBPBoQk7BON5bI92QkFWS51W/NRpGvFWUFBkXAlKMgv5hSwxzrRSftykN6QU8ClDWxP6hHUiNpWBf3Xw9GDTVn8yC2S7BWPZ3BKvbbqTpezqldm2tJMf7nusC63/L257jCVtozp7AFHz9GzQ2Gs3EHOFvatWNUuupHcsxXeugIWQk2Nucs1wcl2GbNacQJZljWM5K+6TEJDde3DNYyF7ESH9B6TvGflJB/UjNpFh4/s9Am2K2UXkxvY/Nu6IesU/01ajq3sHm8UAf8DEJH0zCUSyBEAAAAASUVORK5CYII=)
+
+1.  Create a GitHub account (if you do not have one)
+2.  Create a new public repository named my-tech-notes
+3.  Upload your three files (index.html, styles.css, script.js)
+4.  Go to the repo settings → “Pages” → set source to main branch, root folder
+5.  GitHub will give you a live URL like: "https://yourusername.github.io/my-tech-notes"
+
+
+#github #website #freewebsite
+            `},
+            //////////////////////////////////////////////////// START of Articles ////////////////////////////////////////////////////////////
+            {
+                id: 3,
+                title: "Python - Turn Cisco Radio up and down",
+                excerpt: "Python script for automating turning Radio up and down on a Cisco AP.",
+                date: "09-09-2025",
+                content: `# Python - Turn Cisco Radio up and down
+
+Python script for automating turning Radio up and down on Cisco AP.
+
+
+
+Turn Radio UP
+
+
+Reference:
+
+\`\`\`
+https://stackoverflow.com/questions/48229181/paramiko-exec-command-with-multiple-commands-on-cisco-router-not-providing-any-o
+https://learningnetwork.cisco.com/s/question/0D56e0000CtFFqeCQG/to-ssh-to-a-cisco-switch-using-python-you-can-use-the-paramiko-library
+\`\`\`
+
+Code:
+
+\`\`\`
+import paramiko
+from time import sleep
+
+hostname = "192.168.88.5"
+username = "user"
+password = "password"
+
+# Create an SSH client instance
+client = paramiko.SSHClient()
+client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
+# Connect to the server
+client.connect(hostname, username=username, password=password)
+# Execute commands
+################################################################################
+connection = client.invoke_shell()
+connection.send("configure terminal")
+output = connection.recv(65535)
+sleep(1)
+connection.send("\n")
+connection.send("interface dot11Radio 0")
+output = connection.recv(65534)
+sleep(.9)
+connection.send("\n")
+connection.send("no shutdown")
+output = connection.recv(65535)
+sleep(2)
+connection.send("\n")
+################################################################################
+# Close the SSH connection
+client.close()
+\`\`\`
+
+
+
+
+Turn Radio down
+
+
+Reference:
+
+\`\`\`
+https://stackoverflow.com/questions/48229181/paramiko-exec-command-with-multiple-commands-on-cisco-router-not-providing-any-o
+https://learningnetwork.cisco.com/s/question/0D56e0000CtFFqeCQG/to-ssh-to-a-cisco-switch-using-python-you-can-use-the-paramiko-library
+\`\`\`
+
+Script:
+
+\`\`\`
+import paramiko
+from time import sleep
+
+hostname = "192.168.88.5"
+username = "user"
+password = "password"
+
+# Create an SSH client instance
+client = paramiko.SSHClient()
+client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
+# Connect to the server
+client.connect(hostname, username=username, password=password)
+# Execute commands on the server
+################################################################################
+connection = client.invoke_shell()
+connection.send("configure terminal")
+output = connection.recv(65535)
+sleep(1)
+connection.send("\n")
+connection.send("interface dot11Radio 0")
+output = connection.recv(65534)
+sleep(.9)
+connection.send("\n")
+connection.send("shutdown")
+output = connection.recv(65535)
+sleep(2)
+connection.send("\n")
+################################################################################
+# Close the SSH connection
+client.close()
+\`\`\`
+
+#Python #Cisco #AP #AccessPoint #Radio #TurnRadioUpAndDown #Paramiko
+            `},
+            {
+                id: 4,
+                title: "Python - Run Ubiquity commands",
+                excerpt: "Python script to run commands on an Ubiquity AP.",
+                date: "09-09-2025",
+                content: `# Python - Run Ubiquity commands
+
+Python script to run commands on an Ubiquity AP, ideal for automating tasks.
+
+\`\`\`
+import paramiko
+
+hostname = "192.168.40.11"
+username = "user"
+password = "password"
+
+# Create an SSH client instance
+client = paramiko.SSHClient()
+client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
+# Connect to the server
+client.connect(hostname, username=username, password=password)
+
+# Execute commands on the server
+stdin, stdout, stderr = client.exec_command("uptime")
+
+# Print the output of the command
+print(stdout.read())
+stdin, stdout, stderr = client.exec_command("ls")
+print(stdout.read())
+
+# Close the SSH connection
+client.close()
+\`\`\`
+
+#python #ubiquity #ap #radio #turnradioonandoff #paramiko
+            `},
+             {
+                id: 5,
+                title: "Python - Quick Web sharing",
+                excerpt: "Run a quick Web sharing service by using a single python command.",
+                date: "09-09-2025",
+                content: `# Python - Quick Web sharing
+
+Python web sharing.
+
+Run the following command on the directory you wish to share.
+
+The whole Directory files and sub Directories will be shared.
+
+\`\`\`
+nohup python3 -m http.server &
+\`\`\`
+
+#python #web #sharing #python3 #http #server
+            `},
+            {
+                id: 6,
+                title: "Trilium - Install steps",
+                excerpt: "Trilium Note taking App install on Ubuntu with Docker.",
+                date: "09-09-2025",
+                content: `# Trilium - Install steps
+
+How to install the Trillium note taking app.
+
+Github [https://github.com/TriliumNext/Notes](https://github.com/TriliumNext/Notes)
+
+
+Trilium install as per [https://triliumnext.github.io/Docs/Wiki/docker-server-installation.html](https://triliumnext.github.io/Docs/Wiki/docker-server-installation.html)
+
+Install docker (Ubuntu server being used),  [https://docs.docker.com/engine/install/ubuntu/](https://docs.docker.com/engine/install/ubuntu/)
+
+Uninstall previous conflicting packages, if any.
+
+\`\`\`
+for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt remove $pkg; done
+\`\`\` 
+
+Add Docker's official GPG key:
+\`\`\`
+sudo apt-get update
+sudo apt-get install ca-certificates curl # Installing ca-certificates and curl
+sudo install -m 0755 -d /etc/apt/keyrings # Setting keyrings that the repository for Docker will be using
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc # Finish setting up keyrings
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+\`\`\`
+
+Add the repository to apt sources:\n
+![](images/dockergpg.png)
+
+
+Install docker packages and then verify they have been successfully installed.
+
+\`\`\`
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+\`\`\`
+
+\`\`\`
+sudo docker run hello-world
+\`\`\`
+
+Now, going back to the Trilium install [https://triliumnext.github.io/Docs/Wiki/docker-server-installation.html](https://triliumnext.github.io/Docs/Wiki/docker-server-installation.html)
+
+Download the latest docker-compose.yml.
+
+\`\`\`
+wget https://raw.githubusercontent.com/TriliumNext/Notes/master/docker-compose.yml
+\`\`\`
+
+(_Check the compose file, in the event port 8080 is already being used on your host, you can change it on the file by modifying the left value, and leaving the one on the right as is_)
+
+Then, start the container.
+
+\`\`\`
+sudo docker compose up -d
+\`\`\`
+
+Confirm that Trilium is up; and its details.
+
+\`\`\`
+sudo docker ps
+sudo docker inspect [container_name]
+\`\`\`
+
+Load Trilium by navigating to http://hostIP:8080 (_replace 8080 for the port on your yaml file_)
+
+#trilium #docker #install #ubuntu #docker-compose #triliumnext #docker-server-installation
+     `}
+    //////////////////////////////// END of Articles ////////////////////////////////////////////////////////////
+        ];
+
+        // Theme management
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        body.setAttribute('data-theme', savedTheme);
+        themeToggle.textContent = savedTheme === 'light' ? '🌙' : '☀️';
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            body.setAttribute('data-theme', newTheme);
+            themeToggle.textContent = newTheme === 'light' ? '🌙' : '☀️';
+            localStorage.setItem('theme', newTheme);
+        });
+
+        // DOM elements
+        const articlesContainer = document.getElementById('articlesContainer');
+        const articleContent = document.getElementById('articleContent');
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const backBtn = document.getElementById('backBtn');
+
+        // State
+        let currentArticles = articlesData;
+        let currentView = 'list'; // 'list' or 'article'
+        let adRotationIndex = 0;
+        let sidebarAdVisible = true;
+
+        // Advertisement Functions
+        function createAdElement(ad) {
+            const adElement = document.createElement('div');
+            adElement.className = `ad-banner ${ad.type === 'sidebar' ? 'sidebar-ad' : ''}`;
+            adElement.onclick = () => handleAdClick(ad);
+            
+            adElement.innerHTML = `
+                <div class="ad-label">Ad</div>
+                ${ad.type === 'sidebar' ? '<button class="ad-close" onclick="event.stopPropagation(); closeSidebarAd()">×</button>' : ''}
+                <div class="ad-content">
+                    ${ad.image ? `<img src="${ad.image}" alt="${ad.title}" class="ad-image">` : ''}
+                    <div class="ad-title">${ad.title}</div>
+                    <div class="ad-description">${ad.description}</div>
+                    <a href="#" class="ad-cta" onclick="event.stopPropagation(); handleAdClick(ad)">${ad.cta}</a>
+                </div>
+            `;
+            
+            // Track impression
+            ad.impressions++;
+            return adElement;
+        }
+
+        function getRandomAd(placement) {
+            const availableAds = advertisementsData.filter(ad => 
+                ad.active && ad.placement.includes(placement)
+            );
+            
+            if (availableAds.length === 0) return null;
+            
+            // Simple rotation
+            const adIndex = adRotationIndex % availableAds.length;
+            adRotationIndex++;
+            
+            return availableAds[adIndex];
+        }
+
+
+        function showSidebarAd() {
+            if (!sidebarAdVisible) return;
+            
+            const existingSidebarAd = document.querySelector('.sidebar-ad');
+            if (existingSidebarAd) return;
+            
+            const ad = getRandomAd('sidebar');
+            if (!ad) return;
+            
+            const sidebarAd = createAdElement(ad);
+            document.body.appendChild(sidebarAd);
+            
+            // Auto-hide after 10 seconds
+            setTimeout(() => {
+                if (sidebarAd.parentNode) {
+                    sidebarAd.remove();
+                }
+            }, 10000);
+        }
+
+        function closeSidebarAd() {
+            const sidebarAd = document.querySelector('.sidebar-ad');
+            if (sidebarAd) {
+                sidebarAd.remove();
+            }
+            sidebarAdVisible = false;
+            
+            // Re-enable sidebar ads after 30 seconds
+            setTimeout(() => {
+                sidebarAdVisible = true;
+            }, 30000);
+        }
+
+        function handleAdClick(ad) {
+            ad.clicks++;
+            console.log(`Ad clicked: ${ad.title} (${ad.clicks} clicks, ${ad.impressions} impressions)`);
+            
+            // Open ad URL in new tab
+            if (ad.url) {
+                window.open(ad.url, '_blank');
+            }
+        }
+
+        function addHeaderAd() {
+            const headerAd = getRandomAd('header');
+            if (!headerAd) return;
+            
+            const headerAdContainer = document.createElement('div');
+            headerAdContainer.className = 'header-ad';
+            headerAdContainer.appendChild(createAdElement(headerAd));
+            
+            const header = document.querySelector('.header');
+            header.parentNode.insertBefore(headerAdContainer, header.nextSibling);
+        }
+
+        // Initialize
+        function init() {
+            renderArticles(articlesData);
+            setupEventListeners();
+            addHeaderAd();
+            
+            // Show sidebar ad after 3 seconds
+            setTimeout(showSidebarAd, 3000);
+            
+            // Rotate sidebar ads every 15 seconds
+            setInterval(() => {
+                if (sidebarAdVisible && Math.random() > 0.5) {
+                    showSidebarAd();
+                }
+            }, 15000);
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            searchInput.addEventListener('input', debounce(handleSearch, 300));
+            searchBtn.addEventListener('click', () => handleSearch());
+            backBtn.addEventListener('click', showArticlesList);
+            
+            // Enter key for search
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    handleSearch();
+                }
+            });
+        }
+
+        // Debounce function
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Render articles list
+        function renderArticles(articles) {
+            if (articles.length === 0) {
+                articlesContainer.innerHTML = `
+                    <div class="no-results">
+                        <h3>No articles found</h3>
+                        <p>Try adjusting your search terms</p>
+                    </div>
+                `;
+                return;
+            }
+
+            articlesContainer.innerHTML = articles.map(article => `
+                <div class="article-card" onclick="showArticle(${article.id})">
+                    <h2 class="article-title">${article.title}</h2>
+                    <p class="article-excerpt">${article.excerpt}</p>
+                    <div class="article-meta">
+                        <span class="article-date">${formatDate(article.date)}</span>
+                        <a href="#" class="read-more" onclick="event.stopPropagation(); showArticle(${article.id})">Read More</a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Search functionality
+        function handleSearch() {
+            const query = searchInput.value.trim().toLowerCase();
+            
+            if (query === '') {
+                currentArticles = articlesData;
+            } else {
+                currentArticles = articlesData.filter(article => 
+                    article.title.toLowerCase().includes(query) ||
+                    article.excerpt.toLowerCase().includes(query) ||
+                    article.content.toLowerCase().includes(query)
+                );
+            }
+            
+            if (currentView === 'list') {
+                renderArticles(currentArticles);
+            }
+        }
+
+        // Show individual article
+        function showArticle(id) {
+            const article = articlesData.find(a => a.id === id);
+            if (!article) return;
+
+            currentView = 'article';
+            articlesContainer.style.display = 'none';
+            articleContent.style.display = 'block';
+            backBtn.classList.add('active');
+
+            // Convert markdown to HTML
+            const htmlContent = marked.parse(article.content);
+            
+            articleContent.innerHTML = `
+                <div class="article-meta" style="margin-bottom: 2rem;">
+                    <span class="article-date">${formatDate(article.date)}</span>
+                </div>
+                ${htmlContent}
+            `;
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Show articles list
+        function showArticlesList() {
+            currentView = 'list';
+            articlesContainer.style.display = 'grid';
+            articleContent.style.display = 'none';
+            backBtn.classList.remove('active');
+            
+            // Re-render with current search results
+            renderArticles(currentArticles);
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        // Make functions globally accessible
+        window.showArticle = showArticle;
+        window.handleAdClick = handleAdClick;
+        window.closeSidebarAd = closeSidebarAd;
+
+        // Initialize the app
+        init();
+    </script>
+</body>
+</html>
