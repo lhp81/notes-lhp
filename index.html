@@ -667,6 +667,277 @@ More notes to come...
 //            `},  
             //////////////////////////////////////////////////// PDF TEMPLATE ////////////////////////////////////////////////////////////
                     {
+                id: 58,
+                title: "Termux - Automated Li-Ion Battery Charge Limiter via Local Tuya LAN Control",
+                excerpt: "Automated Li-Ion Battery Charge Limiter via Local Tuya LAN Control",
+                date: "11-28-2026",
+                content: `# Automated Li-Ion Battery Charge Limiter via Local Tuya LAN Control
+ <br>  
+<br>
+
+• Architecture & Overview   
+Modern lithium-ion batteries degrade faster when kept at 100% state-of-charge (SoC) or subjected to deep discharges below 20%.   
+While some mobile operating systems offer software-level charge limiting, physically cutting AC power to the charger eliminates parasitic draw and hardware trickle-charging.   
+This guide details how to deploy a zero-cloud, local-LAN automation loop using an Android device running Termux (Linux environment) and a Tuya-based smart plug (e.g., Smartis). 
+System Workflow   
+    1. Telemetry: Termux queries the Android BatteryManager API via termux-battery-status.   
+    2. Evaluation: A background Bash daemon evaluates battery percentage and charging state against hysteresis thresholds (20%–80%).   
+    3. Actuation: When a threshold is crossed, the daemon invokes a Python wrapper utilizing tinytuya to send an AES-encrypted TCP payload directly to the smart plug over port 6668. 
+
+
+• Network & Hardware Prerequisites   
+2.1 Pair the Device   
+    1. Connect your mobile device to a 2.4 GHz Wi-Fi network (Tuya ESP8266/BK7231 chipsets do not support 5 GHz bands).   
+    2. Provision the smart plug using the Smart Life or Tuya Smart mobile app.   
+    
+2.2 Configure DHCP Reservation   
+Local LAN control requires a deterministic IP address.   
+    1. Open the smart plug settings in the mobile app and navigate to Device Information to record its MAC Address.   
+    2. Access your router's DHCP server configuration and bind a Static IP Lease (e.g., 192.168.1.92) to that MAC address. 
+
+• Cloud Provisioning & Key Extraction   
+Tuya encrypts local LAN payloads using a device-specific 16-character local_key.   
+While control is entirely local, you must perform a one-time API query against the Tuya IoT Cloud to retrieve this key.   
+3.1 Create a Tuya Cloud Project   
+    1. Log in to the Tuya IoT Platform.   
+    2. Navigate to Cloud → Development and click Create Cloud Project.   
+    3. Configure the project parameters:    
+        ◦ Industry: Smart Home   
+        ◦ Development Method: Smart Home   
+        ◦ Data Center: Select the region matching your Smart Life app account (e.g., Western America Data Center).   
+    4. During the API authorization wizard, ensure IoT Core and Authorization Token Management are enabled.   
+
+3.2 Link the Mobile App Account   
+    1. Inside your newly created project, navigate to the Devices tab → Link Tuya App Account → Add App Account.   
+    2. Open the Smart Life app on your phone, tap the Scan icon (top right), and scan the QR code displayed on the portal.   
+    3. Confirm that your smart plug appears under the All Devices list.   
+
+3.3 Record API Credentials   
+Navigate to your project's Overview tab and record the following from the Authorization Key card:   
+    • Access ID / Client ID   
+    • Access Secret / Client Secret   
+    • Data Center Region Code: Map your data center to its TinyTuya shorthand:   
+\`\`\`
+Data Center	        Code   
+Western America       us   
+Eastern America	  us-e   
+China	               cn   
+Singapore	        sg   
+Central Europe	  eu   
+Western Europe	  eu-w   
+India	               in   
+\`\`\`   
+   
+• Environment Setup (Termux / Linux)   
+\`\`\`
+Note: Install Termux and the Termux:API add-on from F-Droid (Play Store builds are deprecated and lack permission parity).
+\`\`\`   
+4.1 Install System Dependencies
+Update repositories and install Python, cryptographic libraries, jq for safe JSON parsing, and the Termux API bridge:   
+\`\`\`
+pkg update && pkg upgrade -y
+pkg install python python-pip python-cryptography jq termux-api -y
+pip install tinytuya
+\`\`\`   
+4.2 Run the TinyTuya Setup Wizard
+Execute the interactive wizard to query the Tuya Cloud API and generate your local device manifest (devices.json):   
+\`\`\`
+python3 -m tinytuya wizard
+\`\`\`   
+Provide your API ID, API Secret, and Region Code when prompted. When asked to poll devices, enter Y.   
+Inspect the generated devices.json file to extract your id (Device ID) and key (Local Key):   
+\`\`\`
+cat devices.json
+\`\`\`   
+
+• Verification & Data Point (DPS) Mapping   
+5.1 Verify Local Connectivity   
+Test direct LAN communication using a one-line Python execution.   
+\`\`\`
+(Note: Modern Tuya firmware typically requires protocol version 3.4 or 3.5. If you receive a JSONDecodeError or timeout, adjust the version parameter accordingly). 
+\`\`\`   
+\`\`\`
+python3 -c 'import tinytuya; d = tinytuya.OutletDevice("YOUR_DEVICE_ID", "192.168.1.92", "YOUR_LOCAL_KEY", version=3.5); print(d.status())'
+\`\`\`   
+   
+Understand Tuya Data Points (DPS)
+A successful query returns a dictionary of Data Points (dps) representing the hardware state: 
+json
+{
+  "dps": {
+    "1": true,
+    "9": 0,
+    "18": 34,
+    "19": 48,
+    "20": 2159,
+    "38": "memory"
+  }
+}
+\`\`\`
+DPS ID	Key Name	Data Type	Scaling / Interpretation
+1	switch_1	Boolean	Relay state (True = ON, False = OFF)
+9	countdown_1	Integer	Remaining timer in seconds
+18	cur_current	Integer	Live current in milliamps (mA)
+19	cur_power	Integer	Live power in deciwatts (divide by 10 for Watts)
+20	cur_voltage	Integer	Live voltage in decivolts (divide by 10 for Volts)
+38	relay_status	Enum	Post-outage behavior (power_off, power_on, memory)
+\`\`\`   
+   
+   
+   
+   
+• Production Implementation   
+6.1 Secure Credential Storage   
+Avoid hardcoding sensitive keys inside executable scripts. Create a restricted configuration file (~/.tuya.env): 
+\`\`\`
+cat << 'EOF' > ~/.tuya.env
+export TUYA_DEVICE_ID="your_device_id_here"
+export TUYA_IP_ADDRESS="192.168.1.92"
+export TUYA_LOCAL_KEY="your_16_char_local_key"
+export TUYA_VERSION="3.5"
+EOF
+\`\`\`   
+\`\`\`
+chmod 600 ~/.tuya.env
+\`\`\`   
+
+   
+   
+• Python Controller (smartplug.py)   
+Create a resilient CLI wrapper with socket timeout handling so transient Wi-Fi packet loss does not hang your automation loop.   
+
+\`\`\`
+cat << 'EOF' > ~/smartplug.py
+#!/usr/bin/env python3
+import os
+import sys
+import tinytuya
+
+DEVICE_ID = os.getenv("TUYA_DEVICE_ID")
+IP_ADDRESS = os.getenv("TUYA_IP_ADDRESS")
+LOCAL_KEY = os.getenv("TUYA_LOCAL_KEY")
+VERSION = float(os.getenv("TUYA_VERSION", "3.5"))
+
+if not all([DEVICE_ID, IP_ADDRESS, LOCAL_KEY]):
+sys.exit(1)
+sys.stderr.write("Error: Missing Tuya environment variables.\\n")
+
+plug = tinytuya.OutletDevice(
+    dev_id=DEVICE_ID,
+    address=IP_ADDRESS,
+    local_key=LOCAL_KEY,
+    version=VERSION
+)
+plug.set_socketTimeout(5.0)
+plug.set_socketRetryLimit(3)
+
+cmd = sys.argv[1].lower() if len(sys.argv) > 1 else "status"
+
+try:
+    if cmd == "on":
+        plug.turn_on()
+        print("OK: Plug turned ON")
+    elif cmd == "off":
+        plug.turn_off()
+        print("OK: Plug turned OFF")
+    elif cmd == "power":
+        res = plug.status()
+        data = res.get("dps", {})
+        if not data:
+            raise RuntimeError(f"Empty DPS payload: {res}")
+        watts = data.get("19", 0) / 10.0
+        volts = data.get("20", 0) / 10.0
+        amps = data.get("18", 0) / 1000.0
+        state = "ON" if data.get("1") else "OFF"
+        print(f"State: {state} | Power: {watts:.1f}W | Voltage: {volts:.1f}V | Current: {amps:.3f}A")
+    else:
+        print(plug.status())
+except Exception as e:
+    sys.stderr.write(f"Communication failure: {e}\\n")
+    sys.exit(2)
+EOF
+\`\`\`   
+\`\`\`
+chmod +x ~/smartplug.py
+\`\`\`   
+   
+   
+• Monitoring Daemon (battery_monitor.sh)   
+This script polls the battery status every 60 seconds using jq for deterministic JSON parsing.   
+It only sends network commands when the battery crosses the < 20% or > 80% thresholds while in the corresponding charge state.   
+\`\`\`
+cat << 'EOF' > ~/battery_monitor.sh
+#!/data/data/com.termux/files/usr/bin/bash
+set -u
+
+source "$HOME/.tuya.env"
+SCRIPT_PATH="$HOME/smartplug.py"
+LOG_FILE="$HOME/battery_monitor.log"
+
+log_msg() {
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" >> "$LOG_FILE"
+}
+
+log_msg "Starting battery monitor daemon..."
+
+while true; do
+    RAW_JSON=$(termux-battery-status 2>/dev/null)
+
+    if [[ -n "$RAW_JSON" ]]; then
+       PERCENT=$(echo "$RAW_JSON" | jq -r '.percentage // empty')
+        STATUS=$(echo "$RAW_JSON" | jq -r '.status // empty')
+
+        if [[ "$PERCENT" =~ ^[0-9]+$ ]]; then
+            if [ "$PERCENT" -lt 20 ] && [[ "$STATUS" == "DISCHARGING" ]]; then
+                OUT=$(python3 "$SCRIPT_PATH" on 2>&1)
+                log_msg "Battery at \${PERCENT}% (\${STATUS}). Triggered ON -> $OUT"
+            elif [ "$PERCENT" -gt 80 ] && [[ "$STATUS" == "CHARGING" ]]; then
+                OUT=$(python3 "$SCRIPT_PATH" off 2>&1)
+                log_msg "Battery at \${PERCENT}% (\${STATUS}). Triggered OFF -> $OUT"
+            fi
+        else
+            log_msg "WARN: Invalid percentage parsed from telemetry."
+        fi
+    else
+        log_msg "ERROR: Failed to retrieve termux-battery-status."
+    fi
+
+    sleep 60
+done
+EOF
+\`\`\`   
+
+\`\`\`
+chmod +x ~/battery_monitor.sh
+\`\`\`   
+   
+   
+• Deployment & Android OS Considerations   
+Android aggressively suspends background processes and throttles Wi-Fi radios when the screen is off (Doze Mode).   
+To ensure reliable execution:   
+    1. Acquire a Wake Lock: Prevent the CPU from sleeping while the daemon runs:
+\`\`\`
+termux-wake-lock
+\`\`\`   
+2. Disable Android Battery Optimization: Go to Android Settings → Apps → Termux (and Termux:API) → Battery → Select Unrestricted.   
+3. Launch the Daemon: Start the script in the background detached from your terminal session:   
+
+\`\`\`
+nohup ~/battery_monitor.sh >/dev/null 2>&1 &
+\`\`\`   
+   
+4. Verify Operation: Tail the log file to confirm polling and state transitions:   
+
+\`\`\`
+tail -f ~/battery_monitor.log
+\`\`\`   
+   
+   
+
+
+#@ll
+            `},              
+                    {
                 id: 57,
                 title: "Termux - battery status",
                 excerpt: "How to obtain battery status information on Termux",
